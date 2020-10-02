@@ -1,0 +1,111 @@
+{
+  "default_namespace": "VirtualCanInterface",
+  "chains": [
+    {
+      "type": "can",
+      "namespace": "PhysicalCanInterface",
+      "device_name": "can0",
+      "dbc_file": "configuration/can_files/can_one.dbc"
+    },
+    {
+      "type": "canfd",
+      "namespace": "PhysicalCanFDInterface",
+      "device_name": "can1",
+      "dbc_file": "configuration/can_files/canfd_one.dbc"
+    },
+    {
+      "type": "can",
+      "namespace": "VirtualCanInterface",
+      "device_name": "vcan1",
+      "dbc_file": "configuration/can_files/can_two.dbc"
+    },
+    {
+      "namespace": "UDPCanInterface",
+      "type": "udp",
+      "dbc_file": "configuration/can_files/can_three.dbc",
+      "device_name": "udp2",
+      "server_port": 2001,
+      "target_host": "127.0.0.1",
+      "target_port": 2000,
+      "fixed_payload_size": 8
+    },
+    {
+      "namespace": "LinSlave",
+      "type": "lin",
+      "config": {
+        "device_identifier": 1,
+        "server_port": 2014,
+        "target_host": null,
+        "target_port": 2013
+      },
+      "device_name": "lin",
+      "node_mode": "slave",
+      "ldf_file": "configuration/ldf_files/lin_one.ldf",
+      "schedule_file": "configuration/ldf_files/lin_one.ldf",
+      "schedule_table_name": "linoneSchedule",
+      "schedule_autostart": false
+    },
+    {
+      "namespace": "LinMaster",
+      "type": "lin",
+      "config": {
+        "device_identifier": 1,
+        "server_port": 2015,
+        "target_host": null,
+        "target_port": 2016
+      },
+      "device_name": "lin",
+      "node_mode": "master",
+      "ldf_file": "configuration/ldf_files/lin_one.ldf",
+      "schedule_file": "configuration/ldf_files/lin_one.ldf",
+      "schedule_table_name": "linoneSchedule",
+      "schedule_autostart": true
+    },
+    {
+      "type": "flexray",
+      "device_name": "flexray0",
+      "namespace": "FlexrayBackbone",
+      "config": {
+        "target_host": "127.0.0.1",
+        "target_port": 51111
+      },
+      "fibex_file": "configuration/fibex_files/flexray.xml"
+    },
+    {
+      "device_name": "virtual",
+      "namespace": "VirtualInterface",
+      "type": "virtual"
+    }
+  ],
+  "gateway": {
+    "gateway_pid": "gateway_pid",
+    "tcp_socket_port": 4040
+  },
+  "auto_config_boot_server": {
+    "port": 4000,
+    "server_pid": "auto_config_boot_server_pid"
+  },
+  "grpc_server": {
+    "port": 50051
+  },
+  "reflectors": [
+    {
+      "application_pid": "reflector1",
+      "reflect": [
+        {
+          "source": "PhysicalCanInterface",
+          "dest": "VirtualCanInterface",
+          "exclude": []
+        },
+        {
+          "source": "VirtualCanInterface",
+          "dest": "PhysicalCanInterface",
+          "exclude": [
+            "FrameA",
+            "FrameB"
+          ]
+        }
+      ]
+    }
+  ]
+}

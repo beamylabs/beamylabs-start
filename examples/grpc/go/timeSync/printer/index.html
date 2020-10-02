@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html> <title>Volvo Signal Broker Png Printer</title>
+<head>
+    <p> Signal broker , Volvo Cars (c)</p>
+</head>
+
+
+<script>
+
+
+    function refresh() {
+        document.getElementById('plotter').src = 'plot.png';
+    }
+
+    function reloadGraph() {
+
+        var now = new Date();
+        document.images['graph'].src = 'plot1.png?' + now.getTime();
+        timeoutID = setTimeout('reloadGraph()', 100);
+
+    }
+
+</script>
+
+<body onLoad="reloadGraph()">
+<img id="graph" src="plot1.png" alt="My updating graph" />
+</body>
+
+</html></html>

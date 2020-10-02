@@ -1,0 +1,5 @@
+{
+  "Brokerip": "localhost",
+  "Brokerport": "50051",
+  "NamespaceName": "Virtual_LIN"
+}

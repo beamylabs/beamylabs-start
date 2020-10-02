@@ -1,0 +1,41 @@
+@startuml
+
+box "5G car application" #LightBlue
+	participant 5G_car_subscriber
+  participant 5G_car_tcp_client
+  participant operating_system
+end box
+box "Signalbroker on Raspberry" #LightGreen
+	participant Signalbroker
+end box
+box "5G host box" #LightBlue
+	participant Host_Box
+end box
+operating_system -> Host_Box : DHCP, request IP
+note left
+5G car application can execute
+on the same hardware as
+the signalbroker, in that case signalbroker and
+5G car application share host, thus also share ip.
+end note
+Host_Box -> operating_system : DHCP, client hardware is assigned IP
+
+note over 5G_car_subscriber
+Subscription is made using
+grpc for relevant signals.
+Signalbroker grpc ip:port is
+specified. [signalbroker:50051]
+car5g.ex
+end note
+5G_car_subscriber -> Signalbroker : Subscription initiated
+Signalbroker -> 5G_car_subscriber : Signals are streamed...
+group
+  loop 5G_car_subscriber -> 5G_car_subscriber 100 ms timer
+    5G_car_subscriber -> 5G_car_tcp_client : send packaged meesages
+    note over 5G_car_tcp_client
+    Destination ip:port configured in application.ex
+    end note
+    5G_car_tcp_client -> Host_Box: tcp_send (messages)
+end
+
+@enduml

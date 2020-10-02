@@ -1,0 +1,52 @@
+version: '3.2'
+services:
+  web-client:
+    stdin_open: true
+    tty: true
+    # build:
+    #   context: ./
+    #   dockerfile: docker/Dockerfile
+    image: beamylabs/beamybroker-web-client:${BEAMYWEBCLIENT_TAG:-latest}
+    environment:
+      SIGNAL_SERVER_HOST_NAME: ${SIGNALBROKER_IP}
+    ports:
+     - "8080:8080"
+    depends_on:
+     - proxy
+  # web-client:
+  #   build:
+  #     context: ./clientSource
+  #     dockerfile: ../docker/yarn.Dockerfile
+  #   image: signalbroker-web-client-yarn
+  #   ports:
+  #    - "8080:8080"
+  #   depends_on:
+  #    - proxy
+  proxy:
+    # build:
+    #   context: ./docker
+    #   dockerfile: grpcwebproxy.Dockerfile
+    image: aleksandarf/grpcwebrproxy:${GRPCWEBPROXY_TAG:-latest}
+    ports:
+      - "8081:8080"
+    command: ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}:50051 --run_tls_server=false --allow_all_origins --server_http_max_read_timeout 0s --server_http_max_write_timeout 0s
+  signal-broker:
+    tty: true
+    # Build and name the SB image
+    # build:
+    #   context: ./
+    #   dockerfile: docker/Dockerfile
+    image: aleksandarf/beamybroker-server:${BEAMYBROKER_TAG:-latest}
+    network_mode: "host"
+    # Mount the "configuration" folder as a volume to be make changes in the files
+    # without having to re-build the docker image every time
+    # Add CONFIG_FOLDER=../configuration_path to an .env file  
+    volumes:
+      - "${CONFIG_FOLDER:-./configuration}:/signalbroker/_build/prod/rel/signal_server/configuration"
+    # # Use this line only if you need a custom command to be executed by this image
+    # # Define the your custom command in the .env file 
+    # command: "${CUSTOM_COMMAND}"
+    environment:
+      - REPLACE_OS_VARS=true
+      - COOKIE=test
+      - NODENAME=master@${SIGNALBROKER_IP}.com
