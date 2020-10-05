@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package base;
+
+service SystemService {
+  rpc GetConfiguration (Empty) returns (Configuration) {}
+  rpc ListSignals (NameSpace) returns (Frames) {}
+  rpc UploadFileChunk (FileUploadChunkRequest) returns (FileUploadResponse) {}
+  rpc UploadFile (stream FileUploadRequest) returns (FileUploadResponse) {}
+// will not return until new configuration is tested an active, make sure to set timeout to a large value. (fibex on pi > 50s)
+  rpc ReloadConfiguration (Empty) returns (ReloadMessage) {}
+}
+
+message Configuration {
+  repeated NetworkInfo networkInfo = 1;
+  bytes interfacesJson = 2;
+  string licenseEndDate = 3;
+  string publicAddress = 4;
+}
+
+message ReloadMessage{
+    oneof status {
+      Configuration configuration = 1;
+      string errorMessage = 2;
+    }
+}
+
+message FileDescription{
+//  sha256 is base16 encoded
+    string sha256 = 1;
+    string path = 2;
+}
+
+message FileUploadRequest{
+    oneof data {
+      FileDescription fileDescription = 1;
+      bytes chunk = 2;
+    }
+}
+
+message FileUploadChunkRequest{
+    FileDescription fileDescription = 1;
+    uint32 chunks = 2;
+    uint32 chunkId = 3;
+    bytes chunk = 4;
+    bool cancelUpload = 5;
+    uint32 uploadTimeout = 6;
+}
+
+message FileUploadResponse{
+    oneof data {
+        bool finished = 1;
+        bool cancelled = 2;
+        string errorMessage = 3;
+    };
+}
