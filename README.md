@@ -5,6 +5,7 @@ Make sure you have docker and docker-compose installed, then
 ```bash
 SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml up
 ```
+> This is persistant over system reboot, and it will restart on reboot over and over again
 
 Point you webbrowser to the hosting machine example http://192.168.4.1:8080/ 
 
