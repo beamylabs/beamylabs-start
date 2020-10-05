@@ -159,7 +159,7 @@ def upload_file(stub, path, dest_path):
      print("uploaded", path, response)
 
 def upload_folder(system_stub, folder):
-     files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*.*'))]
+     files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*')) if not os.path.isdir(y)]
      for file in files:
             upload_file(system_stub, file, file.replace(folder, ""))
 
