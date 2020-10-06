@@ -7,6 +7,10 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 
+/* eslint-disable */
+// @ts-nocheck
+
+
 
 const grpc = {};
 grpc.web = require('grpc-web');
@@ -39,16 +43,6 @@ proto.base.FunctionalServiceClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -66,12 +60,38 @@ proto.base.FunctionalServicePromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!proto.base.FunctionalServiceClient} The delegate callback based client
+   * @private @const {!grpc.web.GrpcWebClientBase} The client
    */
-  this.delegateClient_ = new proto.base.FunctionalServiceClient(
-      hostname, credentials, options);
+  this.client_ = new grpc.web.GrpcWebClientBase(options);
+
+  /**
+   * @private @const {string} The hostname
+   */
+  this.hostname_ = hostname;
 
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.ClientId,
+ *   !proto.base.Empty>}
+ */
+const methodDescriptor_FunctionalService_OpenPassWindow = new grpc.web.MethodDescriptor(
+  '/base.FunctionalService/OpenPassWindow',
+  grpc.web.MethodType.UNARY,
+  common_pb.ClientId,
+  common_pb.Empty,
+  /**
+   * @param {!proto.base.ClientId} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  common_pb.Empty.deserializeBinary
+);
 
 
 /**
@@ -82,7 +102,10 @@ proto.base.FunctionalServicePromiseClient =
  */
 const methodInfo_FunctionalService_OpenPassWindow = new grpc.web.AbstractClientBase.MethodInfo(
   common_pb.Empty,
-  /** @param {!proto.base.ClientId} request */
+  /**
+   * @param {!proto.base.ClientId} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -106,7 +129,7 @@ proto.base.FunctionalServiceClient.prototype.openPassWindow =
       '/base.FunctionalService/OpenPassWindow',
       request,
       metadata || {},
-      methodInfo_FunctionalService_OpenPassWindow,
+      methodDescriptor_FunctionalService_OpenPassWindow,
       callback);
 };
 
@@ -117,18 +140,38 @@ proto.base.FunctionalServiceClient.prototype.openPassWindow =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.base.Empty>}
- *     The XHR Node Readable Stream
+ *     Promise that resolves to the response
  */
 proto.base.FunctionalServicePromiseClient.prototype.openPassWindow =
     function(request, metadata) {
-  var _this = this;
-  return new Promise(function (resolve, reject) {
-    _this.delegateClient_.openPassWindow(
-      request, metadata, function (error, response) {
-        error ? reject(error) : resolve(response);
-      });
-  });
+  return this.client_.unaryCall(this.hostname_ +
+      '/base.FunctionalService/OpenPassWindow',
+      request,
+      metadata || {},
+      methodDescriptor_FunctionalService_OpenPassWindow);
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.ClientId,
+ *   !proto.base.Empty>}
+ */
+const methodDescriptor_FunctionalService_ClosePassWindow = new grpc.web.MethodDescriptor(
+  '/base.FunctionalService/ClosePassWindow',
+  grpc.web.MethodType.UNARY,
+  common_pb.ClientId,
+  common_pb.Empty,
+  /**
+   * @param {!proto.base.ClientId} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  common_pb.Empty.deserializeBinary
+);
 
 
 /**
@@ -139,7 +182,10 @@ proto.base.FunctionalServicePromiseClient.prototype.openPassWindow =
  */
 const methodInfo_FunctionalService_ClosePassWindow = new grpc.web.AbstractClientBase.MethodInfo(
   common_pb.Empty,
-  /** @param {!proto.base.ClientId} request */
+  /**
+   * @param {!proto.base.ClientId} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -163,7 +209,7 @@ proto.base.FunctionalServiceClient.prototype.closePassWindow =
       '/base.FunctionalService/ClosePassWindow',
       request,
       metadata || {},
-      methodInfo_FunctionalService_ClosePassWindow,
+      methodDescriptor_FunctionalService_ClosePassWindow,
       callback);
 };
 
@@ -174,18 +220,38 @@ proto.base.FunctionalServiceClient.prototype.closePassWindow =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.base.Empty>}
- *     The XHR Node Readable Stream
+ *     Promise that resolves to the response
  */
 proto.base.FunctionalServicePromiseClient.prototype.closePassWindow =
     function(request, metadata) {
-  var _this = this;
-  return new Promise(function (resolve, reject) {
-    _this.delegateClient_.closePassWindow(
-      request, metadata, function (error, response) {
-        error ? reject(error) : resolve(response);
-      });
-  });
+  return this.client_.unaryCall(this.hostname_ +
+      '/base.FunctionalService/ClosePassWindow',
+      request,
+      metadata || {},
+      methodDescriptor_FunctionalService_ClosePassWindow);
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.SenderInfo,
+ *   !proto.base.Empty>}
+ */
+const methodDescriptor_FunctionalService_SetFanSpeed = new grpc.web.MethodDescriptor(
+  '/base.FunctionalService/SetFanSpeed',
+  grpc.web.MethodType.UNARY,
+  proto.base.SenderInfo,
+  common_pb.Empty,
+  /**
+   * @param {!proto.base.SenderInfo} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  common_pb.Empty.deserializeBinary
+);
 
 
 /**
@@ -196,7 +262,10 @@ proto.base.FunctionalServicePromiseClient.prototype.closePassWindow =
  */
 const methodInfo_FunctionalService_SetFanSpeed = new grpc.web.AbstractClientBase.MethodInfo(
   common_pb.Empty,
-  /** @param {!proto.base.SenderInfo} request */
+  /**
+   * @param {!proto.base.SenderInfo} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -220,7 +289,7 @@ proto.base.FunctionalServiceClient.prototype.setFanSpeed =
       '/base.FunctionalService/SetFanSpeed',
       request,
       metadata || {},
-      methodInfo_FunctionalService_SetFanSpeed,
+      methodDescriptor_FunctionalService_SetFanSpeed,
       callback);
 };
 
@@ -231,18 +300,38 @@ proto.base.FunctionalServiceClient.prototype.setFanSpeed =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.base.Empty>}
- *     The XHR Node Readable Stream
+ *     Promise that resolves to the response
  */
 proto.base.FunctionalServicePromiseClient.prototype.setFanSpeed =
     function(request, metadata) {
-  var _this = this;
-  return new Promise(function (resolve, reject) {
-    _this.delegateClient_.setFanSpeed(
-      request, metadata, function (error, response) {
-        error ? reject(error) : resolve(response);
-      });
-  });
+  return this.client_.unaryCall(this.hostname_ +
+      '/base.FunctionalService/SetFanSpeed',
+      request,
+      metadata || {},
+      methodDescriptor_FunctionalService_SetFanSpeed);
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.SubscriberRequest,
+ *   !proto.base.Value>}
+ */
+const methodDescriptor_FunctionalService_SubscribeToFanSpeed = new grpc.web.MethodDescriptor(
+  '/base.FunctionalService/SubscribeToFanSpeed',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.base.SubscriberRequest,
+  proto.base.Value,
+  /**
+   * @param {!proto.base.SubscriberRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.base.Value.deserializeBinary
+);
 
 
 /**
@@ -253,7 +342,10 @@ proto.base.FunctionalServicePromiseClient.prototype.setFanSpeed =
  */
 const methodInfo_FunctionalService_SubscribeToFanSpeed = new grpc.web.AbstractClientBase.MethodInfo(
   proto.base.Value,
-  /** @param {!proto.base.SubscriberRequest} request */
+  /**
+   * @param {!proto.base.SubscriberRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -273,8 +365,8 @@ proto.base.FunctionalServiceClient.prototype.subscribeToFanSpeed =
   return this.client_.serverStreaming(this.hostname_ +
       '/base.FunctionalService/SubscribeToFanSpeed',
       request,
-      metadata,
-      methodInfo_FunctionalService_SubscribeToFanSpeed);
+      metadata || {},
+      methodDescriptor_FunctionalService_SubscribeToFanSpeed);
 };
 
 
@@ -287,11 +379,11 @@ proto.base.FunctionalServiceClient.prototype.subscribeToFanSpeed =
  */
 proto.base.FunctionalServicePromiseClient.prototype.subscribeToFanSpeed =
     function(request, metadata) {
-  return this.delegateClient_.client_.serverStreaming(this.delegateClient_.hostname_ +
+  return this.client_.serverStreaming(this.hostname_ +
       '/base.FunctionalService/SubscribeToFanSpeed',
       request,
-      metadata,
-      methodInfo_FunctionalService_SubscribeToFanSpeed);
+      metadata || {},
+      methodDescriptor_FunctionalService_SubscribeToFanSpeed);
 };
 
 

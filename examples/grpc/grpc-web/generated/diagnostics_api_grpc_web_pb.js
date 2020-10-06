@@ -7,6 +7,10 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 
+/* eslint-disable */
+// @ts-nocheck
+
+
 
 const grpc = {};
 grpc.web = require('grpc-web');
@@ -39,16 +43,6 @@ proto.base.DiagnosticsServiceClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -66,12 +60,38 @@ proto.base.DiagnosticsServicePromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!proto.base.DiagnosticsServiceClient} The delegate callback based client
+   * @private @const {!grpc.web.GrpcWebClientBase} The client
    */
-  this.delegateClient_ = new proto.base.DiagnosticsServiceClient(
-      hostname, credentials, options);
+  this.client_ = new grpc.web.GrpcWebClientBase(options);
+
+  /**
+   * @private @const {string} The hostname
+   */
+  this.hostname_ = hostname;
 
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.DiagnosticsRequest,
+ *   !proto.base.DiagnosticsResponse>}
+ */
+const methodDescriptor_DiagnosticsService_SendDiagnosticsQuery = new grpc.web.MethodDescriptor(
+  '/base.DiagnosticsService/SendDiagnosticsQuery',
+  grpc.web.MethodType.UNARY,
+  proto.base.DiagnosticsRequest,
+  proto.base.DiagnosticsResponse,
+  /**
+   * @param {!proto.base.DiagnosticsRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.base.DiagnosticsResponse.deserializeBinary
+);
 
 
 /**
@@ -82,7 +102,10 @@ proto.base.DiagnosticsServicePromiseClient =
  */
 const methodInfo_DiagnosticsService_SendDiagnosticsQuery = new grpc.web.AbstractClientBase.MethodInfo(
   proto.base.DiagnosticsResponse,
-  /** @param {!proto.base.DiagnosticsRequest} request */
+  /**
+   * @param {!proto.base.DiagnosticsRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -106,7 +129,7 @@ proto.base.DiagnosticsServiceClient.prototype.sendDiagnosticsQuery =
       '/base.DiagnosticsService/SendDiagnosticsQuery',
       request,
       metadata || {},
-      methodInfo_DiagnosticsService_SendDiagnosticsQuery,
+      methodDescriptor_DiagnosticsService_SendDiagnosticsQuery,
       callback);
 };
 
@@ -117,17 +140,15 @@ proto.base.DiagnosticsServiceClient.prototype.sendDiagnosticsQuery =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.base.DiagnosticsResponse>}
- *     The XHR Node Readable Stream
+ *     Promise that resolves to the response
  */
 proto.base.DiagnosticsServicePromiseClient.prototype.sendDiagnosticsQuery =
     function(request, metadata) {
-  var _this = this;
-  return new Promise(function (resolve, reject) {
-    _this.delegateClient_.sendDiagnosticsQuery(
-      request, metadata, function (error, response) {
-        error ? reject(error) : resolve(response);
-      });
-  });
+  return this.client_.unaryCall(this.hostname_ +
+      '/base.DiagnosticsService/SendDiagnosticsQuery',
+      request,
+      metadata || {},
+      methodDescriptor_DiagnosticsService_SendDiagnosticsQuery);
 };
 
 
