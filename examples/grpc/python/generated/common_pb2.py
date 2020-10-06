@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04\x62\x61se\"\x07\n\x05\x45mpty\"\x16\n\x08\x43lientId\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x08SignalId\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"J\n\nSignalInfo\x12\x1a\n\x02id\x18\x01 \x01(\x0b\x32\x0e.base.SignalId\x12 \n\x08metaData\x18\x02 \x01(\x0b\x32\x0e.base.MetaData\"d\n\x08MetaData\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x0b\n\x03max\x18\x05 \x01(\x05\x12\x0b\n\x03min\x18\x06 \x01(\x05\x12\x0c\n\x04unit\x18\x07 \x01(\t\x12\x0c\n\x04size\x18\x08 \x01(\x05\x12\r\n\x05isRaw\x18\t \x01(\x08\"\x19\n\tNameSpace\x12\x0c\n\x04name\x18\x01 \x01(\t\"~\n\rConfiguration\x12&\n\x0bnetworkInfo\x18\x01 \x03(\x0b\x32\x11.base.NetworkInfo\x12\x16\n\x0einterfacesJson\x18\x02 \x01(\x0c\x12\x16\n\x0elicenseEndDate\x18\x03 \x01(\t\x12\x15\n\rpublicAddress\x18\x04 \x01(\t\"T\n\x0bNetworkInfo\x12\"\n\tnamespace\x18\x01 \x01(\x0b\x32\x0f.base.NameSpace\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"V\n\tFrameInfo\x12$\n\nsignalInfo\x18\x01 \x01(\x0b\x32\x10.base.SignalInfo\x12#\n\tchildInfo\x18\x02 \x03(\x0b\x32\x10.base.SignalInfo\"(\n\x06\x46rames\x12\x1e\n\x05\x66rame\x18\x01 \x03(\x0b\x32\x0f.base.FrameInfob\x06proto3')
+  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04\x62\x61se\"\x07\n\x05\x45mpty\"\x16\n\x08\x43lientId\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x08SignalId\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"J\n\nSignalInfo\x12\x1a\n\x02id\x18\x01 \x01(\x0b\x32\x0e.base.SignalId\x12 \n\x08metaData\x18\x02 \x01(\x0b\x32\x0e.base.MetaData\"d\n\x08MetaData\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x0b\n\x03max\x18\x05 \x01(\x05\x12\x0b\n\x03min\x18\x06 \x01(\x05\x12\x0c\n\x04unit\x18\x07 \x01(\t\x12\x0c\n\x04size\x18\x08 \x01(\x05\x12\r\n\x05isRaw\x18\t \x01(\x08\"\x19\n\tNameSpace\x12\x0c\n\x04name\x18\x01 \x01(\t\"T\n\x0bNetworkInfo\x12\"\n\tnamespace\x18\x01 \x01(\x0b\x32\x0f.base.NameSpace\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"V\n\tFrameInfo\x12$\n\nsignalInfo\x18\x01 \x01(\x0b\x32\x10.base.SignalInfo\x12#\n\tchildInfo\x18\x02 \x03(\x0b\x32\x10.base.SignalInfo\"(\n\x06\x46rames\x12\x1e\n\x05\x66rame\x18\x01 \x03(\x0b\x32\x0f.base.FrameInfob\x06proto3')
 )
 
 
@@ -254,58 +254,6 @@ _NAMESPACE = _descriptor.Descriptor(
 )
 
 
-_CONFIGURATION = _descriptor.Descriptor(
-  name='Configuration',
-  full_name='base.Configuration',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='networkInfo', full_name='base.Configuration.networkInfo', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='interfacesJson', full_name='base.Configuration.interfacesJson', index=1,
-      number=2, type=12, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b(""),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='licenseEndDate', full_name='base.Configuration.licenseEndDate', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='publicAddress', full_name='base.Configuration.publicAddress', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=322,
-  serialized_end=448,
-)
-
-
 _NETWORKINFO = _descriptor.Descriptor(
   name='NetworkInfo',
   full_name='base.NetworkInfo',
@@ -346,8 +294,8 @@ _NETWORKINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=450,
-  serialized_end=534,
+  serialized_start=322,
+  serialized_end=406,
 )
 
 
@@ -384,8 +332,8 @@ _FRAMEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=536,
-  serialized_end=622,
+  serialized_start=408,
+  serialized_end=494,
 )
 
 
@@ -415,14 +363,13 @@ _FRAMES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=624,
-  serialized_end=664,
+  serialized_start=496,
+  serialized_end=536,
 )
 
 _SIGNALID.fields_by_name['namespace'].message_type = _NAMESPACE
 _SIGNALINFO.fields_by_name['id'].message_type = _SIGNALID
 _SIGNALINFO.fields_by_name['metaData'].message_type = _METADATA
-_CONFIGURATION.fields_by_name['networkInfo'].message_type = _NETWORKINFO
 _NETWORKINFO.fields_by_name['namespace'].message_type = _NAMESPACE
 _FRAMEINFO.fields_by_name['signalInfo'].message_type = _SIGNALINFO
 _FRAMEINFO.fields_by_name['childInfo'].message_type = _SIGNALINFO
@@ -433,7 +380,6 @@ DESCRIPTOR.message_types_by_name['SignalId'] = _SIGNALID
 DESCRIPTOR.message_types_by_name['SignalInfo'] = _SIGNALINFO
 DESCRIPTOR.message_types_by_name['MetaData'] = _METADATA
 DESCRIPTOR.message_types_by_name['NameSpace'] = _NAMESPACE
-DESCRIPTOR.message_types_by_name['Configuration'] = _CONFIGURATION
 DESCRIPTOR.message_types_by_name['NetworkInfo'] = _NETWORKINFO
 DESCRIPTOR.message_types_by_name['FrameInfo'] = _FRAMEINFO
 DESCRIPTOR.message_types_by_name['Frames'] = _FRAMES
@@ -480,13 +426,6 @@ NameSpace = _reflection.GeneratedProtocolMessageType('NameSpace', (_message.Mess
   # @@protoc_insertion_point(class_scope:base.NameSpace)
   })
 _sym_db.RegisterMessage(NameSpace)
-
-Configuration = _reflection.GeneratedProtocolMessageType('Configuration', (_message.Message,), {
-  'DESCRIPTOR' : _CONFIGURATION,
-  '__module__' : 'common_pb2'
-  # @@protoc_insertion_point(class_scope:base.Configuration)
-  })
-_sym_db.RegisterMessage(Configuration)
 
 NetworkInfo = _reflection.GeneratedProtocolMessageType('NetworkInfo', (_message.Message,), {
   'DESCRIPTOR' : _NETWORKINFO,

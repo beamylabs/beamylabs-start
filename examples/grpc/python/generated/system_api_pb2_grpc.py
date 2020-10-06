@@ -18,7 +18,7 @@ class SystemServiceStub(object):
     self.GetConfiguration = channel.unary_unary(
         '/base.SystemService/GetConfiguration',
         request_serializer=common__pb2.Empty.SerializeToString,
-        response_deserializer=common__pb2.Configuration.FromString,
+        response_deserializer=system__api__pb2.Configuration.FromString,
         )
     self.ListSignals = channel.unary_unary(
         '/base.SystemService/ListSignals',
@@ -87,7 +87,7 @@ def add_SystemServiceServicer_to_server(servicer, server):
       'GetConfiguration': grpc.unary_unary_rpc_method_handler(
           servicer.GetConfiguration,
           request_deserializer=common__pb2.Empty.FromString,
-          response_serializer=common__pb2.Configuration.SerializeToString,
+          response_serializer=system__api__pb2.Configuration.SerializeToString,
       ),
       'ListSignals': grpc.unary_unary_rpc_method_handler(
           servicer.ListSignals,
