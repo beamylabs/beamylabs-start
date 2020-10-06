@@ -80,20 +80,6 @@ defmodule Base.NameSpace do
   field :name, 1, type: :string
 end
 
-defmodule Base.Configuration do
-  @moduledoc false
-  use Protobuf, syntax: :proto3
-
-  @type t :: %__MODULE__{
-          networkInfo: [Base.NetworkInfo.t()],
-          interfacesJson: binary
-        }
-  defstruct [:networkInfo, :interfacesJson]
-
-  field :networkInfo, 1, repeated: true, type: Base.NetworkInfo
-  field :interfacesJson, 2, type: :bytes
-end
-
 defmodule Base.NetworkInfo do
   @moduledoc false
   use Protobuf, syntax: :proto3
