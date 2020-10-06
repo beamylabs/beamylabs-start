@@ -1,18 +1,6 @@
 {
-  "default_namespace": "VirtualCanInterface",
+  "default_namespace": "UDPCanInterface",
   "chains": [
-    {
-       "type" : "can",
-       "namespace" : "VirtualCanInterface",
-       "device_name" : "vcan0",
-       "human_file" : "human/benchc.json"
-    },
-    {
-      "type": "can",
-      "namespace": "DiagnosticsCanInterface",
-      "device_name": "can0",
-      "dbc_file": "can/diagnostics.dbc"
-    },
     {
       "device_name": "virtual",
       "namespace": "VirtualInterface",
