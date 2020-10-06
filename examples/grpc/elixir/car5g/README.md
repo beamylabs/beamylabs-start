@@ -29,5 +29,5 @@ mix run --no-halt
 
 from this folder
 ```bash
-protoc -I ../../../../apps/grpc_service/proto_files/  --elixir_out=plugins=grpc:./lib/generated_proto_files ../../../../apps/grpc_service/proto_files/*.proto
+protoc -I ../../../../proto_files/  --elixir_out=plugins=grpc:./lib/generated_proto_files ../../../../proto_files/*.proto
 ```
