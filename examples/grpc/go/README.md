@@ -17,7 +17,7 @@ Follow this steps before you continue
 	```
 4. Include the generated grpc proto files in the folder proto_files, the go hook files (*.pb.go) is also generated in the folder proto_files.
 	```
-	protoc -I ../../../apps/grpc_service/proto_files ../../../apps/grpc_service/proto_files/*.proto  --go_out=plugins=grpc:. proto_files/*.proto
+	protoc -I ../../../apps/grpc_service/proto_files ../../../apps/grpc_service/proto_files/*.proto  --go_out=plugins=grpc:./timeSync/proto_files/
 	```
 
 ## Go and the signal broker
