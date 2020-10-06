@@ -8,7 +8,7 @@ inspiration from
 https://github.com/grpc/grpc-web/ and https://hackernoon.com/interface-grpc-with-web-using-grpc-web-and-envoy-possibly-the-best-way-forward-3ae9671af67
 
 
-proto files are available in: [/signalbroker-server/apps/grpc_service/proto_files/](https://github.com/beamylabs/signalbroker-server/tree/master/apps/grpc_service/proto_files)
+proto files are available in: [proto_files/](/proto_files)
 
 to re-generate files - or just grab the files from the generated folder
 
@@ -20,5 +20,5 @@ to re-generate files - or just grab the files from the generated folder
 Run the command from "this" directory!
 
 ```bash
-protoc ../../../apps/grpc_service/proto_files/* -I../../../apps/grpc_service/proto_files --js_out=import_style=commonjs:generated --grpc-web_out=import_style=commonjs,mode=grpcwebtext:generated
+protoc ../../../proto_files/* -I../../../proto_files --js_out=import_style=commonjs:generated --grpc-web_out=import_style=commonjs,mode=grpcwebtext:generated
 ```

@@ -8,7 +8,7 @@ inspiration from
 https://grpc.io/docs/tutorials/basic/python.html
 
 
-proto files are available in: [signal_server/apps/grpc_service/proto_files/](/apps/grpc_service/proto_files/)
+proto files are available in: [proto_files](/proto_files/)
 
 ## Setup
 ```bash
@@ -18,7 +18,7 @@ pip install grpcio-tools
 to re-generate files (already generated in the [generated](generated/) folder)
 
 ```bash
-python -m grpc_tools.protoc -I../../../apps/grpc_service/proto_files --python_out=./generated --grpc_python_out=./generated ../../../apps/grpc_service/proto_files/*
+python -m grpc_tools.protoc -I../../../proto_files --python_out=./generated --grpc_python_out=./generated ../../../proto_files/*
 ```
 
 ## Run

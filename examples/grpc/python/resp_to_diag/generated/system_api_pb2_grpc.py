@@ -18,7 +18,7 @@ class SystemServiceStub(object):
     self.GetConfiguration = channel.unary_unary(
         '/base.SystemService/GetConfiguration',
         request_serializer=common__pb2.Empty.SerializeToString,
-        response_deserializer=common__pb2.Configuration.FromString,
+        response_deserializer=system__api__pb2.Configuration.FromString,
         )
     self.ListSignals = channel.unary_unary(
         '/base.SystemService/ListSignals',
@@ -75,8 +75,8 @@ class SystemServiceServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def ReloadConfiguration(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """will not return until new configuration is tested an active, make sure to set timeout to a large value. (fibex on pi > 50s)
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
@@ -87,7 +87,7 @@ def add_SystemServiceServicer_to_server(servicer, server):
       'GetConfiguration': grpc.unary_unary_rpc_method_handler(
           servicer.GetConfiguration,
           request_deserializer=common__pb2.Empty.FromString,
-          response_serializer=common__pb2.Configuration.SerializeToString,
+          response_serializer=system__api__pb2.Configuration.SerializeToString,
       ),
       'ListSignals': grpc.unary_unary_rpc_method_handler(
           servicer.ListSignals,

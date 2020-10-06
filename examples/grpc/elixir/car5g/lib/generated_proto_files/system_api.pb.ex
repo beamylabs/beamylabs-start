@@ -1,3 +1,21 @@
+defmodule Base.Configuration do
+  @moduledoc false
+  use Protobuf, syntax: :proto3
+
+  @type t :: %__MODULE__{
+          networkInfo: [Base.NetworkInfo.t()],
+          interfacesJson: binary,
+          licenseEndDate: String.t(),
+          publicAddress: String.t()
+        }
+  defstruct [:networkInfo, :interfacesJson, :licenseEndDate, :publicAddress]
+
+  field :networkInfo, 1, repeated: true, type: Base.NetworkInfo
+  field :interfacesJson, 2, type: :bytes
+  field :licenseEndDate, 3, type: :string
+  field :publicAddress, 4, type: :string
+end
+
 defmodule Base.ReloadMessage do
   @moduledoc false
   use Protobuf, syntax: :proto3

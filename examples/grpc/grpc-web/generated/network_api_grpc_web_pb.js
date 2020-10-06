@@ -7,6 +7,10 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 
+/* eslint-disable */
+// @ts-nocheck
+
+
 
 const grpc = {};
 grpc.web = require('grpc-web');
@@ -39,16 +43,6 @@ proto.base.NetworkServiceClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -66,12 +60,38 @@ proto.base.NetworkServicePromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!proto.base.NetworkServiceClient} The delegate callback based client
+   * @private @const {!grpc.web.GrpcWebClientBase} The client
    */
-  this.delegateClient_ = new proto.base.NetworkServiceClient(
-      hostname, credentials, options);
+  this.client_ = new grpc.web.GrpcWebClientBase(options);
+
+  /**
+   * @private @const {string} The hostname
+   */
+  this.hostname_ = hostname;
 
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.SubscriberConfig,
+ *   !proto.base.Signals>}
+ */
+const methodDescriptor_NetworkService_SubscribeToSignals = new grpc.web.MethodDescriptor(
+  '/base.NetworkService/SubscribeToSignals',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.base.SubscriberConfig,
+  proto.base.Signals,
+  /**
+   * @param {!proto.base.SubscriberConfig} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.base.Signals.deserializeBinary
+);
 
 
 /**
@@ -82,7 +102,10 @@ proto.base.NetworkServicePromiseClient =
  */
 const methodInfo_NetworkService_SubscribeToSignals = new grpc.web.AbstractClientBase.MethodInfo(
   proto.base.Signals,
-  /** @param {!proto.base.SubscriberConfig} request */
+  /**
+   * @param {!proto.base.SubscriberConfig} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -102,8 +125,8 @@ proto.base.NetworkServiceClient.prototype.subscribeToSignals =
   return this.client_.serverStreaming(this.hostname_ +
       '/base.NetworkService/SubscribeToSignals',
       request,
-      metadata,
-      methodInfo_NetworkService_SubscribeToSignals);
+      metadata || {},
+      methodDescriptor_NetworkService_SubscribeToSignals);
 };
 
 
@@ -116,12 +139,34 @@ proto.base.NetworkServiceClient.prototype.subscribeToSignals =
  */
 proto.base.NetworkServicePromiseClient.prototype.subscribeToSignals =
     function(request, metadata) {
-  return this.delegateClient_.client_.serverStreaming(this.delegateClient_.hostname_ +
+  return this.client_.serverStreaming(this.hostname_ +
       '/base.NetworkService/SubscribeToSignals',
       request,
-      metadata,
-      methodInfo_NetworkService_SubscribeToSignals);
+      metadata || {},
+      methodDescriptor_NetworkService_SubscribeToSignals);
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.PublisherConfig,
+ *   !proto.base.Empty>}
+ */
+const methodDescriptor_NetworkService_PublishSignals = new grpc.web.MethodDescriptor(
+  '/base.NetworkService/PublishSignals',
+  grpc.web.MethodType.UNARY,
+  proto.base.PublisherConfig,
+  common_pb.Empty,
+  /**
+   * @param {!proto.base.PublisherConfig} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  common_pb.Empty.deserializeBinary
+);
 
 
 /**
@@ -132,7 +177,10 @@ proto.base.NetworkServicePromiseClient.prototype.subscribeToSignals =
  */
 const methodInfo_NetworkService_PublishSignals = new grpc.web.AbstractClientBase.MethodInfo(
   common_pb.Empty,
-  /** @param {!proto.base.PublisherConfig} request */
+  /**
+   * @param {!proto.base.PublisherConfig} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -156,7 +204,7 @@ proto.base.NetworkServiceClient.prototype.publishSignals =
       '/base.NetworkService/PublishSignals',
       request,
       metadata || {},
-      methodInfo_NetworkService_PublishSignals,
+      methodDescriptor_NetworkService_PublishSignals,
       callback);
 };
 
@@ -167,18 +215,38 @@ proto.base.NetworkServiceClient.prototype.publishSignals =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.base.Empty>}
- *     The XHR Node Readable Stream
+ *     Promise that resolves to the response
  */
 proto.base.NetworkServicePromiseClient.prototype.publishSignals =
     function(request, metadata) {
-  var _this = this;
-  return new Promise(function (resolve, reject) {
-    _this.delegateClient_.publishSignals(
-      request, metadata, function (error, response) {
-        error ? reject(error) : resolve(response);
-      });
-  });
+  return this.client_.unaryCall(this.hostname_ +
+      '/base.NetworkService/PublishSignals',
+      request,
+      metadata || {},
+      methodDescriptor_NetworkService_PublishSignals);
 };
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.base.SignalIds,
+ *   !proto.base.Signals>}
+ */
+const methodDescriptor_NetworkService_ReadSignals = new grpc.web.MethodDescriptor(
+  '/base.NetworkService/ReadSignals',
+  grpc.web.MethodType.UNARY,
+  proto.base.SignalIds,
+  proto.base.Signals,
+  /**
+   * @param {!proto.base.SignalIds} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.base.Signals.deserializeBinary
+);
 
 
 /**
@@ -189,7 +257,10 @@ proto.base.NetworkServicePromiseClient.prototype.publishSignals =
  */
 const methodInfo_NetworkService_ReadSignals = new grpc.web.AbstractClientBase.MethodInfo(
   proto.base.Signals,
-  /** @param {!proto.base.SignalIds} request */
+  /**
+   * @param {!proto.base.SignalIds} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -213,7 +284,7 @@ proto.base.NetworkServiceClient.prototype.readSignals =
       '/base.NetworkService/ReadSignals',
       request,
       metadata || {},
-      methodInfo_NetworkService_ReadSignals,
+      methodDescriptor_NetworkService_ReadSignals,
       callback);
 };
 
@@ -224,17 +295,15 @@ proto.base.NetworkServiceClient.prototype.readSignals =
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.base.Signals>}
- *     The XHR Node Readable Stream
+ *     Promise that resolves to the response
  */
 proto.base.NetworkServicePromiseClient.prototype.readSignals =
     function(request, metadata) {
-  var _this = this;
-  return new Promise(function (resolve, reject) {
-    _this.delegateClient_.readSignals(
-      request, metadata, function (error, response) {
-        error ? reject(error) : resolve(response);
-      });
-  });
+  return this.client_.unaryCall(this.hostname_ +
+      '/base.NetworkService/ReadSignals',
+      request,
+      metadata || {},
+      methodDescriptor_NetworkService_ReadSignals);
 };
 
 
