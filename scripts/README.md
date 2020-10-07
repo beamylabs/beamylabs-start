@@ -9,5 +9,7 @@ sudo ./install-service
 
 ## Debug
 ```
+sudo systemctl start beamylabs-upgrade.service  
 sudo systemctl status beamylabs-upgrade.service  
+sudo systemctl stop beamylabs-upgrade.service  
 ```
