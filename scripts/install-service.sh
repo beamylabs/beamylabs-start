@@ -1,4 +1,5 @@
 #!/bin/bash
+#run this as sudo
 cp beamylabs-upgrade.service /etc/systemd/system/
-sudo systemctl start beamylabs-upgrade
-sudo systemctl enable beamylabs-upgrade
+systemctl start beamylabs-upgrade
+systemctl enable beamylabs-upgrade
