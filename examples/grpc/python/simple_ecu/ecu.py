@@ -97,7 +97,7 @@ def publish_on_timer(client_id, stub, signal, pause):
     global counter
     while True:
         signal_with_payload = network_api_pb2.Signal(id = signal)
-        signal_with_payload.integer = 1
+        signal_with_payload.integer = counter % 100
         publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=[signal_with_payload]), frequency = 0)
         try:
                 stub.PublishSignals(publisher_info)
@@ -107,14 +107,23 @@ def publish_on_timer(client_id, stub, signal, pause):
         counter = counter + 1
 
 
-
+def read_on_timer(client_id, stub, signal, pause):
+    while True:
+        read_info = network_api_pb2.SignalIds(signalId=[signal])
+        try:
+                signals = stub.ReadSignals(read_info)
+        except grpc._channel._Rendezvous as err:
+                print(err)
+        print("signal read is ", signals, signals.signal[0].integer)
+        time.sleep(pause)
 
 
 def run():
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+    channel = grpc.insecure_channel('192.168.1.33:50051')
+#     channel = grpc.insecure_channel('192.168.4.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
-    client_id = common_pb2.ClientId(id="app_identifier")
+    
 
 # If you need to change the id of the req/resp modify here configuration/can/diagnostics.dbc 
 #     diag_frame_req = common_pb2.SignalId(name="DiagReqFrame_2016", namespace=common_pb2.NameSpace(name = "DiagnosticsCanInterface"))
@@ -123,10 +132,21 @@ def run():
     upload_folder(system_stub, "configuration")
     reload_configuration(system_stub)
 
-    # write some signal at a given intervall
+    # let ecu_A write value at some given intervall
     
-    signal = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "UDPCanInterface"))
-    publish_on_timer(client_id, network_stub, signal, 0.1)
+    client_id_ecu_A = common_pb2.ClientId(id="ecu_A")
+    signal_on_ecu_A = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A"))
+
+    ecu_A_thread = Thread(target = publish_on_timer, args = (client_id_ecu_A, network_stub, signal_on_ecu_A, 1, ))
+    ecu_A_thread.start()
+
+    # let ecu_B read the value muliply by 2 and send back result
+    client_id_ecu_B = common_pb2.ClientId(id="ecu_B")
+    signal_on_ecu_B = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_B"))
+    ecu_B_thread = Thread(target = read_on_timer, args = (client_id_ecu_B, network_stub, signal_on_ecu_B, 1, ))
+    ecu_B_thread.start()
+
+     
 
 #     print("-------------- Subscribe to diag_req, on request submit resp_frame --------------")
 #     subscribe_to_diag(client_id, network_stub, diag_frame_req, diag_frame_resp)

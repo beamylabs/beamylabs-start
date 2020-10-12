@@ -19,13 +19,23 @@
       "type": "virtual"
     },
     {
-      "namespace": "UDPCanInterface",
+      "namespace": "ecu_A",
       "type": "udp",
       "human_file": "human/benchc.json",
-      "device_name": "udp2",
+      "device_name": "ecu_A",
       "server_port": 2001,
       "target_host": "127.0.0.1",
       "target_port": 2000,
+      "fixed_payload_size": 8
+    },
+    {
+      "namespace": "ecu_B",
+      "type": "udp",
+      "human_file": "human/benchc.json",
+      "device_name": "ecu_B",
+      "server_port": 2000,
+      "target_host": "127.0.0.1",
+      "target_port": 2001,
       "fixed_payload_size": 8
     }
   ],
