@@ -87,24 +87,88 @@ def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
             print(response)   
             print(binascii.hexlify(response.signal[0].raw))
             # here we could switch on the response.signal[0].raw which contains service id and did.     
-            publish_signals(client_id, stub, diag_frame_resp)
+            publish_signals(client_id, stub, diag_frame_resp, )
     except grpc._channel._Rendezvous as err:
             print(err)
 
-counter = 0
+increasing_counter = 0
 
-def publish_on_timer(client_id, stub, signal, pause):
-    global counter
+def publish_signal(client_id, stub, signal, value):
+    signal_with_payload = network_api_pb2.Signal(id = signal)
+    signal_with_payload.integer = value
+    publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=[signal_with_payload]), frequency = 0)
+    try:
+        stub.PublishSignals(publisher_info)
+    except grpc._channel._Rendezvous as err:
+        print(err)
+
+
+# def publish_on_timer(client_id, stub, signal, pause):
+#     global counter
+#     while True:
+        
+#         signal_with_payload = network_api_pb2.Signal(id = signal)
+#         signal_with_payload.integer = counter % 100
+#         publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=[signal_with_payload]), frequency = 0)
+#         try:
+#                 stub.PublishSignals(publisher_info)
+#         except grpc._channel._Rendezvous as err:
+#                 print(err)
+#         time.sleep(pause)
+#         counter = counter + 1
+
+
+# ecu_A publish some value (counter), read other value (counter_times_2) (which is published by ecu_B)
+def ecu_A(stub, pause):
     while True:
-        signal_with_payload = network_api_pb2.Signal(id = signal)
-        signal_with_payload.integer = counter % 100
-        publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=[signal_with_payload]), frequency = 0)
-        try:
-                stub.PublishSignals(publisher_info)
-        except grpc._channel._Rendezvous as err:
-                print(err)
+        global increasing_counter
+        namespace = "ecu_A"
+        clientId = common_pb2.ClientId(id="id_ecu_A")
+        counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
+        publish_signal(clientId, stub, counter, increasing_counter)
+        
+        counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
+        read_counter_times_2 = read_signal(stub, counter_times_2)
+
+        print("counter_times_2 is ", read_counter_times_2.signal[0].integer)
+        increasing_counter = increasing_counter + 1
         time.sleep(pause)
-        counter = counter + 1
+
+        # read the other signal, print value
+
+# read some value (counter) published by ecu_a, double and send value (counter_times_2)
+def ecu_B(stub, pause):
+    while True:
+        namespace = "ecu_B"
+        client_id = common_pb2.ClientId(id="id_ecu_B")
+        counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
+        read_counter = read_signal(stub, counter)
+        print("counter is ", read_counter.signal[0].integer)
+
+        counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
+        publish_signal(client_id, stub, counter_times_2, read_counter.signal[0].integer * 2)        
+        time.sleep(pause)
+
+        # double the value and publish
+
+
+        # signal_counter_ecu_A = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
+        # # counter = 
+
+        # publish_signal(client_id_ecu_A, stub, signal_counter_ecu_A, counter)
+        # counter = counter + 1
+        # time.sleep(pause)
+
+        # signal_double_ecu_B = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
+        # double_signal = read_signal(stub, signal_double_ecu_B)
+
+        # print("Double signal is ", double_signal.signal[0].integer)
+        # read the other signal, print value
+
+        
+def read_signal(stub, signal):
+    read_info = network_api_pb2.SignalIds(signalId=[signal])
+    return stub.ReadSignals(read_info)
 
 
 def read_on_timer(client_id, stub, signal, pause):
@@ -134,17 +198,22 @@ def run():
 
     # let ecu_A write value at some given intervall
     
-    client_id_ecu_A = common_pb2.ClientId(id="ecu_A")
-    signal_on_ecu_A = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A"))
-
-    ecu_A_thread = Thread(target = publish_on_timer, args = (client_id_ecu_A, network_stub, signal_on_ecu_A, 1, ))
+#     client_id_ecu_A = common_pb2.ClientId(id="ecu_A")
+#     signal_on_ecu_A = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A"))
+    ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
     ecu_A_thread.start()
 
-    # let ecu_B read the value muliply by 2 and send back result
-    client_id_ecu_B = common_pb2.ClientId(id="ecu_B")
-    signal_on_ecu_B = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_B"))
-    ecu_B_thread = Thread(target = read_on_timer, args = (client_id_ecu_B, network_stub, signal_on_ecu_B, 1, ))
+    ecu_B_thread  = Thread(target = ecu_B, args = (network_stub, 1,))
     ecu_B_thread.start()
+
+#     ecu_A_thread = Thread(target = publish_on_timer, args = (client_id_ecu_A, network_stub, signal_on_ecu_A, 1, ))
+#     ecu_A_thread.start()
+
+    # let ecu_B read the value muliply by 2 and send back result
+#     client_id_ecu_B = common_pb2.ClientId(id="ecu_B")
+#     signal_on_ecu_B = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_B"))
+#     ecu_B_thread = Thread(target = read_on_timer, args = (client_id_ecu_B, network_stub, signal_on_ecu_B, 1, ))
+#     ecu_B_thread.start()
 
      
 
