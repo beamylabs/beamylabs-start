@@ -68,6 +68,9 @@ def reload_configuration(system_stub):
 
 ##################### END BOILERPLATE ####################################################
 
+def read_signal(stub, signal):
+    read_info = network_api_pb2.SignalIds(signalId=[signal])
+    return stub.ReadSignals(read_info)
 
 def publish_signal(client_id, stub, signal, value):
     signal_with_payload = network_api_pb2.Signal(id = signal)
@@ -97,7 +100,7 @@ def ecu_A(stub, pause):
         time.sleep(pause)
 
 # read some value (counter) published by ecu_a, double and send value (counter_times_2)
-def ecu_B(stub, pause):
+def ecu_B_read(stub, pause):
     while True:
         namespace = "ecu_B"
         client_id = common_pb2.ClientId(id="id_ecu_B")
@@ -108,11 +111,30 @@ def ecu_B(stub, pause):
         counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
         publish_signal(client_id, stub, counter_times_2, read_counter.signal[0].integer * 2)        
         time.sleep(pause)
-        
-def read_signal(stub, signal):
-    read_info = network_api_pb2.SignalIds(signalId=[signal])
-    return stub.ReadSignals(read_info)
 
+def ecu_B_subscribe(stub):
+    namespace = "ecu_B"
+    client_id = common_pb2.ClientId(id="id_ecu_B")
+    counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
+
+    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=False)
+    try:
+        for subs_counter in stub.SubscribeToSignals(sub_info):
+            print("ecu_B, counter is ", subs_counter.signal[0].integer)
+            counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
+            publish_signal(client_id, stub, counter_times_2, subs_counter.signal[0].integer * 2)    
+            
+    except grpc._channel._Rendezvous as err:
+            print(err)
+
+    
+    
+    read_counter = read_signal(stub, counter)
+    print("ecu_B, counter is ", read_counter.signal[0].integer)
+
+    counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
+    publish_signal(client_id, stub, counter_times_2, read_counter.signal[0].integer * 2)        
+    time.sleep(pause)
 
 def read_on_timer(client_id, stub, signal, pause):
     while True:
@@ -137,8 +159,11 @@ def run():
     ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
     ecu_A_thread.start()
 
-    ecu_B_thread  = Thread(target = ecu_B, args = (network_stub, 1,))
-    ecu_B_thread.start()
+    ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
+    ecu_B_thread_read.start()
+
+#     ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
+#     ecu_B_thread_subscribe.start()
 
 
 if __name__ == '__main__':
