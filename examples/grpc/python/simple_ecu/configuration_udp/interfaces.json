@@ -7,16 +7,24 @@
       "type": "virtual"
     },
     {
-      "type": "can",
       "namespace": "ecu_A",
-      "device_name": "can0",
-      "human_file": "human/benchc.json"
+      "type": "udp",
+      "human_file": "human/benchc.json",
+      "device_name": "ecu_A",
+      "server_port": 2001,
+      "target_host": "127.0.0.1",
+      "target_port": 2000,
+      "fixed_payload_size": 8
     },
     {
-      "type": "can",
       "namespace": "ecu_B",
-      "device_name": "can1",
-      "human_file": "human/benchc.json"
+      "type": "udp",
+      "human_file": "human/benchc.json",
+      "device_name": "ecu_B",
+      "server_port": 2000,
+      "target_host": "127.0.0.1",
+      "target_port": 2001,
+      "fixed_payload_size": 8
     }
   ],
   "gateway": {

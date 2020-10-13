@@ -130,6 +130,7 @@ def run():
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     
+#     upload_folder(system_stub, "configuration_udp")
     upload_folder(system_stub, "configuration")
     reload_configuration(system_stub)
 
