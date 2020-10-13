@@ -92,8 +92,8 @@ def ecu_A(stub, pause):
         counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
         read_counter_times_2 = read_signal(stub, counter_times_2)
 
-        print("counter_times_2 is ", read_counter_times_2.signal[0].integer)
-        increasing_counter = increasing_counter + 1
+        print("ecu_A, counter_times_2 is ", read_counter_times_2.signal[0].integer)
+        increasing_counter = (increasing_counter + 1) % 10
         time.sleep(pause)
 
 # read some value (counter) published by ecu_a, double and send value (counter_times_2)
@@ -103,7 +103,7 @@ def ecu_B(stub, pause):
         client_id = common_pb2.ClientId(id="id_ecu_B")
         counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
         read_counter = read_signal(stub, counter)
-        print("counter is ", read_counter.signal[0].integer)
+        print("ecu_B, counter is ", read_counter.signal[0].integer)
 
         counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
         publish_signal(client_id, stub, counter_times_2, read_counter.signal[0].integer * 2)        
