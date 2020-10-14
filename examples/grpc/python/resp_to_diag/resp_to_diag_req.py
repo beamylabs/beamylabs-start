@@ -92,7 +92,7 @@ def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
 
 
 def run():
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('192.168.1.33:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     client_id = common_pb2.ClientId(id="app_identifier")
