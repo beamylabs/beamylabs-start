@@ -35,6 +35,7 @@ services:
   signal-broker:
     tty: true
     restart: always
+    privileged: true
     # Build and name the SB image
     # build:
     #   context: ./
