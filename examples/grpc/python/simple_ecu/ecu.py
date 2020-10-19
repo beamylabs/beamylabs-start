@@ -127,15 +127,6 @@ def ecu_B_subscribe(stub):
     except grpc._channel._Rendezvous as err:
             print(err)
 
-    
-    
-    read_counter = read_signal(stub, counter)
-    print("ecu_B, counter is ", read_counter.signal[0].integer)
-
-    counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-    publish_signal(client_id, stub, counter_times_2, read_counter.signal[0].integer * 2)        
-    time.sleep(pause)
-
 def read_on_timer(client_id, stub, signal, pause):
     while True:
         read_info = network_api_pb2.SignalIds(signalId=[signal])
