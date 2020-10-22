@@ -17,6 +17,18 @@
       "namespace": "ecu_B",
       "device_name": "can1",
       "human_file": "human/benchc.json"
+    },
+    {
+      "type": "can",
+      "namespace": "test_network_vcan0",
+      "device_name": "vcan0",
+      "human_file": "can/test.dbc"
+    },
+    {
+      "type": "can",
+      "namespace": "diagnstics_vcan0",
+      "device_name": "vcan1",
+      "human_file": "can/diagnostics.dbc"
     }
   ],
   "gateway": {
