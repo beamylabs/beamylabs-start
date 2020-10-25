@@ -53,4 +53,4 @@ services:
     environment:
       - REPLACE_OS_VARS=true
       - COOKIE=test
-      - NODENAME=master@${SIGNALBROKER_IP}.com
+      - NODENAME=node@${SIGNALBROKER_IP}
