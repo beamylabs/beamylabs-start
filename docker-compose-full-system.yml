@@ -53,4 +53,4 @@ services:
     environment:
       - REPLACE_OS_VARS=true
       - COOKIE=test
-      - NODENAME=node@${SIGNALBROKER_IP}
+      - NODENAME=node@${NODE_NAME:-notset.com}

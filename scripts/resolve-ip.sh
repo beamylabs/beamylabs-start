@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 
-defaultip="192.168.4.1"
+# defaultip="192.168.4.1"
+defaultip=""
 
 iface="${1:-}"
 

@@ -5,7 +5,7 @@
 Make sure you have `docker` and `docker-compose` installed, then
 
 ```bash
-SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml up
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml up
 ```
 
 > `$(scripts/resolve-ip.sh eth0)` assumes that the interface for your main
@@ -30,13 +30,13 @@ like `beamy-cafe42`, the address should be `http://192.168.4.1:8080/`.
 Point your webbrowser to the hosting machine http://hosting-ip:8080/ example http://192.168.4.1:8080/ 
 
 ```bash
-SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml down
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml down
 ```
 
 ## Upgrade
 
 ```bash
-SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml pull
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1docker-compose -f docker-compose-full-system.yml pull
 ```
 
 ## Inspiration
