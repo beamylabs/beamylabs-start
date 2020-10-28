@@ -2,26 +2,14 @@
   "default_namespace": "VirtualInterface",
   "chains": [
     {
-      "type": "can",
-      "namespace": "VirtualCanInterface",
-      "device_name": "vcan0",
-      "human_file": "human/benchc.json"
-    },
-    {
-      "type": "can",
-      "namespace": "DiagnosticsCanInterface",
-      "device_name": "can0",
-      "dbc_file": "can/diagnostics.dbc"
-    },
-    {
       "device_name": "virtual",
       "namespace": "VirtualInterface",
       "type": "virtual"
     },
     {
-      "namespace": "UDPCanInterface",
+      "namespace": "DiagnosticsCanInterface",
       "type": "udp",
-      "human_file": "human/benchc.json",
+      "dbc_file": "can/diagnostics.dbc",
       "device_name": "udp2",
       "server_port": 2001,
       "target_host": "127.0.0.1",
