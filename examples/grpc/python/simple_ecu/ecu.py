@@ -86,9 +86,9 @@ increasing_counter = 0
 def ecu_A(stub, pause):
     while True:
         global increasing_counter
-        namespace = "ecu_A"
+        namespace = "DiagnosticsCanInterface"
         clientId = common_pb2.ClientId(id="id_ecu_A")
-        counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
+        counter = common_pb2.SignalId(name="DiagResFrame_2024", namespace=common_pb2.NameSpace(name = namespace))
         publish_signal(clientId, stub, counter, increasing_counter)
         
         # read the other value and output result
@@ -97,12 +97,12 @@ def ecu_A(stub, pause):
 
         print("ecu_A, counter_times_2 is ", read_counter_times_2.signal[0].integer)
         increasing_counter = (increasing_counter + 1) % 10
-        time.sleep(pause)
+        time.sleep(0.1)
 
 # read some value (counter) published by ecu_a, double and send value (counter_times_2)
 def ecu_B_read(stub, pause):
     while True:
-        namespace = "ecu_B"
+        namespace = "DiagnosticsCanInterface"
         client_id = common_pb2.ClientId(id="id_ecu_B")
         counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
         read_counter = read_signal(stub, counter)
@@ -139,19 +139,19 @@ def read_on_timer(client_id, stub, signal, pause):
 
 
 def run():
-    channel = grpc.insecure_channel('192.168.1.33:50051')
+    channel = grpc.insecure_channel('127.0.0.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     
 #     upload_folder(system_stub, "configuration_udp")
-    upload_folder(system_stub, "configuration")
-    reload_configuration(system_stub)
+    # upload_folder(system_stub, "configuration")
+    # reload_configuration(system_stub)
 
     ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
     ecu_A_thread.start()
 
-    ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
-    ecu_B_thread_read.start()
+    # ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
+    # ecu_B_thread_read.start()
 
 #     ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
 #     ecu_B_thread_subscribe.start()
