@@ -17,13 +17,12 @@ import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
 
-
-import hashlib
-import base64
-
 from threading import Thread, Timer
 ##################### START BOILERPLATE ####################################################
 
+import hashlib
+import posixpath
+import ntpath
 
 def get_sha256(file):
         f = open(file,"rb")
@@ -48,7 +47,8 @@ def upload_file(stub, path, dest_path):
      print(sha256)
      file = open(path, "rb")  
 
-     upload_iterator = generate_data(file, dest_path, 1000000, sha256)
+     # make sure path is unix style (necessary for windows, and does no harm om linux)
+     upload_iterator = generate_data(file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256)
      response = stub.UploadFile(upload_iterator)
      print("uploaded", path, response)
 
@@ -139,7 +139,7 @@ def read_on_timer(client_id, stub, signal, pause):
 
 
 def run():
-    channel = grpc.insecure_channel('192.168.1.33:50051')
+    channel = grpc.insecure_channel('127.0.0.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     
