@@ -15,6 +15,24 @@ proto files are available in: [proto_files](/proto_files/)
 pip install grpcio-tools
 ```
 
+## Setup Windows
+use installer [here](https://www.python.org/downloads/release/python-2718/) donwload 2.7 version [link](https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi)
+
+Follow the installer
+> it's recommended to enable "Add python.exe to Path"
+
+Run shell (terminal or powershell) as administrator, install necessary tools via pip
+```
+python -m pip instaLL grpcio-tools
+python -m pip install grpcio-tools protobuf
+```
+Example; from [here](simple_ecu/) run
+```
+python ecy.py
+```
+
+## Re-generate stubs
+
 to re-generate files (already generated in the [generated](generated/) folder)
 
 ```bash
