@@ -67,9 +67,11 @@ def send_udp():
 #             print(err)
 
 
+##################### START BOILERPLATE ####################################################
 
 import hashlib
-import base64
+import posixpath
+import ntpath
 
 def get_sha256(file):
         f = open(file,"rb")
@@ -77,7 +79,7 @@ def get_sha256(file):
         readable_hash = hashlib.sha256(bytes).hexdigest();
         return readable_hash
 
-# 20000 as in infinity :)
+# 20000 as in infinity
 def generate_data(file, dest_path, chunk_size, sha256):
     for x in range(0, 20000):
         if x == 0:
@@ -89,19 +91,20 @@ def generate_data(file, dest_path, chunk_size, sha256):
                         break
                 yield system_api_pb2.FileUploadRequest(chunk = buf)   
 
-from glob import glob
-
 def upload_file(stub, path, dest_path):
      sha256 = get_sha256(path)
      print(sha256)
      file = open(path, "rb")  
 
-     upload_iterator = generate_data(file, dest_path, 1000000, sha256)
+     # make sure path is unix style (necessary for windows, and does no harm om linux)
+     upload_iterator = generate_data(file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256)
      response = stub.UploadFile(upload_iterator)
      print("uploaded", path, response)
 
+from glob import glob
+
 def upload_folder(system_stub, folder):
-     files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*.*'))]
+     files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*')) if not os.path.isdir(y)]
      for file in files:
             upload_file(system_stub, file, file.replace(folder, ""))
 
@@ -110,11 +113,13 @@ def reload_configuration(system_stub):
       response = system_stub.ReloadConfiguration(request, timeout=60000)
       print(response)
 
-from glob import glob
+
+
+##################### END BOILERPLATE ####################################################
 
 def run():
 #     channel = grpc.insecure_channel('192.168.1.82:50051')
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+    channel = grpc.insecure_channel('192.168.1.184:50051')
     functional_stub = functional_api_pb2_grpc.FunctionalServiceStub(channel)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     diag_stub = diagnostics_api_pb2_grpc.DiagnosticsServiceStub(channel)
