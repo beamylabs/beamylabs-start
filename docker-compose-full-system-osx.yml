@@ -37,4 +37,4 @@ services:
     environment:
       - REPLACE_OS_VARS=true
       - COOKIE=test
-      - NODENAME=node@${NODE_NAME:-notset.com}
+      - NODENAME=node@${NODE_NAME:-unset.example.com}
