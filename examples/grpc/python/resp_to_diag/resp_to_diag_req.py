@@ -67,18 +67,19 @@ def reload_configuration(system_stub):
 
 ##################### END BOILERPLATE ####################################################
 
+import binascii
+
 def publish_signals(client_id, stub, diag_frame_resp):
 
     signal_with_payload = network_api_pb2.Signal(id = diag_frame_resp)
-    signal_with_payload.raw = b'\x01x02x03x04x05x06x07x08'
+    signal_with_payload.raw = b'\x01\x02\x03\x04\x05\x06\x07\x08'
+    # signal_with_payload.raw = binascii.unhexlify("0102030405060708")
     publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=[signal_with_payload]), frequency = 0)
     try:
         stub.PublishSignals(publisher_info)
     except grpc._channel._Rendezvous as err:
         print(err)
 
-
-import binascii
 def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[diag_frame_req]), onChange=False)
     try:
