@@ -24,7 +24,7 @@ Point your web browser at the machine running Beamybroker, an address like
 `http://192.0.2.42:8080/`. If you are connected to a hosted WLAN Access Point
 like `beamy-cafe42`, the address should be `http://192.168.4.1:8080/`.
 
-> BEWARE: if you change your your interface settings you must restart do doing [STOP](#stop)/[START](#start)
+> BEWARE: if you change your your interface settings you must restart by do doing [STOP](#stop)/[START](#start)
 
 ## Stop
 
@@ -35,7 +35,7 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compo
 ## Upgrade
 
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1docker-compose -f docker-compose-full-system.yml pull
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml pull
 ```
 
 ## Inspiration
