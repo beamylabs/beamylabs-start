@@ -14,7 +14,7 @@ fi
 
 found="$(ifconfig "$iface" | sed -E -n "s/^[[:space:]]*inet (([0-9]+\.){3}[0-9]+).*/\1/p")"
 case "$found" in
-  ""|127.0.0.1)
+  ""|127.0.0.1|169.254.*)
     ip="$defaultip"
     ;;
   *)
