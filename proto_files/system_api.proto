@@ -18,6 +18,7 @@ message Configuration {
   bytes interfacesJson = 2;
   string licenseEndDate = 3;
   string publicAddress = 4;
+  string serverVersion = 5;
 }
 
 message ReloadMessage{

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x10system_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\"~\n\rConfiguration\x12&\n\x0bnetworkInfo\x18\x01 \x03(\x0b\x32\x11.base.NetworkInfo\x12\x16\n\x0einterfacesJson\x18\x02 \x01(\x0c\x12\x16\n\x0elicenseEndDate\x18\x03 \x01(\t\x12\x15\n\rpublicAddress\x18\x04 \x01(\t\"_\n\rReloadMessage\x12,\n\rconfiguration\x18\x01 \x01(\x0b\x32\x13.base.ConfigurationH\x00\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x42\x08\n\x06status\"/\n\x0f\x46ileDescription\x12\x0e\n\x06sha256\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"^\n\x11\x46ileUploadRequest\x12\x30\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescriptionH\x00\x12\x0f\n\x05\x63hunk\x18\x02 \x01(\x0cH\x00\x42\x06\n\x04\x64\x61ta\"\xa5\x01\n\x16\x46ileUploadChunkRequest\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\x0e\n\x06\x63hunks\x18\x02 \x01(\r\x12\x0f\n\x07\x63hunkId\x18\x03 \x01(\r\x12\r\n\x05\x63hunk\x18\x04 \x01(\x0c\x12\x14\n\x0c\x63\x61ncelUpload\x18\x05 \x01(\x08\x12\x15\n\ruploadTimeout\x18\x06 \x01(\r\"]\n\x12\x46ileUploadResponse\x12\x12\n\x08\x66inished\x18\x01 \x01(\x08H\x00\x12\x13\n\tcancelled\x18\x02 \x01(\x08H\x00\x12\x16\n\x0c\x65rrorMessage\x18\x03 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta2\xc4\x02\n\rSystemService\x12\x36\n\x10GetConfiguration\x12\x0b.base.Empty\x1a\x13.base.Configuration\"\x00\x12.\n\x0bListSignals\x12\x0f.base.NameSpace\x1a\x0c.base.Frames\"\x00\x12K\n\x0fUploadFileChunk\x12\x1c.base.FileUploadChunkRequest\x1a\x18.base.FileUploadResponse\"\x00\x12\x43\n\nUploadFile\x12\x17.base.FileUploadRequest\x1a\x18.base.FileUploadResponse\"\x00(\x01\x12\x39\n\x13ReloadConfiguration\x12\x0b.base.Empty\x1a\x13.base.ReloadMessage\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x10system_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\"\x95\x01\n\rConfiguration\x12&\n\x0bnetworkInfo\x18\x01 \x03(\x0b\x32\x11.base.NetworkInfo\x12\x16\n\x0einterfacesJson\x18\x02 \x01(\x0c\x12\x16\n\x0elicenseEndDate\x18\x03 \x01(\t\x12\x15\n\rpublicAddress\x18\x04 \x01(\t\x12\x15\n\rserverVersion\x18\x05 \x01(\t\"_\n\rReloadMessage\x12,\n\rconfiguration\x18\x01 \x01(\x0b\x32\x13.base.ConfigurationH\x00\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x42\x08\n\x06status\"/\n\x0f\x46ileDescription\x12\x0e\n\x06sha256\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"^\n\x11\x46ileUploadRequest\x12\x30\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescriptionH\x00\x12\x0f\n\x05\x63hunk\x18\x02 \x01(\x0cH\x00\x42\x06\n\x04\x64\x61ta\"\xa5\x01\n\x16\x46ileUploadChunkRequest\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\x0e\n\x06\x63hunks\x18\x02 \x01(\r\x12\x0f\n\x07\x63hunkId\x18\x03 \x01(\r\x12\r\n\x05\x63hunk\x18\x04 \x01(\x0c\x12\x14\n\x0c\x63\x61ncelUpload\x18\x05 \x01(\x08\x12\x15\n\ruploadTimeout\x18\x06 \x01(\r\"]\n\x12\x46ileUploadResponse\x12\x12\n\x08\x66inished\x18\x01 \x01(\x08H\x00\x12\x13\n\tcancelled\x18\x02 \x01(\x08H\x00\x12\x16\n\x0c\x65rrorMessage\x18\x03 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta2\xc4\x02\n\rSystemService\x12\x36\n\x10GetConfiguration\x12\x0b.base.Empty\x1a\x13.base.Configuration\"\x00\x12.\n\x0bListSignals\x12\x0f.base.NameSpace\x1a\x0c.base.Frames\"\x00\x12K\n\x0fUploadFileChunk\x12\x1c.base.FileUploadChunkRequest\x1a\x18.base.FileUploadResponse\"\x00\x12\x43\n\nUploadFile\x12\x17.base.FileUploadRequest\x1a\x18.base.FileUploadResponse\"\x00(\x01\x12\x39\n\x13ReloadConfiguration\x12\x0b.base.Empty\x1a\x13.base.ReloadMessage\"\x00\x62\x06proto3')
   ,
   dependencies=[common__pb2.DESCRIPTOR,])
 
@@ -63,6 +63,13 @@ _CONFIGURATION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='serverVersion', full_name='base.Configuration.serverVersion', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -75,8 +82,8 @@ _CONFIGURATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=40,
-  serialized_end=166,
+  serialized_start=41,
+  serialized_end=190,
 )
 
 
@@ -116,8 +123,8 @@ _RELOADMESSAGE = _descriptor.Descriptor(
       name='status', full_name='base.ReloadMessage.status',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=168,
-  serialized_end=263,
+  serialized_start=192,
+  serialized_end=287,
 )
 
 
@@ -154,8 +161,8 @@ _FILEDESCRIPTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=265,
-  serialized_end=312,
+  serialized_start=289,
+  serialized_end=336,
 )
 
 
@@ -195,8 +202,8 @@ _FILEUPLOADREQUEST = _descriptor.Descriptor(
       name='data', full_name='base.FileUploadRequest.data',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=314,
-  serialized_end=408,
+  serialized_start=338,
+  serialized_end=432,
 )
 
 
@@ -261,8 +268,8 @@ _FILEUPLOADCHUNKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=411,
-  serialized_end=576,
+  serialized_start=435,
+  serialized_end=600,
 )
 
 
@@ -309,8 +316,8 @@ _FILEUPLOADRESPONSE = _descriptor.Descriptor(
       name='data', full_name='base.FileUploadResponse.data',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=578,
-  serialized_end=671,
+  serialized_start=602,
+  serialized_end=695,
 )
 
 _CONFIGURATION.fields_by_name['networkInfo'].message_type = common__pb2._NETWORKINFO
@@ -396,8 +403,8 @@ _SYSTEMSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=674,
-  serialized_end=998,
+  serialized_start=698,
+  serialized_end=1022,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetConfiguration',
