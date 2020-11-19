@@ -1,19 +1,16 @@
 # tiny grpc python example
 
-## Installation, configuration
-
-start the server and make sure it uses [configuration file:](config/interfaces.json)
-
-inspiration from
-https://grpc.io/docs/tutorials/basic/python.html
-
-
-proto files are available in: [proto_files](/proto_files/)
-
 ## Setup
 ```bash
 pip install grpcio-tools
 ```
+
+Example; from [here](simple_ecu/) run
+```
+python ecy.py
+```
+
+> **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L142 (keep the port 50051)**
 
 ## Setup Windows
 use installer [here](https://www.python.org/downloads/release/python-2718/) donwload 2.7 version [link](https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi)
@@ -30,6 +27,9 @@ Example; from [here](simple_ecu/) run
 ```
 python ecy.py
 ```
+
+> **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L142 (keep the port 50051)**
+
 
 ## Re-generate stubs
 
