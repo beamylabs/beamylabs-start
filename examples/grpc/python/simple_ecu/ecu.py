@@ -139,7 +139,7 @@ def read_on_timer(client_id, stub, signal, pause):
 
 
 def run():
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+    channel = grpc.insecure_channel('192.168.1.184:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     

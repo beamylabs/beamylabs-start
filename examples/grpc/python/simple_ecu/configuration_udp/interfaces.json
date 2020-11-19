@@ -9,7 +9,7 @@
     {
       "namespace": "ecu_A",
       "type": "udp",
-      "human_file": "human/benchc.json",
+      "dbc_file": "can/test.dbc",
       "device_name": "ecu_A",
       "server_port": 2001,
       "target_host": "127.0.0.1",
@@ -19,7 +19,7 @@
     {
       "namespace": "ecu_B",
       "type": "udp",
-      "human_file": "human/benchc.json",
+      "dbc_file": "can/test.dbc",
       "device_name": "ecu_B",
       "server_port": 2000,
       "target_host": "127.0.0.1",
