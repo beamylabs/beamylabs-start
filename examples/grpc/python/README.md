@@ -1,4 +1,4 @@
-# tiny grpc python example
+# Simple python example
 
 ## Setup
 ```bash
