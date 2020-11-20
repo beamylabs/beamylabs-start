@@ -4,9 +4,15 @@
 
 Make sure you have `docker` and `docker-compose` installed, then
 
+simple setup
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml up
+SIGNALBROKER_IP={ADD YOUR HOST IP HERE} docker-compose -f docker-compose-full-system.yml up
 ```
+advanced setup
+```bash
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh wlan0) docker-compose -f docker-compose-full-system.yml up
+```
+
 > On a generic setup `NODE_NAME` and `SIGNALBROKER_IP` will likely be set to the same value.
 
 > `$(scripts/resolve-ip.sh eth0)` assumes that the interface for your main
@@ -24,18 +30,30 @@ Point your web browser at the machine running Beamybroker, an address like
 `http://192.0.2.42:8080/`. If you are connected to a hosted WLAN Access Point
 like `beamy-cafe42`, the address should be `http://192.168.4.1:8080/`.
 
-> BEWARE: if you change your your interface settings you must restart by do doing [STOP](#stop)/[START](#start)
+> BEWARE 1: if you change your your interface settings you must restart by do doing [STOP](#stop)/[START](#start)
 
+> BEWARE 2: if you provided wrong ip then do [STOP](#stop) and then append `--force-recreate` when doing `up` again.
+ 
 ## Stop
 
+simple setup
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml down
+SIGNALBROKER_IP={ADD YOUR HOST IP HERE} docker-compose -f docker-compose-full-system.yml down
+```
+advanced setup
+```bash
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh wlan0) docker-compose -f docker-compose-full-system.yml down
 ```
 
 ## Upgrade
 
+simple setup
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml pull
+SIGNALBROKER_IP={ADD YOUR HOST IP HERE} docker-compose -f docker-compose-full-system.yml pull
+```
+advanced setup
+```bash
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh wlan0) docker-compose -f docker-compose-full-system.yml pull
 ```
 
 ## Inspiration
