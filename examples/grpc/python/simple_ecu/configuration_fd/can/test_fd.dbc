@@ -1,0 +1,51 @@
+// *************************************************************************** *
+// *                                                                           *
+// *             Mini dbc file for diagnostic queries.                         *
+// *             https://en.wikipedia.org/wiki/OBD-II_PIDs                     *
+// *                                                                           *
+// *************************************************************************** *
+
+// *    ref https://en.wikipedia.org/wiki/OBD-II_PIDs                                                               *
+// *    The diagnostic reader initiates a query using CAN ID 7DFh/2015 [clarification needed],                      *
+// *    which acts as a broadcast address, and accepts responses from any ID in the range 7E8h/2024 to 7EFh/2031.   *
+// *    ECUs that can respond to OBD queries listen both to the functional broadcast ID of 7DFh/2015 and one        *
+// *    assigned ID in the range 7E0h/2015 to 7E7h/2023. Their response has an ID of their assigned ID plus 8 e.g.  *
+// *    7E8h/2024 through 7EFh/2031.                                                                                *
+
+
+VERSION "CanFD"
+
+BO_ 2583168284 GNSSPositionData_RC: 47 GNSSReceiver
+ SG_ SequenceID : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ counter : 8|16@1+ (1,0) [0|65532] "day" Vector__XXX
+ SG_ PositionTime : 24|32@1+ (0.0001,0) [0|86401] "s" Vector__XXX
+ SG_ Latitude : 56|64@1- (1E-016,0) [-90|90] "deg" Vector__XXX
+ SG_ Longitude : 120|64@1- (1E-016,0) [-180|180] "deg" Vector__XXX
+ SG_ Altitude : 184|64@1- (1E-006,0) [-9223372036854.78|9223372036854.78] "m" Vector__XXX
+ SG_ TypeOfSystem : 248|4@1+ (1,0) [0|4] "" Vector__XXX
+ SG_ GNSSMethod : 252|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ GNSSIntegrity : 256|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ NumberOfSVs : 264|8@1+ (1,0) [0|252] "" Vector__XXX
+ SG_ HDOP : 272|16@1- (0.01,0) [-327.64|327.64] "" Vector__XXX
+ SG_ PDOP : 288|16@1- (0.01,0) [-327.64|327.64] "" Vector__XXX
+ SG_ GeoidalSeparation : 304|32@1- (0.01,0) [-21470000|21470000] "m" Vector__XXX
+ SG_ NumberOfReferenceStations : 336|8@1+ (1,0) [0|252] "" Vector__XXX
+ SG_ RefrenceStationType1 : 344|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ ReferenceStationID1 : 348|12@1+ (1,0) [0|4095] "" Vector__XXX
+ SG_ AgeOfDGNSSCorrections1 : 360|16@1+ (0.01,0) [0|655.32] "sec" Vector__XXX
+
+BO_ 2565799452 ACL_RC: 18 GNSSReceiver
+ SG_ IdentityNumber : 0|21@1+ (1,0) [0|2097150] "" Vector__XXX
+ SG_ ManufacturerCode : 21|11@1+ (1,0) [0|2047] "" Vector__XXX
+ SG_ ECUInstance : 32|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ counter_times_2 : 35|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ Function : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ VehicleSystem1 m1 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem2 m2 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem3 m3 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem4 m4 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem5 m5 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem m0 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystemInstance : 56|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ IndustryGroup M : 60|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ ArbitraryAddressCapable : 63|1@1+ (1,0) [0|1] "" Vector__XXX
