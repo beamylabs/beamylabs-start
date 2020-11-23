@@ -7,7 +7,7 @@ pip install grpcio-tools
 
 Example; from [here](simple_ecu/) run
 ```
-python ecy.py
+python ecu.py
 ```
 
 > **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L142 (keep the port 50051)**
