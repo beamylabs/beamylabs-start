@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04\x62\x61se\"\x07\n\x05\x45mpty\"\x16\n\x08\x43lientId\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x08SignalId\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"J\n\nSignalInfo\x12\x1a\n\x02id\x18\x01 \x01(\x0b\x32\x0e.base.SignalId\x12 \n\x08metaData\x18\x02 \x01(\x0b\x32\x0e.base.MetaData\"d\n\x08MetaData\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x0b\n\x03max\x18\x05 \x01(\x05\x12\x0b\n\x03min\x18\x06 \x01(\x05\x12\x0c\n\x04unit\x18\x07 \x01(\t\x12\x0c\n\x04size\x18\x08 \x01(\x05\x12\r\n\x05isRaw\x18\t \x01(\x08\"\x19\n\tNameSpace\x12\x0c\n\x04name\x18\x01 \x01(\t\"T\n\x0bNetworkInfo\x12\"\n\tnamespace\x18\x01 \x01(\x0b\x32\x0f.base.NameSpace\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"V\n\tFrameInfo\x12$\n\nsignalInfo\x18\x01 \x01(\x0b\x32\x10.base.SignalInfo\x12#\n\tchildInfo\x18\x02 \x03(\x0b\x32\x10.base.SignalInfo\"(\n\x06\x46rames\x12\x1e\n\x05\x66rame\x18\x01 \x03(\x0b\x32\x0f.base.FrameInfob\x06proto3')
+  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04\x62\x61se\"\x07\n\x05\x45mpty\"\x16\n\x08\x43lientId\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x08SignalId\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"J\n\nSignalInfo\x12\x1a\n\x02id\x18\x01 \x01(\x0b\x32\x0e.base.SignalId\x12 \n\x08metaData\x18\x02 \x01(\x0b\x32\x0e.base.MetaData\"\x84\x01\n\x08MetaData\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x0b\n\x03max\x18\x05 \x01(\x05\x12\x0b\n\x03min\x18\x06 \x01(\x05\x12\x0c\n\x04unit\x18\x07 \x01(\t\x12\x0c\n\x04size\x18\x08 \x01(\x05\x12\r\n\x05isRaw\x18\t \x01(\x08\x12\x0e\n\x06\x66\x61\x63tor\x18\n \x01(\x01\x12\x0e\n\x06offset\x18\x0b \x01(\x01\"\x19\n\tNameSpace\x12\x0c\n\x04name\x18\x01 \x01(\t\"T\n\x0bNetworkInfo\x12\"\n\tnamespace\x18\x01 \x01(\x0b\x32\x0f.base.NameSpace\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"V\n\tFrameInfo\x12$\n\nsignalInfo\x18\x01 \x01(\x0b\x32\x10.base.SignalInfo\x12#\n\tchildInfo\x18\x02 \x03(\x0b\x32\x10.base.SignalInfo\"(\n\x06\x46rames\x12\x1e\n\x05\x66rame\x18\x01 \x03(\x0b\x32\x0f.base.FrameInfob\x06proto3')
 )
 
 
@@ -206,6 +206,20 @@ _METADATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='factor', full_name='base.MetaData.factor', index=6,
+      number=10, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='offset', full_name='base.MetaData.offset', index=7,
+      number=11, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -218,8 +232,8 @@ _METADATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=193,
-  serialized_end=293,
+  serialized_start=194,
+  serialized_end=326,
 )
 
 
@@ -249,8 +263,8 @@ _NAMESPACE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=295,
-  serialized_end=320,
+  serialized_start=328,
+  serialized_end=353,
 )
 
 
@@ -294,8 +308,8 @@ _NETWORKINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=322,
-  serialized_end=406,
+  serialized_start=355,
+  serialized_end=439,
 )
 
 
@@ -332,8 +346,8 @@ _FRAMEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=408,
-  serialized_end=494,
+  serialized_start=441,
+  serialized_end=527,
 )
 
 
@@ -363,8 +377,8 @@ _FRAMES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=496,
-  serialized_end=536,
+  serialized_start=529,
+  serialized_end=569,
 )
 
 _SIGNALID.fields_by_name['namespace'].message_type = _NAMESPACE

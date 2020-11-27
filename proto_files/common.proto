@@ -26,6 +26,8 @@ message MetaData {
   string unit = 7;
   int32 size = 8;
   bool isRaw = 9;
+  double factor = 10;
+  double offset = 11;
 }
 
 message NameSpace {
