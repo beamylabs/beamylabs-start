@@ -1,0 +1,15 @@
+[Unit]
+Description=Beamy Flexray Forwarder
+After=network.target
+
+[Service]
+ExecStart=/home/root/flexray2ip.new  
+WorkingDirectory=/home/root
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
