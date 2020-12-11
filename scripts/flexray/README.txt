@@ -11,4 +11,8 @@ using serial
 
 using mac address
 ./prepare-flexray-using-mac-addr.sh 04:1c:64:01:28:86
+
+using mac address option 2
+In order to get this working do
+-> sudo apt-get install nmap
 ./prepare-flexray-using-mac-addr-slow.sh 04:1c:64:01:28:86

@@ -10,4 +10,9 @@ fi
 
 hostname=`arp -a | grep $macaddr | awk '{print $2}' | sed 's/[()]//g'`
 
+if [ -z "$hostname" ]; then
+  echo >/dev/stderr "failed resoling ip/hostname, try another way"
+  exit 0
+fi
+
 ./prepare-flexray.sh $hostname

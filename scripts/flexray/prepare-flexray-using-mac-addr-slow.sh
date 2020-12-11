@@ -10,4 +10,9 @@ fi
 
 hostname=`nmap -sP 192.168.1.0/24 >/dev/null && arp -an | grep $macaddr | awk '{print $2}' | sed 's/[()]//g'`
 
+if [ -z "$hostname" ]; then
+  echo >/dev/stderr "failed resoling ip/hostname, try another way"
+  exit 0
+fi
+
 ./prepare-flexray.sh $hostname
