@@ -44,3 +44,9 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compo
 - [go](examples/grpc/go/README.md)
 - [elixir](examples/grpc/elixir/car5g/README.md)
 - [grpc-web](examples/grpc/grpc-web/README.md)
+
+## Statistics and usage 
+
+In order to understand usage of the product and it's enviroment it will try and send system information based on your interfaces.json and it's execution enviroment on start. The data is obfuscated and it is not distributed to any other party. Its sole purpose is the make the software better.
+
+This is not mandatoy and can be disabled, however to keep us motivated we would please urge you not to disable this feature.
