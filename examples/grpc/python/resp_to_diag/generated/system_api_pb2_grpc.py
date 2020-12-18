@@ -40,6 +40,16 @@ class SystemServiceStub(object):
         request_serializer=common__pb2.Empty.SerializeToString,
         response_deserializer=system__api__pb2.ReloadMessage.FromString,
         )
+    self.GetLicenseInfo = channel.unary_unary(
+        '/base.SystemService/GetLicenseInfo',
+        request_serializer=common__pb2.Empty.SerializeToString,
+        response_deserializer=system__api__pb2.LicenseInfo.FromString,
+        )
+    self.SetLicense = channel.unary_unary(
+        '/base.SystemService/SetLicense',
+        request_serializer=system__api__pb2.License.SerializeToString,
+        response_deserializer=system__api__pb2.LicenseInfo.FromString,
+        )
 
 
 class SystemServiceServicer(object):
@@ -81,6 +91,20 @@ class SystemServiceServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def GetLicenseInfo(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def SetLicense(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_SystemServiceServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -108,6 +132,16 @@ def add_SystemServiceServicer_to_server(servicer, server):
           servicer.ReloadConfiguration,
           request_deserializer=common__pb2.Empty.FromString,
           response_serializer=system__api__pb2.ReloadMessage.SerializeToString,
+      ),
+      'GetLicenseInfo': grpc.unary_unary_rpc_method_handler(
+          servicer.GetLicenseInfo,
+          request_deserializer=common__pb2.Empty.FromString,
+          response_serializer=system__api__pb2.LicenseInfo.SerializeToString,
+      ),
+      'SetLicense': grpc.unary_unary_rpc_method_handler(
+          servicer.SetLicense,
+          request_deserializer=system__api__pb2.License.FromString,
+          response_serializer=system__api__pb2.LicenseInfo.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
