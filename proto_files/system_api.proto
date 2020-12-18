@@ -11,12 +11,13 @@ service SystemService {
   rpc UploadFile (stream FileUploadRequest) returns (FileUploadResponse) {}
 // will not return until new configuration is tested an active, make sure to set timeout to a large value. (fibex on pi > 50s)
   rpc ReloadConfiguration (Empty) returns (ReloadMessage) {}
+  rpc GetLicenseInfo (Empty) returns (LicenseInfo) {}
+  rpc SetLicense (License) returns (LicenseInfo) {}
 }
 
 message Configuration {
   repeated NetworkInfo networkInfo = 1;
   bytes interfacesJson = 2;
-  string licenseEndDate = 3;
   string publicAddress = 4;
   string serverVersion = 5;
 }
@@ -56,4 +57,34 @@ message FileUploadResponse{
         bool cancelled = 2;
         string errorMessage = 3;
     };
+}
+
+enum LicenseStatus {
+  UNSET = 0;
+  VALID = 1;
+  EXPIRED = 2;
+  BADDATE = 3;
+  WRONGMACHINE = 4;
+  INCOMPLETEJSON = 5;
+  INVALIDJSON = 6;
+  BADSIGNATURE = 7;
+  MALFORMED = 8;
+  SERVERERROR = 9;
+  NOTERMSAGREEMENT = 10;
+}
+
+message LicenseInfo {
+  LicenseStatus status = 1;
+  // verbatim json from the license data (if base64-decodable)
+  bytes json = 2;
+  // extracted from json for convenience
+  string expires = 3;
+  // info to use when requesting a new license
+  string requestId = 4;
+  bytes requestMachineId = 5;
+}
+
+message License {
+  bytes data = 1;
+  bool termsAgreement = 2;
 }
