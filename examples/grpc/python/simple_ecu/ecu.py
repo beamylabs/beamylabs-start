@@ -64,7 +64,9 @@ def reload_configuration(system_stub):
       response = system_stub.ReloadConfiguration(request, timeout=60000)
       print(response)
 
-
+def check_license(system_stub):
+    status = system_stub.GetLicenseInfo(common_pb2.Empty()).status
+    assert status = = system_api_pb2.LicenseStatus.VALID, "Check your license, status is: %d" % status
 
 ##################### END BOILERPLATE ####################################################
 
@@ -137,15 +139,20 @@ def read_on_timer(client_id, stub, signal, pause):
         print("signal read is ", signals, signals.signal[0].integer)
         time.sleep(pause)
 
-
 def run():
     channel = grpc.insecure_channel('192.168.1.184:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
+    check_license(system_stub)
     
-#     upload_folder(system_stub, "configuration_udp")
-    upload_folder(system_stub, "configuration")
+    upload_folder(system_stub, "configuration_udp")
+    # upload_folder(system_stub, "configuration")
     reload_configuration(system_stub)
+
+    # list available signals
+    configuration = system_stub.GetConfiguration(common_pb2.Empty())
+    for networkInfo in configuration.networkInfo:
+        print("signals in namespace ", networkInfo.namespace.name, system_stub.ListSignals(networkInfo.namespace))
 
     ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
     ecu_A_thread.start()
@@ -153,8 +160,8 @@ def run():
     ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
     ecu_B_thread_read.start()
 
-#     ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
-#     ecu_B_thread_subscribe.start()
+    # ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
+    # ecu_B_thread_subscribe.start()
 
 
 if __name__ == '__main__':
