@@ -143,18 +143,19 @@ def run():
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     
-#     upload_folder(system_stub, "configuration_udp")
-    upload_folder(system_stub, "configuration")
+    # upload_folder(system_stub, "configuration_udp")
+    # upload_folder(system_stub, "configuration")
+    upload_folder(system_stub, "configuration_fd")
     reload_configuration(system_stub)
 
     ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
     ecu_A_thread.start()
 
-    ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
-    ecu_B_thread_read.start()
+    # ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
+    # ecu_B_thread_read.start()
 
-#     ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
-#     ecu_B_thread_subscribe.start()
+    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
+    ecu_B_thread_subscribe.start()
 
 
 if __name__ == '__main__':
