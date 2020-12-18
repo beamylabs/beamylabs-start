@@ -66,7 +66,7 @@ def reload_configuration(system_stub):
 
 def check_license(system_stub):
     status = system_stub.GetLicenseInfo(common_pb2.Empty()).status
-    assert status = = system_api_pb2.LicenseStatus.VALID, "Check your license, status is: %d" % status
+    assert status == system_api_pb2.LicenseStatus.VALID, "Check your license, status is: %d" % status
 
 ##################### END BOILERPLATE ####################################################
 
