@@ -68,6 +68,29 @@ def check_license(system_stub):
     status = system_stub.GetLicenseInfo(common_pb2.Empty()).status
     assert status == system_api_pb2.LicenseStatus.VALID, "Check your license, status is: %d" % status
 
+import requests
+import json
+import base64
+
+# re-request a license. Uses the same email (requestId) as before
+# hash will be found in your mailbox
+def request_license(system_stub):
+    requestMachineId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestMachineId
+    requestId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
+    body = {"id": requestId.encode("utf-8"), "machine_id": json.loads(requestMachineId)}
+    resp_request = requests.post('https://www.beamylabs.com/requestlicense', json = {"licensejsonb64": base64.b64encode(json.dumps(body))})
+    print(resp_request)
+
+# using your hash, upload your license (remove the dashes) use the same email (requestId) address as before
+def download_license(system_stub, hash_without_dashes):
+    requestId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
+    resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": requestId, "hash": hash_without_dashes})
+    license_info = resp_fetch.json()
+    license_bytes = license_info['license_data'].encode('utf-8')
+    # you agree to license and conditions found here https://www.beamylabs.com/license/
+    result = system_stub.SetLicense(system_api_pb2.License(termsAgreement = True, data = license_bytes))
+    print(result)
+    
 ##################### END BOILERPLATE ####################################################
 
 def read_signal(stub, signal):
@@ -140,10 +163,12 @@ def read_on_timer(client_id, stub, signal, pause):
         time.sleep(pause)
 
 def run():
-    channel = grpc.insecure_channel('192.168.1.184:50051')
+    channel = grpc.insecure_channel('127.0.0.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
+    # request_license(system_stub)
+    # download_license(system_stub, "your_hash_without_quotes")
     
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration")
