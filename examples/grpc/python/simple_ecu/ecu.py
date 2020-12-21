@@ -72,24 +72,28 @@ import requests
 import json
 import base64
 
-# re-request a license. Uses the same email (requestId) as before
+# re-request a license. By default uses the same email (requestId) as before
 # hash will be found in your mailbox
-def request_license(system_stub):
+def request_license(system_stub, id=None):
+    if id == None:
+        id = (system_stub.GetLicenseInfo(common_pb2.Empty()).requestId).encode("utf-8")
+        assert id != '', "no old id avaliable, provide your email"
     requestMachineId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestMachineId
     requestId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
     body = {"id": requestId.encode("utf-8"), "machine_id": json.loads(requestMachineId)}
     resp_request = requests.post('https://www.beamylabs.com/requestlicense', json = {"licensejsonb64": base64.b64encode(json.dumps(body))})
-    print(resp_request)
+    assert resp_request.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_request.status_code)
+    print("License requested check your mail: ", id)
 
 # using your hash, upload your license (remove the dashes) use the same email (requestId) address as before
 def download_license(system_stub, hash_without_dashes):
     requestId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
     resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": requestId, "hash": hash_without_dashes})
+    assert resp_fetch.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_fetch.status_code)
     license_info = resp_fetch.json()
     license_bytes = license_info['license_data'].encode('utf-8')
     # you agree to license and conditions found here https://www.beamylabs.com/license/
-    result = system_stub.SetLicense(system_api_pb2.License(termsAgreement = True, data = license_bytes))
-    print(result)
+    system_stub.SetLicense(system_api_pb2.License(termsAgreement = True, data = license_bytes))
     
 ##################### END BOILERPLATE ####################################################
 
