@@ -9,8 +9,14 @@ Example; from [here](simple_ecu/) run
 ```
 python ecu.py
 ```
+for a more advance example
+```
+python ecu_advanced.py 
+```
 
-> **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L142 (keep the port 50051)**
+> **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L147 (keep the port 50051)**
+
+> this example works on any linux as it uses [udp](simple_ecu/configuration_udp) per default. If you like to use [can](simple_ecu/configuration) you need a can enabled device. Then enable this [line](https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L153)
 
 ## Setup Windows
 use installer [here](https://www.python.org/downloads/release/python-2718/) donwload 2.7 version [link](https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi)
