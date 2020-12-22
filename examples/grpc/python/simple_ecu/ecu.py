@@ -101,15 +101,6 @@ def read_signal(stub, signal):
     read_info = network_api_pb2.SignalIds(signalId=[signal])
     return stub.ReadSignals(read_info)
 
-def publish_signal(client_id, stub, signal, value):
-    signal_with_payload = network_api_pb2.Signal(id = signal)
-    signal_with_payload.integer = value
-    publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=[signal_with_payload]), frequency = 0)
-    try:
-        stub.PublishSignals(publisher_info)
-    except grpc._channel._Rendezvous as err:
-        print(err)
-
 def publish_signals(client_id, stub, signals_with_payload):
     publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=signals_with_payload), frequency = 0)
     try:
@@ -132,7 +123,7 @@ def ecu_A(stub, pause):
         counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
         read_counter_times_2 = read_signal(stub, counter_times_2)
 
-        print("ecu_A, counter_times_2 is ", read_counter_times_2.signal[0].integer)
+        print("ecu_A, (result) counter_times_2 is ", read_counter_times_2.signal[0].integer)
         increasing_counter = (increasing_counter + 1) % 10
         time.sleep(pause)
 
@@ -143,10 +134,11 @@ def ecu_B_read(stub, pause):
         client_id = common_pb2.ClientId(id="id_ecu_B")
         counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
         read_counter = read_signal(stub, counter)
-        print("ecu_B, counter is ", read_counter.signal[0].integer)
+        print("ecu_B, (read) counter is ", read_counter.signal[0].integer)
 
         counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-        publish_signal(client_id, stub, counter_times_2, read_counter.signal[0].integer * 2)        
+        signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = read_counter.signal[0].integer * 2)
+        publish_signals(client_id, stub, [signal_with_payload])        
         time.sleep(pause)
 
 def ecu_B_subscribe(stub):
@@ -157,9 +149,10 @@ def ecu_B_subscribe(stub):
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=False)
     try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
-            print("ecu_B, subscribe counter is ", subs_counter.signal[0].integer)
+            print("ecu_B, (subscribe) counter is ", subs_counter.signal[0].integer)
             counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-            publish_signal(client_id, stub, counter_times_2, subs_counter.signal[0].integer * 2)    
+            signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = subs_counter.signal[0].integer * 2)
+            publish_signals(client_id, stub, [signal_with_payload])   
             
     except grpc._channel._Rendezvous as err:
             print(err)
@@ -173,9 +166,10 @@ def ecu_B_subscribe_2(stub):
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=False)
     try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
-            print("ecu_B, subscribe_2 counter is ", subs_counter.signal[0].integer)
+            print("ecu_B, (subscribe_2) counter is ", subs_counter.signal[0].integer)
             counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-            publish_signal(client_id, stub, counter_times_2, subs_counter.signal[0].integer * 2)    
+            # signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = subs_counter.signal[0].integer * 2)
+            # publish_signals(client_id, stub, [signal_with_payload])   
             
     except grpc._channel._Rendezvous as err:
             print(err)
