@@ -78,19 +78,20 @@ import base64
 # hash will be found in your mailbox
 def request_license(system_stub, id=None):
     if id == None:
-        id = (system_stub.GetLicenseInfo(common_pb2.Empty()).requestId).encode("utf-8")
-        assert id != '', "no old id avaliable, provide your email"
+        id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
+        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
     requestMachineId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestMachineId
-    requestId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-    body = {"id": requestId.encode("utf-8"), "machine_id": json.loads(requestMachineId)}
+    body = {"id": id.encode("utf-8"), "machine_id": json.loads(requestMachineId)}
     resp_request = requests.post('https://www.beamylabs.com/requestlicense', json = {"licensejsonb64": base64.b64encode(json.dumps(body))})
     assert resp_request.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_request.status_code)
     print("License requested check your mail: ", id)
 
 # using your hash, upload your license (remove the dashes) use the same email (requestId) address as before
-def download_license(system_stub, hash_without_dashes):
-    requestId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-    resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": requestId, "hash": hash_without_dashes})
+def download_and_install_license(system_stub, hash_without_dashes, id=None):
+    if id == None:
+        id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
+        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
+    resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": id, "hash": hash_without_dashes})
     assert resp_fetch.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_fetch.status_code)
     license_info = resp_fetch.json()
     license_bytes = license_info['license_data'].encode('utf-8')
@@ -213,7 +214,7 @@ def run():
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
     # request_license(system_stub)
-    # download_license(system_stub, "your_emailed_hash_without_quotes")
+    # download_and_install_license(system_stub, "your_emailed_hash_without_quotes")
     
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration")
