@@ -16,7 +16,7 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh 
 
 > Some dated docker compose versions might show `ERROR: Invalid interpolation format for "command" option... `. If thats the case edit the [docker-compose-full-system.yml](docker-compose-full-system.yml) and replace [${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}](https://github.com/beamylabs/beamylabs-start/blob/master/docker-compose-full-system.yml#L34) with your ip resulting in `command: ./grpcwebproxy --backend_addr=192.x.x.x:50051...` manually.
 
-> Running the above `docker-compose` command only needs to be done once. It
+> Running the above `docker-compose` command only needs to be done once. It is
 > persistant over system reboot, and will restart the containers upon reboot,
 > over and over again.
 
