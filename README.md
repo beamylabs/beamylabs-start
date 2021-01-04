@@ -5,7 +5,7 @@
 Make sure you have `docker` and `docker-compose` installed, then
 
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml up
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml up
 ```
 > On a generic setup `NODE_NAME` and `SIGNALBROKER_IP` will likely be set to the same value.
 
@@ -29,13 +29,13 @@ like `beamy-cafe42`, the address should be `http://192.168.4.1:8080/`.
 ## Stop
 
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml down
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml down
 ```
 
 ## Upgrade
 
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=192.168.4.1 docker-compose -f docker-compose-full-system.yml pull
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml pull
 ```
 
 ## Inspiration
