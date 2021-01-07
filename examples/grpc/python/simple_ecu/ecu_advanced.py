@@ -214,7 +214,7 @@ def run():
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
     # request_license(system_stub)
-    # download_and_install_license(system_stub, "your_emailed_hash_without_quotes")
+    # download_and_install_license(system_stub, "your_emailed_hash_without_dashes")
     
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
