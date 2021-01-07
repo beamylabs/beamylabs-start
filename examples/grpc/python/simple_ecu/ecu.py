@@ -149,8 +149,8 @@ def run():
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
     
-    # upload_folder(system_stub, "configuration_udp")
-    upload_folder(system_stub, "configuration_lin")
+    upload_folder(system_stub, "configuration_udp")
+    # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
     reload_configuration(system_stub)
 
