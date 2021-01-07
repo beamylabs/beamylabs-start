@@ -152,6 +152,7 @@ def run():
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
+    # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
 
     # list available signals

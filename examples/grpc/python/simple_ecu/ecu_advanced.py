@@ -180,7 +180,7 @@ def ecu_B_subscribe_2(stub):
     testFr06_Child02 = common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = namespace))
     testFr04 = common_pb2.SignalId(name="TestFr04", namespace=common_pb2.NameSpace(name = namespace))
 
-    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter, testFr06_Child02, testFr04]), onChange=False)
+    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter, testFr06_Child02, testFr04]), onChange=True)
     try:
         for response in stub.SubscribeToSignals(sub_info):
             # since we subscribe to a set of signal we need to check which arrived.
@@ -216,9 +216,10 @@ def run():
     # request_license(system_stub)
     # download_and_install_license(system_stub, "your_emailed_hash_without_quotes")
     
-    upload_folder(system_stub, "configuration_udp")
+    # upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
-    # upload_folder(system_stub, "configuration_can")
+    upload_folder(system_stub, "configuration_can")
+    # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
 
     # list available signals
