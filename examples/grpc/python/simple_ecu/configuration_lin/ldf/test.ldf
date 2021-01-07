@@ -19,9 +19,9 @@ Signals {
 	SomePartNrDEVS2Nr4: 8, 0, DEVS2, DEVM;
 	SomeChks: 2, 0, DEVM, DEVS2;
 	SomeCntr: 2, 0, DEVM, DEVS2;
-	SomeReq2: 2, 0, DEVM, DEVS2;
+	counter: 2, 0, DEVM, DEVS2;
 	SomeReq2Type2: 4, 8, DEVM, DEVS2;
-	SomeReq3: 14, 0, DEVS1, DEVM;
+	counter_times_2: 14, 0, DEVS1, DEVM;
 	SomeQf: 2, 3, DEVS1, DEVM;
 	ErrRespDEVS1: 1, 0, DEVS1, DEVM;
 }
@@ -50,11 +50,11 @@ Frames {
 		SomeReq1, 6;
 		SomeChks, 0;
 		SomeCntr, 2;
-		SomeReq2, 4;
+		counter, 4;
 		SomeReq2Type2, 8;
 	}
 	DEVS1LIN01Fr1: 0x05, DEVS1, 3 {
-		SomeReq3, 0;
+		counter_times_2, 0;
 		SomeQf, 16;
 		ErrRespDEVS1, 18; 
 	}
@@ -169,9 +169,9 @@ Signal_encoding_types {
 Signal_representation {
 	SomeQf1 : SomeQf;
 	TypeReq1 : SomeReq1;
-	TypeReq2 : SomeReq2;
+	TypeReq2 : counter;
 	SomeReq2Type2 : SomeReq2Type2;
-	SomeReq31 : SomeReq3;
+	SomeReq31 : counter_times_2;
 	UInt2 : SomeChks, SomeCntr;
 	UInt8 : SomePartNrDEVS2EndSgn1, SomePartNrDEVS2EndSgn2, SomePartNrDEVS2EndSgn3, SomePartNrDEVS2Nr1, SomePartNrDEVS2Nr2, SomePartNrDEVS2Nr3, SomePartNrDEVS2Nr4;
 }
