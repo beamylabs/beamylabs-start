@@ -8,14 +8,8 @@
     },
     {
       "namespace": "ecu_A",
-      "type": "lin",
-      "config": {
-        "device_identifier": 8,
-        "server_port": 2014,
-        "target_host": null,
-        "target_port": 2013
-      },
-      "device_name": "lin",
+      "type": "linusb",
+      "device_name": "/dev/ttyACM1",
       "node_mode": "master",
       "ldf_file": "ldf/test.ldf",
       "schedule_file": "ldf/test.ldf",
@@ -24,12 +18,38 @@
     },
     {
       "namespace": "ecu_B",
+      "type": "linusb",
+      "device_name": "/dev/ttyACM0",
+      "node_mode": "slave",
+      "ldf_file": "ldf/test.ldf",
+      "schedule_file": "ldf/test.ldf",
+      "schedule_table_name": "DEVMLIN01Schedule01",
+      "schedule_autostart": false
+    },
+    {
+      "namespace": "ecu_C",
+      "type": "lin",
+      "config": {
+        "device_identifier": 8,
+        "server_port": 2014,
+        "target_host": null,
+        "target_port": 2013
+      },
+      "device_name": "lin",
+      "node_mode": "slave",
+      "ldf_file": "ldf/test.ldf",
+      "schedule_file": "ldf/test.ldf",
+      "schedule_table_name": "DEVMLIN01Schedule01",
+      "schedule_autostart": false
+    },
+    {
+      "namespace": "ecu_D",
       "type": "lin",
       "config": {
         "device_identifier": 1,
-        "server_port": 2015,
+        "server_port": 2016,
         "target_host": null,
-        "target_port": 2016
+        "target_port": 2015
       },
       "device_name": "lin2",
       "node_mode": "slave",
@@ -54,12 +74,12 @@
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
-    "port": 4000,
+    "server_port": 4000,
+    "target_port": 4001,
     "server_pid": "auto_config_boot_server_pid"
   },
   "grpc_server": {
     "port": 50051
   },
-  "reflectors": [
-  ]
+  "reflectors": []
 }

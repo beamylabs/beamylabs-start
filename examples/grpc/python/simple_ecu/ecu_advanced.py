@@ -177,7 +177,7 @@ def ecu_B_subscribe_2(stub):
     # specify some signals
     client_id = common_pb2.ClientId(id="id_ecu_B")
     counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
-    testFr06_Child02 = common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = namespace))
+    testFr06_Child02 = common_pb2.SignalId(name="DEVMLIN01Fr01", namespace=common_pb2.NameSpace(name = namespace))
     testFr04 = common_pb2.SignalId(name="TestFr04", namespace=common_pb2.NameSpace(name = namespace))
 
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter, testFr06_Child02, testFr04]), onChange=True)
@@ -189,7 +189,7 @@ def ecu_B_subscribe_2(stub):
                     print(" ecu_B, (subscribe_2) counter is ", signal.integer)
                 if (signal.id.name == "TestFr06_Child02"):
                     print(" ecu_B signal: " + signal.id.name + " arrived: " + str(signal.integer))
-                if (signal.id.name == "TestFr04"):
+                if (signal.id.name == "DEVMLIN01Fr01"):
                     print(" ecu_B, (subscribe_2) raw is ", binascii.hexlify(signal.raw))
             
     except grpc._channel._Rendezvous as err:
@@ -216,8 +216,8 @@ def run():
     # request_license(system_stub)
     # download_and_install_license(system_stub, "your_emailed_hash_without_quotes")
     
-    upload_folder(system_stub, "configuration_udp")
-    # upload_folder(system_stub, "configuration_lin")
+    # upload_folder(system_stub, "configuration_udp")
+    upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
     # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
