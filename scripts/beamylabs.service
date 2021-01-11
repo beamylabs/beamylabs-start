@@ -1,0 +1,18 @@
+[Unit]
+Description=Beamy Signal Broker Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Environment=NODE_NAME="$(scripts/resolve-ip.sh eth0)"
+Environment=SIGNALBROKER_IP="$(scripts/resolve-ip.sh eth0)"
+ExecStart=docker-compose -f docker-compose-full-system.yml up
+ExecStop=docker-compose -f docker-compose-full-system.yml down
+WorkingDirectory=/home/pi/beamylabs-start/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
