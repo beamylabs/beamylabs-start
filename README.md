@@ -2,7 +2,7 @@
 
 ## Start
 
-Make sure you have `docker` and `docker-compose` installed, then
+Make sure you have `docker` and `docker-compose` installed, then run:
 
 ```bash
 NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml up
@@ -11,10 +11,11 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh 
 
 > `$(scripts/resolve-ip.sh eth0)` assumes that the interface for your main
 > ethernet connection is called `eth0`. If that's not the case, you need to
-> change `eth0` to the correct name (hint, find out using `ifconfig` or
+> change `eth0` to the correct name. (Hint you can can find your interface name using `ifconfig` or
 > `ipconfig`).
 
-> Some dated docker compose versions might show `ERROR: Invalid interpolation format for "command" option... `. If thats the case edit the [docker-compose-full-system.yml](docker-compose-full-system.yml) and replace [${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}](https://github.com/beamylabs/beamylabs-start/blob/master/docker-compose-full-system.yml#L34) with your ip resulting in `command: ./grpcwebproxy --backend_addr=192.x.x.x:50051...` manually.
+> Some dated docker compose versions might show <br /> `ERROR: Invalid interpolation format for "command" option... `. <br /> 
+>> If you can't upgrade your docker-compose you can fix this by manually adding the ip address in the  [docker-compose-full-system.yml](docker-compose-full-system.yml) like so: <br /> [`command: ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}:50051 ...`](https://github.com/beamylabs/beamylabs-start/blob/master/docker-compose-full-system.yml#L34) <br /> with your ip resulting in: <br /> `command: ./grpcwebproxy --backend_addr=192.x.x.x:50051 ...` <br /> manually.
 
 > Running the above `docker-compose` command only needs to be done once. It is
 > persistant over system reboot, and will restart the containers upon reboot,
@@ -22,7 +23,7 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh 
 
 Point your web browser at the machine running Beamybroker, an address like
 `http://192.0.2.42:8080/`. If you are connected to a hosted WLAN Access Point
-like `beamy-cafe42`, the address should be `http://192.168.4.1:8080/`.
+like `beamylabs`, the address should be `http://192.168.4.1:8080/`.
 
 > BEWARE: if you change your your interface settings you must restart by do doing [STOP](#stop)/[START](#start)
 
@@ -33,9 +34,21 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh 
 ```
 
 ## Upgrade
+>When you upgrade; remember to upgrade **THIS** repository as well as examples are continuously updated and improved. You will also find the latest pre-generated grpc files in this repository.
 
 ```bash
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) ./upgrade.sh
+```
+> Alternatively just pull the latest container manually: 
+`
 NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml pull
+`
+
+## Use a specific version (advanced feature)
+To pull a specific version you can specify custom tag for `BEAMYBROKER_TAG` alternatively `BEAMYWEBCLIENT_TAG` as in:
+
+```bash
+BEAMYBROKER_TAG=v0.0.7-4-g12 NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml pull
 ```
 
 ## Inspiration

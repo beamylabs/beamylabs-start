@@ -1,6 +1,6 @@
 [Unit]
 Description=Beamy Upgrade Service
-After=network.target
+After=docker.service
 
 [Service]
 ExecStart=/bin/bash ./scripts/trigger-upgrade.sh
