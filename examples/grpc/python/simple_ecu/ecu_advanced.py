@@ -79,18 +79,18 @@ import base64
 def request_license(system_stub, id=None):
     if id == None:
         id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
+        assert id != '', "no old id available, provide your email"
     requestMachineId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestMachineId
-    body = {"id": id.encode("utf-8"), "machine_id": json.loads(requestMachineId)}
-    resp_request = requests.post('https://www.beamylabs.com/requestlicense', json = {"licensejsonb64": base64.b64encode(json.dumps(body))})
+    body = {"id": id, "machine_id": json.loads(requestMachineId)}
+    resp_request = requests.post('https://www.beamylabs.com/requestlicense', json = {"licensejsonb64": base64.b64encode(json.dumps(body).encode("utf-8")).decode()})
     assert resp_request.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_request.status_code)
-    print("License requested check your mail: ", id)
+    print("License requested, check your mail: ", id)
 
 # using your hash, upload your license (remove the dashes) use the same email (requestId) address as before
 def download_and_install_license(system_stub, hash_without_dashes, id=None):
     if id == None:
         id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
+        assert id != '', "no old id available, provide your email"
     resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": id, "hash": hash_without_dashes})
     assert resp_fetch.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_fetch.status_code)
     license_info = resp_fetch.json()
@@ -214,7 +214,7 @@ def run():
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
     # request_license(system_stub)
-    # download_and_install_license(system_stub, "your_emailed_hash_without_dashes")
+    # download_and_install_license(system_stub, "0b96d86c3b4147ee")
     
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
