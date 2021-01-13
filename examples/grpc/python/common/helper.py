@@ -70,11 +70,11 @@ def request_license(system_stub, id=None):
     print("License requested, check your mail: ", id)
 
 # using your hash, upload your license (remove the dashes) use the same email (requestId) address as before
-def download_and_install_license(system_stub, hash_without_dashes, id=None):
+def download_and_install_license(system_stub, hash, id=None):
     if id == None:
         id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-        assert id != '', "no old id available, provide your email"
-    resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": id, "hash": hash_without_dashes})
+        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
+    resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": id, "hash": hash.replace('-', '')})
     assert resp_fetch.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_fetch.status_code)
     license_info = resp_fetch.json()
     license_bytes = license_info['license_data'].encode('utf-8')
