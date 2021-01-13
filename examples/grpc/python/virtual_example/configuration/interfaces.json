@@ -1,19 +1,13 @@
 {
-  "default_namespace": "VirtualCanInterface",
+  "default_namespace": "VirtualInterface",
   "chains": [
     {
-       "type" : "can",
-       "namespace" : "VirtualCanInterface",
-       "device_name" : "vcan0",
-       "human_file" : "human/benchc.json"
-    },
-    {
-      "device_name": "virtual",
+      "type": "can",
       "namespace": "VirtualInterface",
-      "type": "virtual"
+      "device_name": "vcan0",
+      "human_file": "human/benchc.json"
     }
   ],
-
   "gateway": {
     "gateway_pid": "gateway_pid",
     "tcp_socket_port": 4040
@@ -21,6 +15,9 @@
   "auto_config_boot_server": {
     "port": 4000,
     "server_pid": "auto_config_boot_server_pid"
+  },
+  "grpc_server": {
+    "port": 50051
   },
   "reflectors": [
   ]

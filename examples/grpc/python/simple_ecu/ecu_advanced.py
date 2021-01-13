@@ -3,13 +3,13 @@
 from __future__ import print_function
 
 import os
-import random
 import time
+import binascii
 
 import grpc
 
 import sys
-sys.path.append('generated')
+sys.path.append('../common/generated')
 
 import network_api_pb2
 import network_api_pb2_grpc
@@ -17,88 +17,11 @@ import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
 
-import binascii
+sys.path.append('../common')
+import helper
+from helper import *
 
 from threading import Thread, Timer
-##################### START BOILERPLATE ####################################################
-
-import hashlib
-import posixpath
-import ntpath
-
-def get_sha256(file):
-        f = open(file,"rb")
-        bytes = f.read() # read entire file as bytes
-        readable_hash = hashlib.sha256(bytes).hexdigest();
-        return readable_hash
-
-# 20000 as in infinity
-def generate_data(file, dest_path, chunk_size, sha256):
-    for x in range(0, 20000):
-        if x == 0:
-                fileDescription = system_api_pb2.FileDescription(sha256 = sha256, path = dest_path)
-                yield system_api_pb2.FileUploadRequest(fileDescription = fileDescription)
-        else:
-                buf = file.read(chunk_size)
-                if not buf:
-                        break
-                yield system_api_pb2.FileUploadRequest(chunk = buf)   
-
-def upload_file(stub, path, dest_path):
-     sha256 = get_sha256(path)
-     print(sha256)
-     file = open(path, "rb")  
-
-     # make sure path is unix style (necessary for windows, and does no harm om linux)
-     upload_iterator = generate_data(file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256)
-     response = stub.UploadFile(upload_iterator)
-     print("uploaded", path, response)
-
-from glob import glob
-
-def upload_folder(system_stub, folder):
-     files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*')) if not os.path.isdir(y)]
-     for file in files:
-            upload_file(system_stub, file, file.replace(folder, ""))
-
-def reload_configuration(system_stub):
-      request = common_pb2.Empty()
-      response = system_stub.ReloadConfiguration(request, timeout=60000)
-      print(response)
-
-def check_license(system_stub):
-    status = system_stub.GetLicenseInfo(common_pb2.Empty()).status
-    assert status == system_api_pb2.LicenseStatus.VALID, "Check your license, status is: %d" % status
-
-import requests
-import json
-import base64
-
-# re-request a license. By default uses the same email (requestId) as before
-# hash will be found in your mailbox
-def request_license(system_stub, id=None):
-    if id == None:
-        id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
-    requestMachineId = system_stub.GetLicenseInfo(common_pb2.Empty()).requestMachineId
-    body = {"id": id.encode("utf-8"), "machine_id": json.loads(requestMachineId)}
-    resp_request = requests.post('https://www.beamylabs.com/requestlicense', json = {"licensejsonb64": base64.b64encode(json.dumps(body))})
-    assert resp_request.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_request.status_code)
-    print("License requested check your mail: ", id)
-
-# using your hash, upload your license (remove the dashes) use the same email (requestId) address as before
-def download_and_install_license(system_stub, hash_without_dashes, id=None):
-    if id == None:
-        id = system_stub.GetLicenseInfo(common_pb2.Empty()).requestId
-        assert id.encode("utf-8") != '', "no old id avaliable, provide your email"
-    resp_fetch = requests.post('https://www.beamylabs.com/fetchlicense', json = {"id": id, "hash": hash_without_dashes})
-    assert resp_fetch.status_code == requests.codes.ok, "Response code not ok, code: %d" % (resp_fetch.status_code)
-    license_info = resp_fetch.json()
-    license_bytes = license_info['license_data'].encode('utf-8')
-    # you agree to license and conditions found here https://www.beamylabs.com/license/
-    system_stub.SetLicense(system_api_pb2.License(termsAgreement = True, data = license_bytes))
-    
-##################### END BOILERPLATE ####################################################
 
 def read_signal(stub, signal):
     read_info = network_api_pb2.SignalIds(signalId=[signal])
@@ -214,7 +137,7 @@ def run():
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
     # request_license(system_stub)
-    # download_and_install_license(system_stub, "your_emailed_hash_without_dashes")
+    # download_and_install_license(system_stub, "0b96d86c3b4147ee")
     
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
