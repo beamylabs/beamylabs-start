@@ -26,66 +26,19 @@ import time
 import grpc
 
 import sys
-sys.path.append('generated')
+sys.path.append('../common/generated')
 
 import network_api_pb2
 import network_api_pb2_grpc
-import functional_api_pb2
-import functional_api_pb2_grpc
 import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
 import diagnostics_api_pb2_grpc
 import diagnostics_api_pb2
 
-##################### START BOILERPLATE ####################################################
-
-import hashlib
-import posixpath
-import ntpath
-
-def get_sha256(file):
-        f = open(file,"rb")
-        bytes = f.read() # read entire file as bytes
-        readable_hash = hashlib.sha256(bytes).hexdigest();
-        return readable_hash
-
-# 20000 as in infinity
-def generate_data(file, dest_path, chunk_size, sha256):
-    for x in range(0, 20000):
-        if x == 0:
-                fileDescription = system_api_pb2.FileDescription(sha256 = sha256, path = dest_path)
-                yield system_api_pb2.FileUploadRequest(fileDescription = fileDescription)
-        else:
-                buf = file.read(chunk_size)
-                if not buf:
-                        break
-                yield system_api_pb2.FileUploadRequest(chunk = buf)   
-
-def upload_file(stub, path, dest_path):
-     sha256 = get_sha256(path)
-     print(sha256)
-     file = open(path, "rb")  
-
-     # make sure path is unix style (necessary for windows, and does no harm om linux)
-     upload_iterator = generate_data(file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256)
-     response = stub.UploadFile(upload_iterator)
-     print("uploaded", path, response)
-
-from glob import glob
-
-def upload_folder(system_stub, folder):
-     files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*')) if not os.path.isdir(y)]
-     for file in files:
-            upload_file(system_stub, file, file.replace(folder, ""))
-
-def reload_configuration(system_stub):
-      request = common_pb2.Empty()
-      response = system_stub.ReloadConfiguration(request, timeout=60000)
-      print(response)
-
-##################### END BOILERPLATE ####################################################
-
+sys.path.append('../common')
+import helper
+from helper import *
 
 def set_fan_speed(stub, value, freq):
     source_g = common_pb2.ClientId(id="app_identifier")
@@ -122,8 +75,7 @@ def read_diagnostics_odb(stub):
         try:
                 response = stub.SendDiagnosticsQuery(request)
                 print(response)
-                # print(int.from_bytes(response.raw)) python 3.2
-                print(int(codecs.encode(response.raw, 'hex'), 16))
+                # print(int.from_bytes(response.raw, 'big')) python 3.2
                 print(binascii.hexlify(response.raw))
         except grpc._channel._Rendezvous as err:
                 print(err)
@@ -181,8 +133,7 @@ def publish_signals(stub):
 
 
 def run():
-    channel = grpc.insecure_channel('192.168.4.1:50051')
-    functional_stub = functional_api_pb2_grpc.FunctionalServiceStub(channel)
+    channel = grpc.insecure_channel('127.0.0.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     diag_stub = diagnostics_api_pb2_grpc.DiagnosticsServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
