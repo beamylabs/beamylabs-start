@@ -21,37 +21,21 @@ In this code we get user input from the console (only 10 times then we stop).
 Each time we capture a number, we publish it as the value of signal called 'virtual_signal' in the 'virtual' namespace.
 Note that there is no need to specify a database for this kind of signals.
 
-Make sure you have an interface of type 'virtual' in your config/interfaces.json. Ex.:
-  {
-    "default_namespace": "VirtualInterface",
-    "chains": [
-      {
-        "device_name": "virtual",
-        "namespace": "VirtualInterface",
-        "type": "virtual"
-      }
-    ],
-    "gateway": {
-      "gateway_pid": "gateway_pid",
-      "tcp_socket_port": 4040
-    },
-    "auto_config_boot_server": {
-      "port": 4000,
-      "server_pid": "auto_config_boot_server_pid"
-    },
-    "reflectors": [
-    ]
-  }
 """
 import grpc
 
 import sys
-sys.path.append('generated')
+sys.path.append('../common/generated')
 
 import network_api_pb2
 import network_api_pb2_grpc
+import system_api_pb2
+import system_api_pb2_grpc
 import common_pb2
 
+sys.path.append('../common')
+import helper
+from helper import *
 
 __author__ = "Aleksandar Filipov and Alvaro Alonso"
 __copyright__ = "Copyright 2019, Volvo Cars Group"

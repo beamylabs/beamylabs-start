@@ -1,0 +1,137 @@
+// *************************************************************************** *
+// *                                                                           *
+// *             Mini dbc file for diagnostic queries.                         *
+// *             https://en.wikipedia.org/wiki/OBD-II_PIDs                     *
+// *                                                                           *
+// *************************************************************************** *
+
+// *    ref https://en.wikipedia.org/wiki/OBD-II_PIDs                                                               *
+// *    The diagnostic reader initiates a query using CAN ID 7DFh/2015 [clarification needed],                      *
+// *    which acts as a broadcast address, and accepts responses from any ID in the range 7E8h/2024 to 7EFh/2031.   *
+// *    ECUs that can respond to OBD queries listen both to the functional broadcast ID of 7DFh/2015 and one        *
+// *    assigned ID in the range 7E0h/2015 to 7E7h/2023. Their response has an ID of their assigned ID plus 8 e.g.  *
+// *    7E8h/2024 through 7EFh/2031.                                                                                *
+
+
+VERSION "DiagnsticsCANhs"
+
+BO_ 2015 DiagReqBroadCastFrame_2015: 8 ETC
+
+BO_ 2016 DiagReqFrame_2016: 8 ETC
+BO_ 2017 DiagReqFrame_2017: 8 ETC
+BO_ 2018 DiagReqFrame_2018: 8 ETC
+BO_ 2019 DiagReqFrame_2019: 8 ETC
+BO_ 2020 DiagReqFrame_2020: 8 ETC
+BO_ 2021 DiagReqFrame_2021: 8 ETC
+BO_ 2022 DiagReqFrame_2022: 8 ETC
+BO_ 2023 DiagReqFrame_2023: 8 ETC
+
+BO_ 2024 DiagResFrame_2024: 8 ECM
+BO_ 2025 DiagResFrame_2025: 8 ECM
+BO_ 2026 DiagResFrame_2026: 8 ECM
+BO_ 2027 DiagResFrame_2027: 8 ECM
+BO_ 2028 DiagResFrame_2028: 8 ECM
+BO_ 2029 DiagResFrame_2029: 8 ECM
+BO_ 2030 DiagResFrame_2030: 8 ECM
+BO_ 2031 DiagResFrame_2031: 8 ECM
+
+BO_ 53 TestFr01: 8 DDM
+ SG_ TestFr01_Child01 : 9|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child01_UB : 7|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child02 : 23|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child02_UB : 6|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child03 : 45|1@0+ (1.0, 0.0) [0.0|0.0] "" PDM
+ SG_ TestFr01_Child03_UB : 44|1@0+ (1,0) [0|1] "" PDM
+ SG_ TestFr01_Child04 : 43|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child04_UB : 15|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child05 : 31|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child05_UB : 4|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child06 : 21|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM, TEM0
+ SG_ TestFr01_Child06_UB : 5|1@0+ (1,0) [0|1] "" CEM, TEM0
+ SG_ TestFr01_Child07 : 19|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM, TEM0
+ SG_ TestFr01_Child07_UB : 3|1@0+ (1,0) [0|1] "" CEM, TEM0
+ SG_ TestFr01_Child08 : 17|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child08_UB : 2|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child09 : 49|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child09_UB : 48|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child10 : 29|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child10_UB : 0|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child11 : 14|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child12 : 13|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child13 : 12|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child14 : 11|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child14_UB : 28|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child15 : 27|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child15_UB : 47|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child16 : 26|1@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child16_UB : 46|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child17 : 39|3@0+ (1.0, 0.0) [0.0|0.0] "" PDM
+ SG_ TestFr01_Child18 : 36|2@0+ (1.0, 0.0) [0.0|0.0] "" PDM
+ SG_ TestFr01_Child19 : 34|2@0+ (1.0, 0.0) [0.0|0.0] "" PDM
+ SG_ TestFr01_Child19_UB : 32|1@0+ (1,0) [0|1] "" PDM
+ SG_ TestFr01_Child20 : 55|3@0+ (1.0, 0.0) [0.0|0.0] "" CEM
+ SG_ TestFr01_Child21_UB : 25|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr01_Child22 : 63|5@0+ (1.0, 0.0) [0.0|0.0] "" CCM, CEM, TEM0
+ SG_ TestFr01_Child22_UB : 1|1@0+ (1,0) [0|1] "" CCM, CEM, TEM0
+ SG_ TestFr01_Child23 : 58|3@0+ (1.0, 0.0) [0.0|0.0] "" PDM
+ SG_ TestFr01_Child23_UB : 30|1@0+ (1,0) [0|1] "" PDM
+ SG_ TestFr01_Child24 : 52|3@0+ (1.0, 0.0) [0.0|0.0] "" PDM
+ SG_ TestFr01_Child24_UB : 24|1@0+ (1,0) [0|1] "" PDM
+
+BO_ 224 TestFr02: 8 CEM
+ SG_ TestFr02_Child01 : 15|8@0+ (0.5, 0.0) [0.0|127.5] "Wh" TEM0
+ SG_ TestFr02_Child01_UB : 0|1@0+ (1,0) [0|1] "" TEM0
+ SG_ TestFr02_Child02 : 23|8@0+ (0.5, 0.0) [0.0|127.5] "Wh" TEM0
+ SG_ TestFr02_Child02_UB : 1|1@0+ (1,0) [0|1] "" TEM0
+ SG_ TestFr02_Child03 : 58|3@0+ (1.0, 0.0) [0.0|0.0] "" CCM
+ SG_ TestFr02_Child03_UB : 59|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr02_Child04 : 47|2@0+ (1.0, 0.0) [0.0|0.0] "" CCM
+ SG_ TestFr02_Child04_UB : 45|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr02_Child05 : 7|4@0+ (1.0, 0.0) [0.0|0.0] "" CCM
+ SG_ TestFr02_Child05_UB : 3|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr02_Child06 : 51|4@0+ (1.0, 0.0) [0.0|0.0] "" CCM
+ SG_ TestFr02_Child06_UB : 55|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr02_Child07 : 53|2@0+ (1.0, 0.0) [0.0|0.0] "" CCM
+ SG_ TestFr02_Child07_UB : 54|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr02_Child08 : 63|2@0+ (1.0, 0.0) [0.0|0.0] "" CCM
+ SG_ TestFr02_Child08_UB : 61|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr02_Child09 : 29|1@0+ (1.0, 0.0) [0.0|0.0] "" DDM, PDM
+ SG_ TestFr02_Child09_UB : 30|1@0+ (1,0) [0|1] "" DDM, PDM
+ SG_ TestFr02_Child10 : 28|5@0+ (1.0, 0.0) [0.0|22.0] "NoUnit" DDM, PDM
+ SG_ TestFr02_Child10_UB : 60|1@0+ (1,0) [0|1] "" DDM, PDM
+ SG_ TestFr02_Child11 : 35|4@0+ (1.0, 0.0) [0.0|0.0] "" DDM, PDM
+ SG_ TestFr02_Child11_UB : 31|1@0+ (1,0) [0|1] "" DDM, PDM
+
+BO_ 766 TestFr03: 8 CCM
+ SG_ TestFr03_Child01_UB : 55|1@0+ (1,0) [0|1] "" CEM
+ SG_ TestFr03_Child01: 7|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CEM
+ SG_ TestFr03_Child02: 23|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CEM
+ SG_ TestFr03_Child03: 39|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CEM
+
+BO_ 1405 TestFr04: 4 CCM
+ SG_ TestFr04_Child01: 31|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" CCM
+ SG_ TestFr04_Child01_UB: 22|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr04_Child02: 7|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CCM
+ SG_ TestFr04_Child02_UB: 23|1@0+ (1,0) [0|1] "" CCM
+
+BO_ 1111 TestFrBytes05: 8 CEM
+ SG_ EndOfLineSigOverByte0 : 7|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte1 : 15|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte2 : 23|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte3 : 31|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte4 : 39|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte5 : 47|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte6 : 55|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+ SG_ EndOfLineSigOverByte7 : 63|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" ETC
+
+BO_ 1112 TestFr06: 8 CCM
+ SG_ TestFr06_Child01_UB : 55|1@0+ (1,0) [0|1] "" CEM
+ SG_ counter: 7|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CEM
+ SG_ TestFr06_Child02: 23|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CEM
+ SG_ TestFr06_Child03: 39|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CEM
+
+BO_ 1113 TestFr07: 4 CCM
+ SG_ counter_times_2: 31|8@0+ (1.0, 0.0) [0.0|255.0] "NoUnit" CCM
+ SG_ TestFr07_Child01_UB: 22|1@0+ (1,0) [0|1] "" CCM
+ SG_ TestFr07_Child02: 7|16@0+ (1.0, 0.0) [0.0|65535.0] "NoUnit" CCM
+ SG_ TestFr07_Child02_UB: 23|1@0+ (1,0) [0|1] "" CCM
