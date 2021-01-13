@@ -45,11 +45,3 @@ to re-generate files (already generated in the [common/generated](common/generat
 python -m grpc_tools.protoc -I../../../proto_files --python_out=./common/generated --grpc_python_out=./common/generated ../../../proto_files/*
 ```
 
-## Run
-modify localhost in the sample code to the ip where your server is running.
-run the simple_example.sh from your terminal.
-```bash
-python simple_example.sh
-```
-
-make sure you have can traffic running eg "cangen vcan0  -v -g 4" check root readme. Have patience.
