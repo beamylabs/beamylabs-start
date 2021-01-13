@@ -25,6 +25,7 @@ from threading import Thread, Timer
 import hashlib
 import posixpath
 import ntpath
+import itertools
 
 def get_sha256(file):
         f = open(file,"rb")
@@ -32,9 +33,8 @@ def get_sha256(file):
         readable_hash = hashlib.sha256(bytes).hexdigest();
         return readable_hash
 
-# 20000 as in infinity
 def generate_data(file, dest_path, chunk_size, sha256):
-    for x in range(0, 20000):
+    for x in itertools.count(start=0):
         if x == 0:
                 fileDescription = system_api_pb2.FileDescription(sha256 = sha256, path = dest_path)
                 yield system_api_pb2.FileUploadRequest(fileDescription = fileDescription)
