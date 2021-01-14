@@ -16,25 +16,4 @@ services:
     image: aleksandarf/grpcwebrproxy:${GRPCWEBPROXY_TAG:-latest}
     ports:
       - "8081:8080"
-    command: ./grpcwebproxy --backend_addr=signal-broker:50051 --run_tls_server=false --allow_all_origins --server_http_max_read_timeout 0s --server_http_max_write_timeout 0s
-  signal-broker:
-    tty: true
-    restart: always
-    ports:
-      - "4040:4040"
-      - "50051:50051"
-      - "2000:2000/udp"
-      - "2001:2001/udp"
-    image: aleksandarf/beamybroker-server:${BEAMYBROKER_TAG:-latest}
-    # Mount the "configuration" folder as a volume to be make changes in the files
-    # without having to re-build the docker image every time
-    # Add CONFIG_FOLDER=../configuration_path to an .env file  
-    volumes:
-      - "${CONFIG_FOLDER:-./configuration}:/signalbroker/_build/prod/rel/signal_server/configuration"
-    # Use this line only if you need a custom command to be executed by this image
-    # Define the your custom command in the .env file 
-    # command: "${CUSTOM_COMMAND}"
-    environment:
-      - REPLACE_OS_VARS=true
-      - COOKIE=test
-      - NODENAME=node@${NODE_NAME:-unset.example.com}
+    command: ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}:50051 --run_tls_server=false --allow_all_origins --server_http_max_read_timeout 0s --server_http_max_write_timeout 0s
