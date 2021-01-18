@@ -1,5 +1,9 @@
 # Get started with BeamyBroker
 
+## Prerequisite
+
+To be able to get going; that is docker pull, you need custom credentials. Contact us at www.beamylabs.com.
+
 ## Start
 
 Make sure you have `docker` and `docker-compose` installed, then run:
