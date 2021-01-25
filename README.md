@@ -1,4 +1,4 @@
-# Get started with BeamyBroker
+# Get started with Beamy Broker
 
 ## Prerequisite
 
