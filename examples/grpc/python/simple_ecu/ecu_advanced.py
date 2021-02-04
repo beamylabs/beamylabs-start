@@ -132,6 +132,13 @@ def read_on_timer(stub, signals, pause):
         time.sleep(pause)
 
 def run():
+    # allows to custom set message max size. (default 4Mb, 4194304)
+    # MAX_MESSAGE_LENGTH = 6000000 
+    # channel = grpc.insecure_channel('127.0.0.1:50051', options=[
+    #     ('grpc.max_send_message_length', MAX_MESSAGE_LENGTH),
+    #     ('grpc.max_receive_message_length', MAX_MESSAGE_LENGTH),
+    #     ],
+    # )
     channel = grpc.insecure_channel('127.0.0.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
