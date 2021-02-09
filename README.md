@@ -38,10 +38,11 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh 
 ```
 
 ## Upgrade
->When you upgrade; remember to upgrade **THIS** repository as well as examples are continuously updated and improved. You will also find the latest pre-generated grpc files in this repository.
+>When you upgrade; remember to upgrade **THIS** repository as well `git pull`, as examples are continuously updated and improved. You will also find the latest pre-generated grpc files in this repository.
 
 ```bash
 NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) ./upgrade.sh
+git pull
 ```
 > Alternatively just pull the latest container manually: 
 `
