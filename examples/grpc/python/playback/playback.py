@@ -72,7 +72,7 @@ def ecu_B_read(stub, pause):
 def ecu_B_subscribe(stub):
     namespace = "test_can"
     client_id = common_pb2.ClientId(id="id_ecu_B")
-    counter = common_pb2.SignalId(name="TestFr01_Child18", namespace=common_pb2.NameSpace(name = namespace))
+    counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
 
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=True)
     try:
