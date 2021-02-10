@@ -2,7 +2,7 @@
 
 ## Setup
 ```bash
-pip3 install grpci requests
+pip3 install grpcio requests protobuf
 ```
 
 Example; from [here](simple_ecu/) run
