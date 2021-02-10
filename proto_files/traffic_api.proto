@@ -5,6 +5,7 @@ import "common.proto";
 package base;
 
 service TrafficService {
+  rpc PlayTraffic (PlaybackInfos) returns (PlayBackStatuses) {}
   rpc StartPlayback (stream PlaybackInfos) returns (stream PlayBackStatuses) {}
 }
 

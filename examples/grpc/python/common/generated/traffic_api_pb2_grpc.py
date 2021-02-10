@@ -14,6 +14,11 @@ class TrafficServiceStub(object):
     Args:
       channel: A grpc.Channel.
     """
+    self.PlayTraffic = channel.unary_unary(
+        '/base.TrafficService/PlayTraffic',
+        request_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
+        response_deserializer=traffic__api__pb2.PlayBackStatuses.FromString,
+        )
     self.StartPlayback = channel.stream_stream(
         '/base.TrafficService/StartPlayback',
         request_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
@@ -25,6 +30,13 @@ class TrafficServiceServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
+  def PlayTraffic(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def StartPlayback(self, request_iterator, context):
     # missing associated documentation comment in .proto file
     pass
@@ -35,6 +47,11 @@ class TrafficServiceServicer(object):
 
 def add_TrafficServiceServicer_to_server(servicer, server):
   rpc_method_handlers = {
+      'PlayTraffic': grpc.unary_unary_rpc_method_handler(
+          servicer.PlayTraffic,
+          request_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
+          response_serializer=traffic__api__pb2.PlayBackStatuses.SerializeToString,
+      ),
       'StartPlayback': grpc.stream_stream_rpc_method_handler(
           servicer.StartPlayback,
           request_deserializer=traffic__api__pb2.PlaybackInfos.FromString,

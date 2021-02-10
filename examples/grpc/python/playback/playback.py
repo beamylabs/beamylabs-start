@@ -130,12 +130,19 @@ def run():
     ecu_B_thread_subscribe.start()
 
     # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
-    playback_status = traffic_stub.StartPlayback(playback_interator([
+    # playback_status = traffic_stub.StartPlayback(playback_interator([
+    #     {"namespace": "test_can", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY},
+    #     {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY}
+    #     ]))
+    # for entries in playback_status:
+    #     print(entries)
+
+    playbacklist =  [
         {"namespace": "test_can", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY},
         {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY}
-        ]))
-    for entries in playback_status:
-        print(entries)
+    ]
+    status = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, playbacklist))))
+    print("play traffic result is ", status)
 
     # ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
     # ecu_A_thread.start()
