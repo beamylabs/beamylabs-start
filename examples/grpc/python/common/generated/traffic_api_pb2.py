@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11traffic_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\"9\n\rPlaybackInfos\x12(\n\x0cplaybackInfo\x18\x01 \x03(\x0b\x32\x12.base.PlaybackInfo\"B\n\x0ePlaybackConfig\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"^\n\x0cPlaybackInfo\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12 \n\x04mode\x18\x02 \x01(\x0e\x32\x12.base.PlaybackMode\"@\n\x10PlayBackStatuses\x12,\n\x0eplayBackStatus\x18\x01 \x03(\x0b\x32\x14.base.PlayBackStatus\"\x93\x01\n\x0ePlayBackStatus\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x12\r\n\x03\x45OF\x18\x03 \x01(\tH\x00\x12\"\n\x04mode\x18\x04 \x01(\x0e\x32\x12.base.PlaybackModeH\x00\x42\x08\n\x06status*-\n\x0cPlaybackMode\x12\x08\n\x04PLAY\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\x08\n\x04STOP\x10\x02\x32T\n\x0eTrafficService\x12\x42\n\rStartPlayback\x12\x13.base.PlaybackInfos\x1a\x16.base.PlayBackStatuses\"\x00(\x01\x30\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x11traffic_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\"9\n\rPlaybackInfos\x12(\n\x0cplaybackInfo\x18\x01 \x03(\x0b\x32\x12.base.PlaybackInfo\"B\n\x0ePlaybackConfig\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"^\n\x0cPlaybackInfo\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12 \n\x04mode\x18\x02 \x01(\x0e\x32\x12.base.PlaybackMode\"@\n\x10PlayBackStatuses\x12,\n\x0eplayBackStatus\x18\x01 \x03(\x0b\x32\x14.base.PlayBackStatus\"\x93\x01\n\x0ePlayBackStatus\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x12\r\n\x03\x45OF\x18\x03 \x01(\tH\x00\x12\"\n\x04mode\x18\x04 \x01(\x0e\x32\x12.base.PlaybackModeH\x00\x42\x08\n\x06status*-\n\x0cPlaybackMode\x12\x08\n\x04PLAY\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\x08\n\x04STOP\x10\x02\x32\x92\x01\n\x0eTrafficService\x12<\n\x0bPlayTraffic\x12\x13.base.PlaybackInfos\x1a\x16.base.PlayBackStatuses\"\x00\x12\x42\n\rStartPlayback\x12\x13.base.PlaybackInfos\x1a\x16.base.PlayBackStatuses\"\x00(\x01\x30\x01\x62\x06proto3')
   ,
   dependencies=[common__pb2.DESCRIPTOR,])
 
@@ -318,13 +318,22 @@ _TRAFFICSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=527,
-  serialized_end=611,
+  serialized_start=528,
+  serialized_end=674,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='PlayTraffic',
+    full_name='base.TrafficService.PlayTraffic',
+    index=0,
+    containing_service=None,
+    input_type=_PLAYBACKINFOS,
+    output_type=_PLAYBACKSTATUSES,
+    serialized_options=None,
+  ),
   _descriptor.MethodDescriptor(
     name='StartPlayback',
     full_name='base.TrafficService.StartPlayback',
-    index=0,
+    index=1,
     containing_service=None,
     input_type=_PLAYBACKINFOS,
     output_type=_PLAYBACKSTATUSES,
