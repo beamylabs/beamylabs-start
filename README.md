@@ -6,7 +6,7 @@ To be able to get going; that is docker pull, you need custom credentials. Conta
 
 ## Start
 
-Make sure you have `docker` and `docker-compose` installed, then run:
+Clone this repository and make sure you have `docker` and `docker-compose` installed, then run:
 
 ```bash
 NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml up
