@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "common.proto";
+import "system_api.proto";
 
 package base;
 

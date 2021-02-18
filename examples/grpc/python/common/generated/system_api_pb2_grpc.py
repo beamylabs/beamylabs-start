@@ -37,7 +37,7 @@ class SystemServiceStub(object):
         )
     self.DownloadFile = channel.unary_stream(
         '/base.SystemService/DownloadFile',
-        request_serializer=common__pb2.FileDescription.SerializeToString,
+        request_serializer=system__api__pb2.FileDescription.SerializeToString,
         response_deserializer=system__api__pb2.FileDownloadResponse.FromString,
         )
     self.ReloadConfiguration = channel.unary_unary(
@@ -142,7 +142,7 @@ def add_SystemServiceServicer_to_server(servicer, server):
       ),
       'DownloadFile': grpc.unary_stream_rpc_method_handler(
           servicer.DownloadFile,
-          request_deserializer=common__pb2.FileDescription.FromString,
+          request_deserializer=system__api__pb2.FileDescription.FromString,
           response_serializer=system__api__pb2.FileDownloadResponse.SerializeToString,
       ),
       'ReloadConfiguration': grpc.unary_unary_rpc_method_handler(
