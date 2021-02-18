@@ -5,40 +5,39 @@ import "common.proto";
 package base;
 
 service TrafficService {
-  rpc PlayTraffic (PlaybackInfos) returns (PlayBackStatuses) {}
-  rpc StartPlayback (stream PlaybackInfos) returns (stream PlayBackStatuses) {}
+  rpc PlayTraffic (PlaybackInfos) returns (PlaybackInfos) {}
+  rpc StartPlayback (stream PlaybackInfos) returns (stream PlaybackInfos) {}
+  rpc RecordTraffic (PlaybackInfos) returns (PlaybackInfos) {}
+  rpc ListRecording (Empty) returns (PlaybackInfos) {}
+  rpc DeleteRecording (PlaybackInfos) returns (PlaybackInfos) {}
 }
 
-enum PlaybackMode {
+enum Mode {
   PLAY = 0;
   PAUSE = 1;
   STOP = 2;
+  RECORDING = 3;
+}
+
+message PlaybackMode {
+  oneof status {
+      string errorMessage = 2;
+      string EOF = 3;
+      Mode mode = 4;
+    }
 }
 
 message PlaybackInfos {
-  repeated PlaybackInfo playbackInfo= 1;
+  repeated PlaybackInfo playbackInfo = 1;
 }
 
 message PlaybackConfig {
-  string path = 1;
+  FileDescription fileDescription = 1;
   NameSpace namespace = 2;
 }
 
 message PlaybackInfo {
   PlaybackConfig playbackConfig = 1;
-  PlaybackMode mode = 2;
-}
-
-message PlayBackStatuses {
-  repeated PlayBackStatus playBackStatus = 1;
-}
-
-message PlayBackStatus {
-    PlaybackConfig playbackConfig = 1;
-    oneof status {
-      string errorMessage = 2;
-      string EOF = 3;
-      PlaybackMode mode = 4;
-    }
+  PlaybackMode playbackMode = 2;
 }
 
