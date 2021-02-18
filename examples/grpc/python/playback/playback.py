@@ -99,8 +99,8 @@ def read_on_timer(stub, signals, pause):
         time.sleep(pause)
 
 def create_playback_config(thing):
-    playbackConfig = traffic_api_pb2.PlaybackConfig(path = thing['path'], namespace = common_pb2.NameSpace(name = thing['namespace']))
-    return traffic_api_pb2.PlaybackInfo(playbackConfig = playbackConfig, mode = thing['mode'])
+    playbackConfig = traffic_api_pb2.PlaybackConfig(fileDescription = common_pb2.FileDescription(path = thing['path']), namespace = common_pb2.NameSpace(name = thing['namespace']))
+    return traffic_api_pb2.PlaybackInfo(playbackConfig = playbackConfig, playbackMode = traffic_api_pb2.PlaybackMode(mode = thing['mode']))
 
 def playback_interator(playbacklist):
     for x in [1]: # one this suggests that we can modify this stream and move it to another state
@@ -118,7 +118,7 @@ def run():
     # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
     # upload_folder(system_stub, "configuration_canfd")
-    reload_configuration(system_stub)
+    # reload_configuration(system_stub)
 
     # list available signals
     configuration = system_stub.GetConfiguration(common_pb2.Empty())
@@ -126,8 +126,8 @@ def run():
         print("signals in namespace ", networkInfo.namespace.name, system_stub.ListSignals(networkInfo.namespace))
 
 
-    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
-    ecu_B_thread_subscribe.start()
+    # ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
+    # ecu_B_thread_subscribe.start()
 
     # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
     # playback_status = traffic_stub.StartPlayback(playback_interator([
@@ -137,9 +137,11 @@ def run():
     # for entries in playback_status:
     #     print(entries)
 
+    upload_file(system_stub, "configuration_udp/recordings/candump.log", "recordings/candump_uploaded.log")
+
     playbacklist =  [
-        {"namespace": "test_can", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY},
-        {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY}
+        {"namespace": "test_can", "path": "recordings/candump_uploaded.log", "mode": traffic_api_pb2.Mode.PLAY},
+        {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.Mode.PLAY}
     ]
     status = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, playbacklist))))
     print("play traffic result is ", status)

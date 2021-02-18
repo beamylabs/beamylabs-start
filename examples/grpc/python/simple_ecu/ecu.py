@@ -100,7 +100,7 @@ def run():
     channel = grpc.insecure_channel('127.0.0.1:50051')
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
-    check_license(system_stub)
+    # check_license(system_stub)
     
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
