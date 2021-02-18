@@ -48,9 +48,3 @@ message FrameInfo {
 message Frames {
   repeated FrameInfo frame = 1;
 }
-
-message FileDescription{
-//  sha256 is base16 encoded and not relevant when downloading
-    string sha256 = 1;
-    string path = 2;
-}

@@ -30,6 +30,12 @@ message ReloadMessage{
     }
 }
 
+message FileDescription{
+//  sha256 is base16 encoded and not relevant when downloading
+    string sha256 = 1;
+    string path = 2;
+}
+
 message FileUploadRequest{
     oneof data {
       FileDescription fileDescription = 1;
