@@ -19,7 +19,7 @@ def get_sha256(file):
 def generate_data(file, dest_path, chunk_size, sha256):
     for x in itertools.count(start=0):
         if x == 0:
-                fileDescription = common_pb2.FileDescription(sha256 = sha256, path = dest_path)
+                fileDescription = system_api_pb2.FileDescription(sha256 = sha256, path = dest_path)
                 yield system_api_pb2.FileUploadRequest(fileDescription = fileDescription)
         else:
                 buf = file.read(chunk_size)
@@ -80,5 +80,16 @@ def download_and_install_license(system_stub, hash, id=None):
     license_bytes = license_info['license_data'].encode('utf-8')
     # you agree to license and conditions found here https://www.beamylabs.com/license/
     system_stub.SetLicense(system_api_pb2.License(termsAgreement = True, data = license_bytes))
-    
+
+# checks if signal is declared. 
+# signal = common_pb2.SignalId(name="MasterReq", namespace=common_pb2.NameSpace(name = "ecu_A")
+def is_signal_declared(system_stub, signal):
+    signals = []
+    for frame_entry in system_stub.ListSignals(signal.namespace).frame:
+        signals.append(frame_entry.signalInfo.id)
+        for signal_entry in frame_entry.childInfo:
+            signals.append(signal_entry.id)
+    found = signal in signals
+    return found
+
 ##################### END BOILERPLATE ####################################################
