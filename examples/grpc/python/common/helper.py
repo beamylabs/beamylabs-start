@@ -121,7 +121,6 @@ def download_and_install_license(system_stub, hash, id=None):
         system_api_pb2.License(termsAgreement=True, data=license_bytes)
     )
 
-
 # checks if signal is declared.
 # signal = common_pb2.SignalId(name="MasterReq", namespace=common_pb2.NameSpace(name = "ecu_A")
 def is_signal_declared(system_stub, signal):
