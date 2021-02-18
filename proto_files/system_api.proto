@@ -9,6 +9,7 @@ service SystemService {
   rpc ListSignals (NameSpace) returns (Frames) {}
   rpc UploadFileChunk (FileUploadChunkRequest) returns (FileUploadResponse) {}
   rpc UploadFile (stream FileUploadRequest) returns (FileUploadResponse) {}
+  rpc DownloadFile (FileDescription) returns (stream FileDownloadResponse) {}
 // will not return until new configuration is tested an active, make sure to set timeout to a large value. (fibex on pi > 50s)
   rpc ReloadConfiguration (Empty) returns (ReloadMessage) {}
   rpc GetLicenseInfo (Empty) returns (LicenseInfo) {}
@@ -27,12 +28,6 @@ message ReloadMessage{
       Configuration configuration = 1;
       string errorMessage = 2;
     }
-}
-
-message FileDescription{
-//  sha256 is base16 encoded
-    string sha256 = 1;
-    string path = 2;
 }
 
 message FileUploadRequest{
@@ -55,6 +50,14 @@ message FileUploadResponse{
     oneof data {
         bool finished = 1;
         bool cancelled = 2;
+        string errorMessage = 3;
+    };
+}
+
+message FileDownloadResponse{
+    oneof data {
+        FileDescription fileDescription = 1;
+        bytes chunk = 4;
         string errorMessage = 3;
     };
 }

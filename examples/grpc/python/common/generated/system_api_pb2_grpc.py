@@ -35,6 +35,11 @@ class SystemServiceStub(object):
         request_serializer=system__api__pb2.FileUploadRequest.SerializeToString,
         response_deserializer=system__api__pb2.FileUploadResponse.FromString,
         )
+    self.DownloadFile = channel.unary_stream(
+        '/base.SystemService/DownloadFile',
+        request_serializer=common__pb2.FileDescription.SerializeToString,
+        response_deserializer=system__api__pb2.FileDownloadResponse.FromString,
+        )
     self.ReloadConfiguration = channel.unary_unary(
         '/base.SystemService/ReloadConfiguration',
         request_serializer=common__pb2.Empty.SerializeToString,
@@ -84,6 +89,13 @@ class SystemServiceServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def DownloadFile(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def ReloadConfiguration(self, request, context):
     """will not return until new configuration is tested an active, make sure to set timeout to a large value. (fibex on pi > 50s)
     """
@@ -127,6 +139,11 @@ def add_SystemServiceServicer_to_server(servicer, server):
           servicer.UploadFile,
           request_deserializer=system__api__pb2.FileUploadRequest.FromString,
           response_serializer=system__api__pb2.FileUploadResponse.SerializeToString,
+      ),
+      'DownloadFile': grpc.unary_stream_rpc_method_handler(
+          servicer.DownloadFile,
+          request_deserializer=common__pb2.FileDescription.FromString,
+          response_serializer=system__api__pb2.FileDownloadResponse.SerializeToString,
       ),
       'ReloadConfiguration': grpc.unary_unary_rpc_method_handler(
           servicer.ReloadConfiguration,
