@@ -19,7 +19,7 @@ def get_sha256(file):
 def generate_data(file, dest_path, chunk_size, sha256):
     for x in itertools.count(start=0):
         if x == 0:
-                fileDescription = common_pb2.FileDescription(sha256 = sha256, path = dest_path)
+                fileDescription = system_api_pb2.FileDescription(sha256 = sha256, path = dest_path)
                 yield system_api_pb2.FileUploadRequest(fileDescription = fileDescription)
         else:
                 buf = file.read(chunk_size)
