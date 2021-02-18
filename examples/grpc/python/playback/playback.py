@@ -99,7 +99,7 @@ def read_on_timer(stub, signals, pause):
         time.sleep(pause)
 
 def create_playback_config(thing):
-    playbackConfig = traffic_api_pb2.PlaybackConfig(fileDescription = common_pb2.FileDescription(path = thing['path']), namespace = common_pb2.NameSpace(name = thing['namespace']))
+    playbackConfig = traffic_api_pb2.PlaybackConfig(fileDescription = system_api_pb2.FileDescription(path = thing['path']), namespace = common_pb2.NameSpace(name = thing['namespace']))
     return traffic_api_pb2.PlaybackInfo(playbackConfig = playbackConfig, playbackMode = traffic_api_pb2.PlaybackMode(mode = thing['mode']))
 
 def playback_interator(playbacklist):
@@ -126,8 +126,8 @@ def run():
         print("signals in namespace ", networkInfo.namespace.name, system_stub.ListSignals(networkInfo.namespace))
 
 
-    # ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
-    # ecu_B_thread_subscribe.start()
+    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
+    ecu_B_thread_subscribe.start()
 
     # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
     # playback_status = traffic_stub.StartPlayback(playback_interator([
