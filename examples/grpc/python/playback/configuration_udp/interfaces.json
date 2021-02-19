@@ -27,6 +27,16 @@
       "fixed_payload_size": 8
     },
     {
+      "namespace": "ecu_C",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "device_name": "ecu_C",
+      "server_port": 2010,
+      "target_host": "127.0.0.1",
+      "target_port": 2011,
+      "fixed_payload_size": 8
+    },
+    {
       "namespace": "test_can",
       "type": "udp",
       "dbc_file": "can/test.dbc",
