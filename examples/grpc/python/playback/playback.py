@@ -118,7 +118,7 @@ def run():
     # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
     # upload_folder(system_stub, "configuration_canfd")
-    # reload_configuration(system_stub)
+    reload_configuration(system_stub)
 
     # list available signals
     configuration = system_stub.GetConfiguration(common_pb2.Empty())
@@ -141,7 +141,8 @@ def run():
 
     playbacklist =  [
         {"namespace": "test_can", "path": "recordings/candump_uploaded.log", "mode": traffic_api_pb2.Mode.PLAY},
-        {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.Mode.PLAY}
+        {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.Mode.PLAY},
+        {"namespace": "ecu_C", "path": "recordings/candump_.log", "mode": traffic_api_pb2.Mode.PLAY}
     ]
     status = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, playbacklist))))
     print("play traffic result is ", status)
