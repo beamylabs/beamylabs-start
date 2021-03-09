@@ -7,11 +7,11 @@ pip3 install grpcio requests protobuf
 
 Example; from [here](simple_ecu/) run
 ```
-python ecu.py
+python3 ecu.py
 ```
 for a more advanced example
 ```
-python ecu_advanced.py 
+python3 ecu_advanced.py 
 ```
 
 > **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L100 (keep the port 50051)**
