@@ -41,6 +41,7 @@ from glob import glob
 
 def upload_folder(system_stub, folder):
      files = [y for x in os.walk(folder) for y in glob(os.path.join(x[0], '*')) if not os.path.isdir(y)]
+     assert len(files) != 0, "Specified upload folder is empty or does not exist, provided folder was: %s" % folder
      for file in files:
             upload_file(system_stub, file, file.replace(folder, ""))
 
