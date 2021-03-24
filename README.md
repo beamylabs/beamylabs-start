@@ -9,7 +9,7 @@ To be able to get going; that is docker pull, you need custom credentials. Conta
 Clone this repository and make sure you have `docker` and `docker-compose` installed, then run:
 
 ```bash
-NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml up
+NODE_NAME=$(scripts/resolve-ip.sh eth0) SIGNALBROKER_IP=$(scripts/resolve-ip.sh eth0) docker-compose -f docker-compose-full-system.yml up -d
 ```
 > On a generic setup `NODE_NAME` and `SIGNALBROKER_IP` will likely be set to the same value.
 
