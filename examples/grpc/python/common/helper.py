@@ -37,6 +37,13 @@ def upload_file(stub, path, dest_path):
      response = stub.UploadFile(upload_iterator)
      print("uploaded", path, response)
 
+def download_file(stub, path, dest_path):
+     file = open(dest_path, "wb")
+     for response in stub.DownloadFile(system_api_pb2.FileDescription(path = path.replace(ntpath.sep, posixpath.sep))):
+         assert response.HasField("errorMessage") == False, "Error uploading file, message is: %s" % response.errorMessage
+         file.write(response.chunk)
+     file.close()
+
 from glob import glob
 
 def upload_folder(system_stub, folder):
