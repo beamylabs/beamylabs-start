@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x10system_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\"}\n\rConfiguration\x12&\n\x0bnetworkInfo\x18\x01 \x03(\x0b\x32\x11.base.NetworkInfo\x12\x16\n\x0einterfacesJson\x18\x02 \x01(\x0c\x12\x15\n\rpublicAddress\x18\x04 \x01(\t\x12\x15\n\rserverVersion\x18\x05 \x01(\t\"_\n\rReloadMessage\x12,\n\rconfiguration\x18\x01 \x01(\x0b\x32\x13.base.ConfigurationH\x00\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x42\x08\n\x06status\"/\n\x0f\x46ileDescription\x12\x0e\n\x06sha256\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"^\n\x11\x46ileUploadRequest\x12\x30\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescriptionH\x00\x12\x0f\n\x05\x63hunk\x18\x02 \x01(\x0cH\x00\x42\x06\n\x04\x64\x61ta\"\xa5\x01\n\x16\x46ileUploadChunkRequest\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\x0e\n\x06\x63hunks\x18\x02 \x01(\r\x12\x0f\n\x07\x63hunkId\x18\x03 \x01(\r\x12\r\n\x05\x63hunk\x18\x04 \x01(\x0c\x12\x14\n\x0c\x63\x61ncelUpload\x18\x05 \x01(\x08\x12\x15\n\ruploadTimeout\x18\x06 \x01(\r\"]\n\x12\x46ileUploadResponse\x12\x12\n\x08\x66inished\x18\x01 \x01(\x08H\x00\x12\x13\n\tcancelled\x18\x02 \x01(\x08H\x00\x12\x16\n\x0c\x65rrorMessage\x18\x03 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"y\n\x14\x46ileDownloadResponse\x12\x30\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescriptionH\x00\x12\x0f\n\x05\x63hunk\x18\x04 \x01(\x0cH\x00\x12\x16\n\x0c\x65rrorMessage\x18\x03 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"~\n\x0bLicenseInfo\x12#\n\x06status\x18\x01 \x01(\x0e\x32\x13.base.LicenseStatus\x12\x0c\n\x04json\x18\x02 \x01(\x0c\x12\x0f\n\x07\x65xpires\x18\x03 \x01(\t\x12\x11\n\trequestId\x18\x04 \x01(\t\x12\x18\n\x10requestMachineId\x18\x05 \x01(\x0c\"/\n\x07License\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x16\n\x0etermsAgreement\x18\x02 \x01(\x08*\xbe\x01\n\rLicenseStatus\x12\t\n\x05UNSET\x10\x00\x12\t\n\x05VALID\x10\x01\x12\x0b\n\x07\x45XPIRED\x10\x02\x12\x0b\n\x07\x42\x41\x44\x44\x41TE\x10\x03\x12\x10\n\x0cWRONGMACHINE\x10\x04\x12\x12\n\x0eINCOMPLETEJSON\x10\x05\x12\x0f\n\x0bINVALIDJSON\x10\x06\x12\x10\n\x0c\x42\x41\x44SIGNATURE\x10\x07\x12\r\n\tMALFORMED\x10\x08\x12\x0f\n\x0bSERVERERROR\x10\t\x12\x14\n\x10NOTERMSAGREEMENT\x10\n2\xf1\x03\n\rSystemService\x12\x36\n\x10GetConfiguration\x12\x0b.base.Empty\x1a\x13.base.Configuration\"\x00\x12.\n\x0bListSignals\x12\x0f.base.NameSpace\x1a\x0c.base.Frames\"\x00\x12K\n\x0fUploadFileChunk\x12\x1c.base.FileUploadChunkRequest\x1a\x18.base.FileUploadResponse\"\x00\x12\x43\n\nUploadFile\x12\x17.base.FileUploadRequest\x1a\x18.base.FileUploadResponse\"\x00(\x01\x12\x45\n\x0c\x44ownloadFile\x12\x15.base.FileDescription\x1a\x1a.base.FileDownloadResponse\"\x00\x30\x01\x12\x39\n\x13ReloadConfiguration\x12\x0b.base.Empty\x1a\x13.base.ReloadMessage\"\x00\x12\x32\n\x0eGetLicenseInfo\x12\x0b.base.Empty\x1a\x11.base.LicenseInfo\"\x00\x12\x30\n\nSetLicense\x12\r.base.License\x1a\x11.base.LicenseInfo\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x10system_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\"}\n\rConfiguration\x12&\n\x0bnetworkInfo\x18\x01 \x03(\x0b\x32\x11.base.NetworkInfo\x12\x16\n\x0einterfacesJson\x18\x02 \x01(\x0c\x12\x15\n\rpublicAddress\x18\x04 \x01(\t\x12\x15\n\rserverVersion\x18\x05 \x01(\t\"_\n\rReloadMessage\x12,\n\rconfiguration\x18\x01 \x01(\x0b\x32\x13.base.ConfigurationH\x00\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x42\x08\n\x06status\"/\n\x0f\x46ileDescription\x12\x0e\n\x06sha256\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"^\n\x11\x46ileUploadRequest\x12\x30\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescriptionH\x00\x12\x0f\n\x05\x63hunk\x18\x02 \x01(\x0cH\x00\x42\x06\n\x04\x64\x61ta\"\xa5\x01\n\x16\x46ileUploadChunkRequest\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\x0e\n\x06\x63hunks\x18\x02 \x01(\r\x12\x0f\n\x07\x63hunkId\x18\x03 \x01(\r\x12\r\n\x05\x63hunk\x18\x04 \x01(\x0c\x12\x14\n\x0c\x63\x61ncelUpload\x18\x05 \x01(\x08\x12\x15\n\ruploadTimeout\x18\x06 \x01(\r\"]\n\x12\x46ileUploadResponse\x12\x12\n\x08\x66inished\x18\x01 \x01(\x08H\x00\x12\x13\n\tcancelled\x18\x02 \x01(\x08H\x00\x12\x16\n\x0c\x65rrorMessage\x18\x03 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"G\n\x14\x46ileDownloadResponse\x12\x0f\n\x05\x63hunk\x18\x01 \x01(\x0cH\x00\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"~\n\x0bLicenseInfo\x12#\n\x06status\x18\x01 \x01(\x0e\x32\x13.base.LicenseStatus\x12\x0c\n\x04json\x18\x02 \x01(\x0c\x12\x0f\n\x07\x65xpires\x18\x03 \x01(\t\x12\x11\n\trequestId\x18\x04 \x01(\t\x12\x18\n\x10requestMachineId\x18\x05 \x01(\x0c\"/\n\x07License\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x16\n\x0etermsAgreement\x18\x02 \x01(\x08*\xbe\x01\n\rLicenseStatus\x12\t\n\x05UNSET\x10\x00\x12\t\n\x05VALID\x10\x01\x12\x0b\n\x07\x45XPIRED\x10\x02\x12\x0b\n\x07\x42\x41\x44\x44\x41TE\x10\x03\x12\x10\n\x0cWRONGMACHINE\x10\x04\x12\x12\n\x0eINCOMPLETEJSON\x10\x05\x12\x0f\n\x0bINVALIDJSON\x10\x06\x12\x10\n\x0c\x42\x41\x44SIGNATURE\x10\x07\x12\r\n\tMALFORMED\x10\x08\x12\x0f\n\x0bSERVERERROR\x10\t\x12\x14\n\x10NOTERMSAGREEMENT\x10\n2\xf1\x03\n\rSystemService\x12\x36\n\x10GetConfiguration\x12\x0b.base.Empty\x1a\x13.base.Configuration\"\x00\x12.\n\x0bListSignals\x12\x0f.base.NameSpace\x1a\x0c.base.Frames\"\x00\x12K\n\x0fUploadFileChunk\x12\x1c.base.FileUploadChunkRequest\x1a\x18.base.FileUploadResponse\"\x00\x12\x43\n\nUploadFile\x12\x17.base.FileUploadRequest\x1a\x18.base.FileUploadResponse\"\x00(\x01\x12\x45\n\x0c\x44ownloadFile\x12\x15.base.FileDescription\x1a\x1a.base.FileDownloadResponse\"\x00\x30\x01\x12\x39\n\x13ReloadConfiguration\x12\x0b.base.Empty\x1a\x13.base.ReloadMessage\"\x00\x12\x32\n\x0eGetLicenseInfo\x12\x0b.base.Empty\x1a\x11.base.LicenseInfo\"\x00\x12\x30\n\nSetLicense\x12\r.base.License\x1a\x11.base.LicenseInfo\"\x00\x62\x06proto3')
   ,
   dependencies=[common__pb2.DESCRIPTOR,])
 
@@ -79,8 +79,8 @@ _LICENSESTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=973,
-  serialized_end=1163,
+  serialized_start=923,
+  serialized_end=1113,
 )
 _sym_db.RegisterEnumDescriptor(_LICENSESTATUS)
 
@@ -393,22 +393,15 @@ _FILEDOWNLOADRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='fileDescription', full_name='base.FileDownloadResponse.fileDescription', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='chunk', full_name='base.FileDownloadResponse.chunk', index=1,
-      number=4, type=12, cpp_type=9, label=1,
+      name='chunk', full_name='base.FileDownloadResponse.chunk', index=0,
+      number=1, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='errorMessage', full_name='base.FileDownloadResponse.errorMessage', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='errorMessage', full_name='base.FileDownloadResponse.errorMessage', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -429,7 +422,7 @@ _FILEDOWNLOADRESPONSE = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=672,
-  serialized_end=793,
+  serialized_end=743,
 )
 
 
@@ -487,8 +480,8 @@ _LICENSEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=795,
-  serialized_end=921,
+  serialized_start=745,
+  serialized_end=871,
 )
 
 
@@ -525,8 +518,8 @@ _LICENSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=923,
-  serialized_end=970,
+  serialized_start=873,
+  serialized_end=920,
 )
 
 _CONFIGURATION.fields_by_name['networkInfo'].message_type = common__pb2._NETWORKINFO
@@ -554,10 +547,6 @@ _FILEUPLOADRESPONSE.fields_by_name['cancelled'].containing_oneof = _FILEUPLOADRE
 _FILEUPLOADRESPONSE.oneofs_by_name['data'].fields.append(
   _FILEUPLOADRESPONSE.fields_by_name['errorMessage'])
 _FILEUPLOADRESPONSE.fields_by_name['errorMessage'].containing_oneof = _FILEUPLOADRESPONSE.oneofs_by_name['data']
-_FILEDOWNLOADRESPONSE.fields_by_name['fileDescription'].message_type = _FILEDESCRIPTION
-_FILEDOWNLOADRESPONSE.oneofs_by_name['data'].fields.append(
-  _FILEDOWNLOADRESPONSE.fields_by_name['fileDescription'])
-_FILEDOWNLOADRESPONSE.fields_by_name['fileDescription'].containing_oneof = _FILEDOWNLOADRESPONSE.oneofs_by_name['data']
 _FILEDOWNLOADRESPONSE.oneofs_by_name['data'].fields.append(
   _FILEDOWNLOADRESPONSE.fields_by_name['chunk'])
 _FILEDOWNLOADRESPONSE.fields_by_name['chunk'].containing_oneof = _FILEDOWNLOADRESPONSE.oneofs_by_name['data']
@@ -648,8 +637,8 @@ _SYSTEMSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1166,
-  serialized_end=1663,
+  serialized_start=1116,
+  serialized_end=1613,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetConfiguration',
