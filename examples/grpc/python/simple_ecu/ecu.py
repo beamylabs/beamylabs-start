@@ -73,13 +73,14 @@ def ecu_B_subscribe(stub):
     counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
 
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=True)
-    try:
+    try:f
         for subs_counter in stub.SubscribeToSignals(sub_info):
-            print("ecu_B, (subscribe) counter is ", subs_counter.signal[0].integer)
-            counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-            signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = subs_counter.signal[0].integer * 2)
-            publish_signals(client_id, stub, [signal_with_payload])
-            
+            for signal in subs_counter.signal:
+                print("ecu_B, (subscribe) counter is ", signal)
+                counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
+                signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = signal.integer * 2)
+                publish_signals(client_id, stub, [signal_with_payload])
+
     except grpc._channel._Rendezvous as err:
             print(err)
 
