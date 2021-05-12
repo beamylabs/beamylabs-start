@@ -4,8 +4,7 @@
     {
       "type": "can",
       "namespace": "VirtualCanInterface",
-      "device_name": "vcan0",
-      "human_file": "human/benchc.json"
+      "device_name": "vcan0"
     },
     {
       "type": "can",
@@ -21,7 +20,6 @@
     {
       "namespace": "UDPCanInterface",
       "type": "udp",
-      "human_file": "human/benchc.json",
       "device_name": "udp2",
       "server_port": 2001,
       "target_host": "127.0.0.1",
