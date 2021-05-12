@@ -73,7 +73,7 @@ def ecu_B_subscribe(stub):
     counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
 
     sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=True)
-    try:f
+    try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
             for signal in subs_counter.signal:
                 print("ecu_B, (subscribe) counter is ", signal)
