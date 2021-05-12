@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+import "common.proto";
+import "system_api.proto";
+
+
+option java_generic_services = true;
+option java_package = "com.example.beamyconfiguration";
+option java_outer_classname = "Traffic";
+
+package base;
+
+
+service TrafficService {
+  rpc PlayTraffic (PlaybackInfos) returns (PlaybackInfos) {}
+  rpc StartPlayback (stream PlaybackInfos) returns (stream PlaybackInfos) {}
+  rpc RecordTraffic (PlaybackInfos) returns (PlaybackInfos) {}
+  rpc ListRecording (Empty) returns (PlaybackInfos) {}
+  rpc DeleteRecording (PlaybackInfos) returns (PlaybackInfos) {}
+}
+
+enum Mode {
+  PLAY = 0;
+  PAUSE = 1;
+  STOP = 2;
+  RECORDING = 3;
+}
+
+message PlaybackMode {
+  oneof status {
+      string errorMessage = 2;
+      string EOF = 3;
+      Mode mode = 4;
+    }
+}
+
+message PlaybackInfos {
+  repeated PlaybackInfo playbackInfo = 1;
+}
+
+message PlaybackConfig {
+  FileDescription fileDescription = 1;
+  NameSpace namespace = 2;
+}
+
+message PlaybackInfo {
+  PlaybackConfig playbackConfig = 1;
+  PlaybackMode playbackMode = 2;
+}
+
