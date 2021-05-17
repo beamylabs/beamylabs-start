@@ -1,0 +1,31 @@
+{
+  "default_namespace": "VirtualInterface",
+  "chains": [
+    {
+      "device_name": "virtual",
+      "namespace": "VirtualInterface",
+      "type": "virtual"
+    },
+    {
+      "namespace": "custom_can",
+      "type": "udp",
+      "dbc_file": "can/custom_traffic.dbc",
+      "device_name": "ecu_A",
+      "server_port": 2004,
+      "target_host": "127.0.0.1",
+      "target_port": 2005
+    }
+  ],
+  "gateway": {
+    "gateway_pid": "gateway_pid",
+    "tcp_socket_port": 4040
+  },
+  "auto_config_boot_server": {
+    "port": 4000,
+    "server_pid": "auto_config_boot_server_pid"
+  },
+  "grpc_server": {
+    "port": 50051
+  },
+  "reflectors": []
+}
