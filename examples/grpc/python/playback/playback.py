@@ -8,7 +8,7 @@ import binascii
 
 import grpc
 
-import sys
+import sys, getopt
 sys.path.append('../common/generated')
 
 import network_api_pb2
@@ -23,69 +23,31 @@ sys.path.append('../common')
 import helper
 from helper import *
 
-from threading import Thread, Timer
+import signal
+from threading import Thread, Timer, Event
+
+exit_event = Event()
 
 def read_signal(stub, signal):
     read_info = network_api_pb2.SignalIds(signalId=[signal])
     return stub.ReadSignals(read_info)
 
-def publish_signals(client_id, stub, signals_with_payload):
-    publisher_info = network_api_pb2.PublisherConfig(clientId = client_id, signals=network_api_pb2.Signals(signal=signals_with_payload), frequency = 0)
-    try:
-        stub.PublishSignals(publisher_info)
-    except grpc._channel._Rendezvous as err:
-        print(err)
-
-increasing_counter = 0
-# ecu_A publish some value (counter), read other value (counter_times_2) (which is published by ecu_B)
-def ecu_A(stub, pause):
-    while True:
-        global increasing_counter
-        namespace = "ecu_A"
-        clientId = common_pb2.ClientId(id="id_ecu_A")
-        counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
-        counter_with_payload = network_api_pb2.Signal(id = counter, integer = increasing_counter)
-        print("\necu_A, seed is ", increasing_counter)
-        publish_signals(clientId, stub, [counter_with_payload])
-        
-        time.sleep(pause)
-
-        # read the other value and output result
-        counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-        read_counter_times_2 = read_signal(stub, counter_times_2)
-
-        print("ecu_A, (result) counter_times_2 is ", read_counter_times_2.signal[0].integer)
-        increasing_counter = (increasing_counter + 1) % 4
-
-# read some value (counter) published by ecu_a
+# read some value published by ecu_a (playback)
 def ecu_B_read(stub, pause):
     while True:
-        namespace = "ecu_B"
+        namespace = "custom_can"
         client_id = common_pb2.ClientId(id="id_ecu_B")
-        counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
+        counter = common_pb2.SignalId(name="SteerAngle", namespace=common_pb2.NameSpace(name = namespace))
         read_counter = read_signal(stub, counter)
-        print("ecu_B, (read) counter is ", read_counter.signal[0].integer)
+        print("ecu_B, (read) SteerAngle is ", read_counter.signal[0].double)
+
+        if exit_event.is_set():
+            stop_playback()
+            sys.exit(2) 
 
         time.sleep(pause)
 
-# subscribe to some value (counter) published by ecu_a, double and send value back to eca_a (counter_times_2)
-def ecu_B_subscribe(stub):
-    namespace = "test_can"
-    client_id = common_pb2.ClientId(id="id_ecu_B")
-    counter = common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = namespace))
-
-    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=[counter]), onChange=True)
-    try:
-        for subs_counter in stub.SubscribeToSignals(sub_info):
-            print("ecu_B, (subscribe) counter is ", subs_counter.signal[0].integer)
-            counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
-            signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = subs_counter.signal[0].integer * 2)
-            publish_signals(client_id, stub, [signal_with_payload])
-            
-    except grpc._channel._Rendezvous as err:
-            print(err)
-
-# subscribe to some value (counter) published by ecu_a, double and send value back to eca_a (counter_times_2)
+# subscribe to some value published by ecu_a (playback), prints signal
 def ecu_B_subscribe_(stub):
     namespace = "custom_can"
     client_id = common_pb2.ClientId(id="id_ecu_B")
@@ -96,6 +58,10 @@ def ecu_B_subscribe_(stub):
         for subs_counter in stub.SubscribeToSignals(sub_info):
             print("ecu_B, (subscribe) SteerAngle is ", subs_counter.signal[0])
             
+            if exit_event.is_set():
+                stop_playback()
+                sys.exit(2)   
+                 
     except grpc._channel._Rendezvous as err:
             print(err)
 
@@ -103,13 +69,18 @@ def ecu_B_subscribe_(stub):
 # logs on purpose tabbed with double space
 def read_on_timer(stub, signals, pause):
     while True:
+        if exit_event.is_set():
+            stop_playback()
+            sys.exit(2)
+        
         read_info = network_api_pb2.SignalIds(signalId=signals)
         try:
-                response = stub.ReadSignals(read_info)
-                for signal in response.signal:
-                    print("  read_on_timer " + signal.id.name + " value " + str(signal.integer))
+            response = stub.ReadSignals(read_info)
+            for signal in response.signal:
+                print("  read_on_timer " + signal.id.name + " value " + str(signal.double))
         except grpc._channel._Rendezvous as err:
-                print(err)
+            print(err)
+
         time.sleep(pause)
 
 def create_playback_config(thing):
@@ -121,20 +92,47 @@ def playback_interator(playbacklist):
         playbackrequest = list(map(create_playback_config, playbacklist))
         yield traffic_api_pb2.PlaybackInfos(playbackInfo = playbackrequest)
 
-def run():
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+def stop_playback():
+    channel = grpc.insecure_channel(ip)
+    traffic_stub = traffic_api_pb2_grpc.TrafficServiceStub(channel)
+    playbacklist =  [
+        {"namespace": "custom_can", "path": "recordings/candump_uploaded.log", "mode": traffic_api_pb2.Mode.STOP}
+    ]
+    status = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, playbacklist))))
+    print("Stop traffic status is ", status)
+    
+def exit_handler(signum, frame):
+    exit_event.set()
+
+def run(argv):
+    global ip
+    # This script will use below ip-address if no argument is passed to the script
+    ip = '127.0.0.1:50051'
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print('Usage: playback.py --ip <ip_address>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('Usage: playback.py --ip <ip_address>')
+            sys.exit(2)
+        elif opt == '--ip':
+            ip = arg
+
+    # To do a clean exit of the script on CTRL+C
+    signal.signal(signal.SIGINT, exit_handler)
+    
+    # Setup
+    channel = grpc.insecure_channel(ip)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     traffic_stub = traffic_api_pb2_grpc.TrafficServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     # check_license(system_stub)
     
     upload_folder(system_stub, "configuration_custom_udp")
-    
-    # upload_folder(system_stub, "configuration_lin")
-    # upload_folder(system_stub, "configuration_can")
-    # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
-    # Give us some time so se it all went accordign to plan
+    # Give us some time to see it all went according to plan
     time.sleep(1)
 
     # list available signals
@@ -142,34 +140,25 @@ def run():
     for networkInfo in configuration.networkInfo:
         print("signals in namespace ", networkInfo.namespace.name, system_stub.ListSignals(networkInfo.namespace))
 
-    # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
-    # playback_status = traffic_stub.StartPlayback(playback_interator([
-    #     {"namespace": "test_can", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY},
-    #     {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY}
-    #     ]))
-    # for entries in playback_status:
-    #     print(entries)
-
     upload_file(system_stub, "configuration_custom_udp/recordings/traffic.log", "recordings/candump_uploaded.log")
-
     playbacklist =  [
         {"namespace": "custom_can", "path": "recordings/candump_uploaded.log", "mode": traffic_api_pb2.Mode.PLAY}
     ]
     status = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, playbacklist))))
     print("play traffic result is ", status)
 
-    # ecu_A_thread  = Thread(target = ecu_A, args = (network_stub, 1,))
-    # ecu_A_thread.start()
+    # Read
+    ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
+    ecu_B_thread_read.start()
 
-    # ecu_B_thread_read  = Thread(target = ecu_B_read, args = (network_stub, 1,))
-    # ecu_B_thread_read.start()
+    # Subscribe
+    # ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe_, args = (network_stub,))
+    # ecu_B_thread_subscribe.start()
 
-    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe_, args = (network_stub,))
-    ecu_B_thread_subscribe.start()
-
-    # read_signals = [common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A")), common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = "ecu_A"))]
-    # ecu_read_demo  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
-    # ecu_read_demo.start()
+    # Read list of signals on timer
+    # read_signals = [common_pb2.SignalId(name="SteerAngle", namespace=common_pb2.NameSpace(name = "custom_can")), common_pb2.SignalId(name="SteerAngleSpeed", namespace=common_pb2.NameSpace(name = "custom_can"))]
+    # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 2))
+    # ecu_read_on_timer.start()
 
 if __name__ == '__main__':
-    run()
+    run(sys.argv[:1])
