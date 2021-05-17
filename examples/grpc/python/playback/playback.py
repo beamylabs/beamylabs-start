@@ -141,6 +141,7 @@ def run(argv):
         print("signals in namespace ", networkInfo.namespace.name, system_stub.ListSignals(networkInfo.namespace))
 
     upload_file(system_stub, "configuration_custom_udp/recordings/traffic.log", "recordings/candump_uploaded.log")
+    # NOTE: If changing this playbacklist, also update playbacklist in function 'stop_playback'
     playbacklist =  [
         {"namespace": "custom_can", "path": "recordings/candump_uploaded.log", "mode": traffic_api_pb2.Mode.PLAY}
     ]
