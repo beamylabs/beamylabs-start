@@ -42,7 +42,7 @@ def ecu_A_publish(stub, signals_with_payload, freq):
 def ecu_B_subscribe(stub, signals):
     client_id = common_pb2.ClientId(id="id_ecu_B")
 
-    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=signals), onChange=True)
+    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=signals), onChange=False)
     try:
         for subscription in stub.SubscribeToSignals(sub_info):
             for signal in subscription.signal:
@@ -75,13 +75,19 @@ def run():
     frames = all_frames(system_stub, namespace)
     print("all frames ", frames)
 
-    signal = common_pb2.SignalId(name="counter", namespace=namespace)
+    signals = signals_in_frame(system_stub, frames[0])
+    print("signal in frame ", signals[0])
+
+    signal = common_pb2.SignalId(name=signals[0].name, namespace=namespace)
     signal_with_payload = network_api_pb2.Signal(id = signal, integer = 2)
 
-    ecu_A_publish_thread  = Thread(target = ecu_A_publish, args = (network_stub, [signal_with_payload], 10))
+    signal2 = common_pb2.SignalId(name=signals[1].name, namespace=namespace)
+    signal2_with_payload = network_api_pb2.Signal(id = signal, integer = 3)
+
+    ecu_A_publish_thread  = Thread(target = ecu_A_publish, args = (network_stub, [signal_with_payload, signal2_with_payload], 10))
     ecu_A_publish_thread.start()
 
-    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub, [signal]))
+    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub, [signal, signal2]))
     ecu_B_thread_subscribe.start()
 
 if __name__ == '__main__':

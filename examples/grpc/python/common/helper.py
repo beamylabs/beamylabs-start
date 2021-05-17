@@ -154,7 +154,7 @@ def all_frames(system_stub, namespace):
 def signals_in_frame(system_stub, frame):
     signals = []
     for frame_entry in system_stub.ListSignals(frame.namespace).frame:
-        if frame_entry.id == frame.id:
+        if frame_entry.signalInfo.id.name == frame.name:
             for signal in frame_entry.childInfo:
                 signals.append(signal.id)
     return signals
