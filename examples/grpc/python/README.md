@@ -7,11 +7,16 @@ pip3 install grpcio requests protobuf
 
 Example; from [here](simple_ecu/) run
 ```
-python3 ecu.py
+python3 ecu.py --ip <ip_address>
 ```
 for a more advanced example
 ```
-python3 ecu_advanced.py 
+python3 ecu_advanced.py --ip <ip_address>
+```
+
+To show available options/usage run script with -h 
+```
+python3 ecu.py -h
 ```
 
 > **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L100 (keep the port 50051)**
@@ -31,7 +36,16 @@ python -m pip install grpcio-tools protobuf
 ```
 Example; from [here](simple_ecu/) run
 ```
-python ecu.py
+python ecu.py --ip <ip_address>
+```
+for a more advanced example
+```
+python3 ecu_advanced.py --ip <ip_address>
+```
+
+To show available options/usage run script with -h
+```
+python3 ecu.py -h
 ```
 
 > **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L142 (keep the port 50051)**
