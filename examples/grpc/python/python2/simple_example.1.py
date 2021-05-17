@@ -1,4 +1,4 @@
-#inspired by https://grpc.io/docs/tutorials/basic/python.html
+# inspired by https://grpc.io/docs/tutorials/basic/python.html
 
 # Copyright 2015 gRPC authors.
 # Copyright 2019 Volvo Cars
@@ -25,7 +25,8 @@ import time
 import grpc
 
 import sys
-sys.path.append('generated')
+
+sys.path.append("generated")
 
 import network_api_pb2
 import network_api_pb2_grpc
@@ -40,19 +41,26 @@ import diagnostics_api_pb2
 
 def subscribe_to_signal(stub):
     source = common_pb2.ClientId(id="app_identifier")
-    signal = common_pb2.SignalId(name="SteerWhlAgSafe", namespace=common_pb2.NameSpace(name = "ChassisCANhs"))
-    sub_info = network_api_pb2.SubscriberConfig(clientId=source, signals=network_api_pb2.SignalIds(signalId=[signal]), onChange=False)
+    signal = common_pb2.SignalId(
+        name="SteerWhlAgSafe", namespace=common_pb2.NameSpace(name="ChassisCANhs")
+    )
+    sub_info = network_api_pb2.SubscriberConfig(
+        clientId=source,
+        signals=network_api_pb2.SignalIds(signalId=[signal]),
+        onChange=False,
+    )
     try:
         for response in stub.SubscribeToSignals(sub_info):
             print(response)
     except grpc._channel._Rendezvous as err:
-            print(err)
+        print(err)
+
 
 import binascii
 
 
 def run():
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel("localhost:50051")
     functional_stub = functional_api_pb2_grpc.FunctionalServiceStub(channel)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     diag_stub = diagnostics_api_pb2_grpc.DiagnosticsServiceStub(channel)
@@ -61,5 +69,5 @@ def run():
     subscribe_to_signal(network_stub)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
