@@ -8,7 +8,7 @@ import time
 
 import grpc
 
-import sys
+import sys, getopt
 sys.path.append('../common/generated')
 
 import network_api_pb2
@@ -46,8 +46,22 @@ def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
             print(err)
 
 
-def run():
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+def run(argv):
+    # This script will use below ip-address if no argument is passed to the script
+    ip = '127.0.0.1:50051'
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print('Usage: resp_to_diag_req.py --ip <ip_address>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('Usage: resp_to_diag_req.py --ip <ip_address>')
+            sys.exit(2)
+        elif opt == '--ip':
+            ip = arg
+    
+    channel = grpc.insecure_channel(ip)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     client_id = common_pb2.ClientId(id="app_identifier")
@@ -64,7 +78,7 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    run(sys.argv[1:])
 
 
 # try this by doing
