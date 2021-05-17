@@ -30,8 +30,6 @@ def publish_signals(client_id, stub, signals_with_payload, freq):
     except grpc._channel._Rendezvous as err:
         print(err)
 
-increasing_counter = 0
-
 # ecu_A publised a set of signals with a given freq
 def ecu_A_publish(stub, signals_with_payload, freq):
     global increasing_counter
@@ -39,10 +37,10 @@ def ecu_A_publish(stub, signals_with_payload, freq):
     publish_signals(clientId, stub, signals_with_payload, freq)
 
 # subscribe to some value (counter) published by ecu_a, double and send value back to eca_a (counter_times_2)
-def ecu_B_subscribe(stub, signals):
+def ecu_B_subscribe(stub, signals, onChange):
     client_id = common_pb2.ClientId(id="id_ecu_B")
 
-    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=signals), onChange=False)
+    sub_info = network_api_pb2.SubscriberConfig(clientId=client_id, signals=network_api_pb2.SignalIds(signalId=signals), onChange=onChange)
     try:
         for subscription in stub.SubscribeToSignals(sub_info):
             for signal in subscription.signal:
@@ -75,19 +73,28 @@ def run():
     frames = all_frames(system_stub, namespace)
     print("all frames ", frames)
 
-    signals = signals_in_frame(system_stub, frames[0])
+    signals = signals_in_frame(system_stub, frames[1])
     print("signal in frame ", signals[0])
 
     signal = common_pb2.SignalId(name=signals[0].name, namespace=namespace)
     signal_with_payload = network_api_pb2.Signal(id = signal, integer = 2)
 
     signal2 = common_pb2.SignalId(name=signals[1].name, namespace=namespace)
-    signal2_with_payload = network_api_pb2.Signal(id = signal, integer = 3)
+    signal2_with_payload = network_api_pb2.Signal(id = signal2, integer = 1)
 
     ecu_A_publish_thread  = Thread(target = ecu_A_publish, args = (network_stub, [signal_with_payload, signal2_with_payload], 10))
     ecu_A_publish_thread.start()
 
-    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub, [signal, signal2]))
+
+    # subscribing code...
+    namespace_sub = "ecu_B"
+    namespace_sub=common_pb2.NameSpace(name = namespace_sub)
+
+    signal = common_pb2.SignalId(name=signals[0].name, namespace=namespace_sub)
+    signal2 = common_pb2.SignalId(name=signals[1].name, namespace=namespace_sub)
+
+    on_change = False
+    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub, [signal, signal2], on_change))
     ecu_B_thread_subscribe.start()
 
 if __name__ == '__main__':
