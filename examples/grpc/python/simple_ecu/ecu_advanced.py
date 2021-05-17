@@ -8,7 +8,7 @@ import binascii
 
 import grpc
 
-import sys
+import sys, getopt
 sys.path.append('../common/generated')
 
 import network_api_pb2
@@ -131,7 +131,21 @@ def read_on_timer(stub, signals, pause):
                 print(err)
         time.sleep(pause)
 
-def run():
+def run(argv):
+    # ecu_advanced.py will use below ip-address if no argument is passed to the script
+    ip = '127.0.0.1:50051'
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print('Usage: ecu_advanced.py --ip <ip_address>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('Usage: ecu_advanced.py --ip <ip_address>')
+            sys.exit(2)
+        elif opt == '--ip':
+            ip = arg
+
     # allows to custom set message max size. (default 4Mb, 4194304)
     # MAX_MESSAGE_LENGTH = 6000000 
     # channel = grpc.insecure_channel('127.0.0.1:50051', options=[
@@ -139,7 +153,7 @@ def run():
     #     ('grpc.max_receive_message_length', MAX_MESSAGE_LENGTH),
     #     ],
     # )
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+    channel = grpc.insecure_channel(ip)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
@@ -176,4 +190,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    run(sys.argv[1:])
