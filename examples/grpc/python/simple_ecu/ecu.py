@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """The Python implementation of the gRPC route guide client."""
 
 from __future__ import print_function
@@ -8,7 +9,7 @@ import binascii
 
 import grpc
 
-import sys
+import sys, getopt
 sys.path.append('../common/generated')
 
 import network_api_pb2
@@ -76,7 +77,7 @@ def ecu_B_subscribe(stub):
     try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
             for signal in subs_counter.signal:
-                print("ecu_B, (subscribe) counter is ", signal)
+                print("ecu_B, (subscribe) counter is ", signal.integer)
                 counter_times_2 = common_pb2.SignalId(name="counter_times_2", namespace=common_pb2.NameSpace(name = namespace))
                 signal_with_payload = network_api_pb2.Signal(id = counter_times_2, integer = signal.integer * 2)
                 publish_signals(client_id, stub, [signal_with_payload])
@@ -97,8 +98,22 @@ def read_on_timer(stub, signals, pause):
                 print(err)
         time.sleep(pause)
 
-def run():
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+def run(argv):
+    # ecu.py will use below ip-address if no argument is passed to the script
+    ip = '127.0.0.1:50051'
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print('Usage: ecu.py --ip <ip_address>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('Usage: ecu.py --ip <ip_address>')
+            sys.exit(2)
+        elif opt == '--ip':
+            ip = arg
+
+    channel = grpc.insecure_channel(ip)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     # check_license(system_stub)
@@ -124,8 +139,8 @@ def run():
     ecu_B_thread_subscribe.start()
 
     # read_signals = [common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A")), common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = "ecu_A"))]
-    # ecu_read_demo  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
-    # ecu_read_demo.start()
+    # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
+    # ecu_read_on_timer.start()
 
 if __name__ == '__main__':
-    run()
+    run(sys.argv[1:])
