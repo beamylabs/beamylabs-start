@@ -27,11 +27,29 @@ from threading import Thread, Timer
 
 
 def read_signal(stub, signal):
+    """Read signals
+
+    Args:
+        stub: NetworkServiceStub
+        signal: SignalId
+
+    Returns:
+        repeated Signal
+
+    """
     read_info = network_api_pb2.SignalIds(signalId=[signal])
     return stub.ReadSignals(read_info)
 
 
 def publish_signals(client_id, stub, signals_with_payload):
+    """Publish signals
+
+    Args:
+        client_id: ClientId
+        stub: NetworkServiceStub
+        signals_with_payload: Signal
+
+    """
     publisher_info = network_api_pb2.PublisherConfig(
         clientId=client_id,
         signals=network_api_pb2.Signals(signal=signals_with_payload),
@@ -44,29 +62,38 @@ def publish_signals(client_id, stub, signals_with_payload):
 
 
 increasing_counter = 0
-# ecu_A publish some value (counter), read other value (counter_times_2) (which is published by ecu_B)
+
+
 def ecu_A(stub, pause):
+    """Publishes a value, read other value (published by ecu_B)
+
+    Args:
+        stub: NetworkServiceStub
+        pause (int): Amount of time to pause in seconds
+
+    """
     while True:
         global increasing_counter
         namespace = "ecu_A"
         clientId = common_pb2.ClientId(id="id_ecu_A")
+
+        # Publishes value 'counter'
         counter = common_pb2.SignalId(
             name="counter", namespace=common_pb2.NameSpace(name=namespace)
         )
         counter_with_payload = network_api_pb2.Signal(
             id=counter, integer=increasing_counter
         )
-        print("\necu_A, seed is ", increasing_counter)
         publish_signals(clientId, stub, [counter_with_payload])
+        print("\necu_A, seed is ", increasing_counter)
 
         time.sleep(pause)
 
-        # read the other value and output result
+        # Read the other value 'counter_times_2' and output result
         counter_times_2 = common_pb2.SignalId(
             name="counter_times_2", namespace=common_pb2.NameSpace(name=namespace)
         )
         read_counter_times_2 = read_signal(stub, counter_times_2)
-
         print(
             "ecu_A, (result) counter_times_2 is ",
             read_counter_times_2.signal[0].integer,
@@ -74,11 +101,19 @@ def ecu_A(stub, pause):
         increasing_counter = (increasing_counter + 1) % 4
 
 
-# read some value (counter) published by ecu_a
 def ecu_B_read(stub, pause):
+    """Read a value published by ecu_A
+
+    Args:
+        stub: NetworkServiceStub
+        pause (int): Amount of time to pause in seconds
+
+    """
     while True:
         namespace = "ecu_B"
         client_id = common_pb2.ClientId(id="id_ecu_B")
+
+        # Read value 'counter'
         counter = common_pb2.SignalId(
             name="counter", namespace=common_pb2.NameSpace(name=namespace)
         )
@@ -88,19 +123,27 @@ def ecu_B_read(stub, pause):
         time.sleep(pause)
 
 
-# subscribe to some value (counter) published by ecu_a, double and send value back to eca_a (counter_times_2)
 def ecu_B_subscribe(stub):
+    """Subscribe to a value published by ecu_A and publish doubled value back to ecu_A
+
+    Args:
+        stub: NetworkServiceStub
+
+    """
     namespace = "ecu_B"
     client_id = common_pb2.ClientId(id="id_ecu_B")
+
+    # Subscribe to value 'counter'
     counter = common_pb2.SignalId(
         name="counter", namespace=common_pb2.NameSpace(name=namespace)
     )
-
     sub_info = network_api_pb2.SubscriberConfig(
         clientId=client_id,
         signals=network_api_pb2.SignalIds(signalId=[counter]),
         onChange=True,
     )
+
+    # Publish doubled value as 'counter_times_2'
     try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
             for signal in subs_counter.signal:
@@ -118,9 +161,15 @@ def ecu_B_subscribe(stub):
         print(err)
 
 
-# simple reading
-# logs on purpose tabbed with double space
 def read_on_timer(stub, signals, pause):
+    """Simple reading with timer, logs on purpose tabbed with double space
+
+    Args:
+        stub: NetworkServiceStub
+        signals: SignalIds
+        pause (int): Amount of time to pause in seconds
+
+    """
     while True:
         read_info = network_api_pb2.SignalIds(signalId=signals)
         try:
@@ -138,7 +187,13 @@ def read_on_timer(stub, signals, pause):
 
 
 def run(argv):
-    # ecu.py will use below ip-address if no argument is passed to the script
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
+
+    Args:
+        argv: Arguments passed when starting script
+
+    """
+    # Check argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1:50051"
     try:
         opts, args = getopt.getopt(argv, "h", ["ip="])
@@ -152,6 +207,7 @@ def run(argv):
         elif opt == "--ip":
             ip = arg
 
+    # Setting up stubs and configuration
     channel = grpc.insecure_channel(ip)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
@@ -163,7 +219,7 @@ def run(argv):
     # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
 
-    # list available signals
+    # Lists available signals
     configuration = system_stub.GetConfiguration(common_pb2.Empty())
     for networkInfo in configuration.networkInfo:
         print(
@@ -172,6 +228,7 @@ def run(argv):
             system_stub.ListSignals(networkInfo.namespace),
         )
 
+    # Starting Threads
     ecu_A_thread = Thread(
         target=ecu_A,
         args=(
