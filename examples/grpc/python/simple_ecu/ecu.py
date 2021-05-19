@@ -193,7 +193,7 @@ def run(argv):
         argv: Arguments passed when starting script
 
     """
-    # Check argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
+    # Checks argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1:50051"
     try:
         opts, args = getopt.getopt(argv, "h", ["ip="])
