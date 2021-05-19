@@ -29,12 +29,17 @@ from threading import Thread, Timer
 def read_signal(stub, signal):
     """Read signals
 
-    Args:
-        stub: NetworkServiceStub
-        signal: SignalId
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+    signal : SignalId
+        Object instance of class
 
-    Returns:
-        repeated Signal
+    Returns
+    -------
+    Signals
+        Object instance of class
 
     """
     read_info = network_api_pb2.SignalIds(signalId=[signal])
@@ -44,10 +49,14 @@ def read_signal(stub, signal):
 def publish_signals(client_id, stub, signals_with_payload):
     """Publish signals
 
-    Args:
-        client_id: ClientId
-        stub: NetworkServiceStub
-        signals_with_payload: Signal
+    Parameters
+    ----------
+    client_id : ClientId
+        Object instance of class
+    stub : NetworkServiceStub
+        Object instance of class
+    signals_with_payload : Signal
+        Object instance of class
 
     """
     publisher_info = network_api_pb2.PublisherConfig(
@@ -65,11 +74,14 @@ increasing_counter = 0
 
 
 def ecu_A(stub, pause):
-    """Publishes some values, read other value (published by ecu_B)
+    """Publishes a value, read other value (published by ecu_B)
 
-    Args:
-        stub: NetworkServiceStub
-        pause (int): Amount of time to pause in seconds
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+    pause : int
+        Amount of time to pause, in seconds
 
     """
     while True:
@@ -127,9 +139,12 @@ def ecu_A(stub, pause):
 def ecu_B_read(stub, pause):
     """Read a value published by ecu_A
 
-    Args:
-        stub: NetworkServiceStub
-        pause (int): Amount of time to pause in seconds
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+    pause : int
+        Amount of time to pause, in seconds
 
     """
     while True:
@@ -149,8 +164,10 @@ def ecu_B_read(stub, pause):
 def ecu_B_subscribe(stub):
     """Subscribe to a value published by ecu_A and publish doubled value back to ecu_A
 
-    Args:
-        stub: NetworkServiceStub
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
 
     """
     namespace = "ecu_B"
@@ -183,11 +200,13 @@ def ecu_B_subscribe(stub):
 
 
 def ecu_B_subscribe_2(stub):
-    """Shows possibility to subscribe to same signal multiple times, also using array to subscribe to additional signals.
-    Logs on purpose tabbed with single space.
+    """Shows possibility to subscribe to same signal multiple times, also using array to
+    subscribe to additional signals. Logs on purpose tabbed with single space.
 
-    Args:
-        stub: NetworkServiceStub
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
 
     """
     namespace = "ecu_B"
@@ -237,10 +256,14 @@ def ecu_B_subscribe_2(stub):
 def read_on_timer(stub, signals, pause):
     """Simple reading with timer, logs on purpose tabbed with double space
 
-    Args:
-        stub: NetworkServiceStub
-        signals: SignalIds
-        pause (int): Amount of time to pause in seconds
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+    signals : SignalId
+        Object instance of class
+    pause : int
+        Amount of time to pause, in seconds
 
     """
     while True:
@@ -262,8 +285,10 @@ def read_on_timer(stub, signals, pause):
 def run(argv):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
 
-    Args:
-        argv: Arguments passed when starting script
+    Parameters
+    ----------
+    argv : list
+        Arguments passed when starting script
 
     """
     # Checks argument passed to script, ecu_advanced.py will use below ip-address if no argument is passed to the script
