@@ -217,7 +217,9 @@ def run(argv):
 
     """
     # Checks argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
-    ip = "127.0.0.1:50051"
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
     try:
         opts, args = getopt.getopt(argv, "h", ["ip="])
     except getopt.GetoptError:
@@ -231,7 +233,7 @@ def run(argv):
             ip = arg
 
     # Setting up stubs and configuration
-    channel = grpc.insecure_channel(ip)
+    channel = grpc.insecure_channel(ip + port)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     # check_license(system_stub)
