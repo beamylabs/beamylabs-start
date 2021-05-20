@@ -43,3 +43,21 @@ The scripts ecu.py and ecu_advanced.py can be started with options `-h` or `--ip
 | read_on_timer        | Reads signals with timer                   | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L256-L282) |
 | run                  | Main function                              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L285-L376) |
 
+### Configuration
+Simple_ecu folder also includes samples of different configurations.
+#### Available configurations
+* [configuration](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration)
+* [configuration_can](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_can)
+* [configuration_lin](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_lin)
+* [configuration_udp](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_udp)
+
+#### Implementation
+The example scripts uploads and reloads configuration. Some lines are commented and not in use, but you can easily uncomment a line to shift between configurations or feel free to use your own.
+It will look similar to this:
+```
+# upload_folder(system_stub, "configuration")
+upload_folder(system_stub, "configuration_udp")
+# upload_folder(system_stub, "configuration_lin")
+# upload_folder(system_stub, "configuration_can")
+reload_configuration(system_stub)
+```
