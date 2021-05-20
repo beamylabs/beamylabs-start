@@ -322,10 +322,10 @@ def run(argv):
     # request_license(system_stub)
     # download_and_install_license(system_stub, "your_emailed_hash")
 
+    # upload_folder(system_stub, "configuration")
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
-    # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
 
     # Lists available signals
