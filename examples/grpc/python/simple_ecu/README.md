@@ -17,42 +17,26 @@ The scripts ecu.py and ecu_advanced.py can be started with options `-h` or `--ip
   * `python3 ecu.py --ip <ip_address>` or
   * `python3 ecu_advanced.py --ip <ip_address>` - for a more advanced example
 
-### ecu.py
+### Overview
+A bunch of things are going on in this examples and it all starts in the main function `def run(argv):`. Lets break it down.
 
-| Functions            | Description                                | Link  |
-| -------------------- | ------------------------------------------ | ----- |
-| read_signal          | Reads signals                              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L29-L46) |
-| publish_signals      | Publish signals                            | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L49-L73) |
-| ecu_A                | Publishes value, read other value          | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L76-L113) |
-| ecu_B_read           | Read value published by ecu_A              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L116-L138) |
-| ecu_B_subscribe      | Subscribe to value published by ecu_A      | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L141-L178) |
-| read_on_timer        | Reads signals with timer                   | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L181-L207) |
-| run                  | Main function                              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu.py#L210-L280) |
+#### Setting up stubs and configuration
+First we start of with setting up a connection to the signal broker (with the ip that was passed to the script) and then defining the grpc stubs that will be used. In code it looks like this:
+```
+  channel = grpc.insecure_channel(ip + port)
+  network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
+  system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
+  check_license(system_stub)
+```
 
-
-### ecu_advanced.py
-
-| Functions            | Description                                | Link  |
-| -------------------- | ------------------------------------------ | ----- |
-| read_signal          | Reads signals                              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L29-L46) |
-| publish_signals      | Publish signals                            | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L49-L70) |
-| ecu_A                | Publishes value, read other value          | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L76-L136) |
-| ecu_B_read           | Read value published by ecu_A              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L139-L161) |
-| ecu_B_subscribe      | Subscribe to value published by ecu_A      | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L164-L199) |
-| ecu_B_subscribe_2    | Variant of above function, shows potential | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L202-L253) |
-| read_on_timer        | Reads signals with timer                   | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L256-L282) |
-| run                  | Main function                              | [ref](https://github.com/beamylabs/beamylabs-start/blob/8872658077838f67f5c035929f6429afc3b81bbd/examples/grpc/python/simple_ecu/ecu_advanced.py#L285-L376) |
-
-### Configuration
-Simple_ecu folder also includes samples of different configurations.
-#### Available configurations
+#### Configuration
+Simple ecu folder contains some examples of different configurations, available configurations to use are the following:
 * [configuration](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration)
 * [configuration_can](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_can)
 * [configuration_lin](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_lin)
 * [configuration_udp](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_udp)
 
-#### Implementation
-The example scripts uploads and reloads configuration. Some lines are commented and not in use, but you can easily uncomment a line to shift between configurations or feel free to use your own.
+The example scripts uploads and reloads configuration with the `system_stub` that was defined above. Some lines are commented and not in use, but you can easily uncomment a line to shift between configurations or feel free to use your own.
 It will look similar to this:
 ```
 # upload_folder(system_stub, "configuration")
@@ -61,3 +45,54 @@ upload_folder(system_stub, "configuration_udp")
 # upload_folder(system_stub, "configuration_can")
 reload_configuration(system_stub)
 ```
+
+#### Threads
+The last part of the example scripts are starting up threads, you can read the docs for threading [here](https://docs.python.org/3/library/threading.html). 
+In both examples you will see a thread called `ecu_A_thread`, this thread defines the target-function `ecu_A` and will then start the thread. 
+```
+ecu_A_thread = Thread(
+  target=ecu_A,
+  args=(
+    network_stub,
+    1,
+  ),
+)
+ecu_A_thread.start()
+```
+The function `ecu_A` will publish one or multiple signals which then can be caught and read by ecu_B. In this examples `ecu_A` also reads a value that's been published by ecu_B.
+
+Next up we see a thread called `ecu_B_threads` which shows how to read signals that has been published on ecu_A. The thread `read_on_timer` is a variant of this and also has the purpose to read.
+
+Last but not least we have the thread `ecu_B_thread_subscribe`, this thread uses target-function `ecu_B_subscribe`. This function will first subscribe to a value, 'counter'. 
+```
+counter = common_pb2.SignalId(
+  name="counter", namespace=common_pb2.NameSpace(name=namespace)
+)
+sub_info = network_api_pb2.SubscriberConfig(
+  clientId=client_id,
+  signals=network_api_pb2.SignalIds(signalId=[counter]),
+  onChange=True,
+)
+```
+Then every time the `counter` signal comes, the function will take the value from the incoming signal, double the value and publish it as another signal `counter_times_2` (which then can be read by ecu_A). I will look like this:
+```
+try:
+  for subs_counter in stub.SubscribeToSignals(sub_info):
+    for signal in subs_counter.signal:
+      print("ecu_B, (subscribe) counter is ", signal.integer)
+      counter_times_2 = common_pb2.SignalId(
+        name="counter_times_2",
+        namespace=common_pb2.NameSpace(name=namespace),
+      )
+      signal_with_payload = network_api_pb2.Signal(
+        id=counter_times_2, integer=signal.integer * 2
+      )
+      publish_signals(client_id, stub, [signal_with_payload])
+
+except grpc._channel._Rendezvous as err:
+  print(err)
+```
+The script `ecu_advanced.py` has e second subscribe function, with a main purpose to show that it's possible to subscribe multiple times to the same signal but also to show a variant on how to subscribe to multiple signals at once.
+
+#### Support
+If you have any further questions, please reach out! 
