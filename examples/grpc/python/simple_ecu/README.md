@@ -92,7 +92,7 @@ try:
 except grpc._channel._Rendezvous as err:
   print(err)
 ```
-The script `ecu_advanced.py` has e second subscribe function, with a main purpose to show that it's possible to subscribe multiple times to the same signal but also to show a variant on how to subscribe to multiple signals at once.
+The script `ecu_advanced.py` has a second subscribe function, with the main purpose to show that it's possible to subscribe multiple times to the same signal but also to show a variant on how to subscribe to multiple signals at once.
 
 #### Support
 If you have any further questions, please reach out! 
