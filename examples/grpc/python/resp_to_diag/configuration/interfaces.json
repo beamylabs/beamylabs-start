@@ -32,8 +32,8 @@
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
-    "port": 4000,
-    "server_pid": "auto_config_boot_server_pid"
+    "target_port": 4000,
+    "server_port": 4001
   },
   "grpc_server": {
     "port": 50051
