@@ -36,7 +36,7 @@ python -m pip install grpcio-tools protobuf
 ```
 Example; from [here](simple_ecu/) run
 ```
-python ecu.py --ip <ip_address>
+python3 ecu.py --ip <ip_address>
 ```
 for a more advanced example
 ```
