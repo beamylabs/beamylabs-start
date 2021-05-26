@@ -73,7 +73,7 @@ def run():
     frames = all_frames(system_stub, namespace)
     print("all frames ", frames)
 
-    signals = signals_in_frame(system_stub, frames[1])
+    signals = all_signals_in_frame(system_stub, frames[1])
     print("signal in frame ", signals[0])
 
     signal = common_pb2.SignalId(name=signals[0].name, namespace=namespace)
