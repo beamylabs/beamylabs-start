@@ -8,7 +8,7 @@ import binascii
 
 import grpc
 
-import sys
+import sys, getopt
 sys.path.append('../common/generated')
 
 import network_api_pb2
@@ -50,8 +50,33 @@ def ecu_B_subscribe(stub, signals, onChange):
     except grpc._channel._Rendezvous as err:
             print(err)
 
-def run():
-    channel = grpc.insecure_channel('127.0.0.1:50051')
+def run(argv):
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
+
+    Parameters
+    ----------
+    argv : list
+        Arguments passed when starting script
+
+    """
+    # Checks argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print("Usage: ecu.py --ip <ip_address>")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == "-h":
+            print("Usage: ecu.py --ip <ip_address>")
+            sys.exit(2)
+        elif opt == "--ip":
+            ip = arg
+
+    # Setting up stubs and configuration
+    channel = grpc.insecure_channel(ip + port)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     # check_license(system_stub)
@@ -97,5 +122,6 @@ def run():
     ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub, [signal, signal2], on_change))
     ecu_B_thread_subscribe.start()
 
-if __name__ == '__main__':
-    run()
+if __name__ == "__main__":
+    run(sys.argv[1:])
+
