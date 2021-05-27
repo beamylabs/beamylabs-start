@@ -76,7 +76,6 @@ Every interface starts with a ` "default_namespace"` , that namespace is require
       "namespace": "VirtualInterface",
       "type": "virtual"
     },
-    ...
 ```
 Above you can see that the `"default_namespace"` is set to `"VirtualInterface"` and that namespace exists in the `"chains"`.
 
