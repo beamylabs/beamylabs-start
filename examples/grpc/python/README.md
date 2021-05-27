@@ -59,3 +59,24 @@ to re-generate files (already generated in the [common/generated](common/generat
 python -m grpc_tools.protoc -I../../../proto_files --python_out=./common/generated --grpc_python_out=./common/generated ../../../proto_files/*
 ```
 
+## Configuration
+Most of the python examples contains one or several configurations to try out. If you have a wish to create your own configuration, this section will cover what a configuration require to include and whats important when writing your own interface. 
+
+A typical configuration includes a folder contaning dbc-files and an interface.json file. For reference, check out the configuration-examples [here](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu).
+
+### Interface
+Open up a `interface.json` in one of the configuration-examples mentioned above to easier follow along.
+
+Every interface starts with a ` "default_namespace"` , that namespace is required to exist in the `chains` for a correct interface. 
+```json
+"default_namespace": "VirtualInterface",
+  "chains": [
+    {
+      "device_name": "virtual",
+      "namespace": "VirtualInterface",
+      "type": "virtual"
+    },
+    ...
+```
+Above you can see that the `"default_namespace"` is set to `"VirtualInterface"` and that namespace exists in the `"chains"`.
+
