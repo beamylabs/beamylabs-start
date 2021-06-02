@@ -125,24 +125,24 @@ def run(argv):
     # signal_with_payload = network_api_pb2.Signal(id = signal, arbitration = True)
     # publish_signals(network_stub, clientId, [signal_with_payload], 0)
 
-    print("sent %s from master expect nothing back" % (signal_with_payload))
-    time.sleep(1)
+    # print("sent %s from master expect nothing back" % (signal_with_payload))
+    # time.sleep(3)
 
     # send master request, now with propriate NAD, DEVS2 has NAD 0x81 (which is the fist byte below)
     signal = common_pb2.SignalId(name="MasterReq", namespace=common_pb2.NameSpace(name = namespace_master))
     signal_with_payload = network_api_pb2.Signal(id = signal, raw = b"\x81\x02\x03\x04\x05\x06\x07\x08")
     publish_signals(network_stub, clientId, [signal_with_payload], 0)
 
-    print("sent %s from master expect nothing back, but client is now ready to reply" % (signal_with_payload))
-    time.sleep(1)
+    print("sent %s from master expect ANSWER" % (signal_with_payload))
+    time.sleep(3)
 
     # # send arbitration from master, expect answer since nad is matching
     # signal = common_pb2.SignalId(name="SlaveResp", namespace=common_pb2.NameSpace(name = namespace_master))
     # signal_with_payload = network_api_pb2.Signal(id = signal, arbitration = True)
     # publish_signals(network_stub, clientId, [signal_with_payload], 0)
 
-    print("sent %s from master expect ANSWER" % (signal_with_payload))
-    time.sleep(3)
+    # print("sent %s from master expect ANSWER" % (signal_with_payload))
+    # time.sleep(3)
 
 
     # send master request, now with another NAD, make sure client doesn't (which is the fist byte below)
@@ -152,12 +152,12 @@ def run(argv):
 
 
     # send arbitration from master, expect nothing back (nad is not matching)!
-    signal = common_pb2.SignalId(name="SlaveResp", namespace=common_pb2.NameSpace(name = namespace_master))
-    signal_with_payload = network_api_pb2.Signal(id = signal, arbitration = True)
-    publish_signals(network_stub, clientId, [signal_with_payload], 0)
+    # signal = common_pb2.SignalId(name="SlaveResp", namespace=common_pb2.NameSpace(name = namespace_master))
+    # signal_with_payload = network_api_pb2.Signal(id = signal, arbitration = True)
+    # publish_signals(network_stub, clientId, [signal_with_payload], 0)
 
     print("sent %s from master NOT expecting ANSWER" % (signal_with_payload))
-    time.sleep(1)
+    time.sleep(3)
 
     print("still quiet.... done")
 
