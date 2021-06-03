@@ -1,5 +1,4 @@
 {
-  "default_namespace": "VirtualInterface",
   "chains": [
     {
       "device_name": "virtual",
@@ -15,7 +14,6 @@
         "target_host": null,
         "target_port": 2013
       },
-      "device_name": "lin",
       "node_mode": "master",
       "ldf_file": "ldf/test.ldf",
       "schedule_file": "ldf/test.ldf",
@@ -26,16 +24,13 @@
       "namespace": "ecu_B",
       "type": "lin",
       "config": {
-        "device_identifier": 1,
+        "device_identifier": 7,
         "server_port": 2015,
         "target_host": null,
         "target_port": 2016
       },
-      "device_name": "lin2",
       "node_mode": "slave",
       "ldf_file": "ldf/test.ldf",
-      "schedule_file": "ldf/test.ldf",
-      "schedule_table_name": "DEVMLIN01Schedule01",
       "schedule_autostart": false
     },
     {
@@ -45,12 +40,10 @@
       "device_name": "test_can",
       "server_port": 2003,
       "target_host": "127.0.0.1",
-      "target_port": 2004,
-      "fixed_payload_size": 8
+      "target_port": 2004    
     }
   ],
   "gateway": {
-    "gateway_pid": "gateway_pid",
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
