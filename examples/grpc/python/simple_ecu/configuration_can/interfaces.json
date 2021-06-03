@@ -1,5 +1,4 @@
 {
-  "default_namespace": "VirtualInterface",
   "chains": [
     {
       "device_name": "virtual",
@@ -25,12 +24,10 @@
       "device_name": "test_can",
       "server_port": 2003,
       "target_host": "127.0.0.1",
-      "target_port": 2004,
-      "fixed_payload_size": 8
+      "target_port": 2004
     }
   ],
   "gateway": {
-    "gateway_pid": "gateway_pid",
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {

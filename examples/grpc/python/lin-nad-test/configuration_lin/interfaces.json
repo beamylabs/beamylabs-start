@@ -45,7 +45,6 @@
     }
   ],
   "gateway": {
-    "gateway_pid": "gateway_pid",
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
