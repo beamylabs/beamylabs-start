@@ -31,7 +31,6 @@ First we start of with setting up a connection to the beamy broker (with the ip 
 
 #### Configuration
 Simple ecu folder contains some examples of different configurations, available configurations to use are the following:
-* [configuration](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration)
 * [configuration_can](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_can)
 * [configuration_lin](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_lin)
 * [configuration_udp](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_udp)
@@ -39,7 +38,6 @@ Simple ecu folder contains some examples of different configurations, available 
 The example scripts uploads and reloads configuration with the `system_stub` that was defined above. Some lines are commented and not in use, but you can easily uncomment a line to shift between configurations or feel free to use your own.
 It will look similar to this:
 ```
-# upload_folder(system_stub, "configuration")
 upload_folder(system_stub, "configuration_udp")
 # upload_folder(system_stub, "configuration_lin")
 # upload_folder(system_stub, "configuration_can")
