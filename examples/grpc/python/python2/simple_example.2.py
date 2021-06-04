@@ -1,5 +1,4 @@
-# inspired by https://grpc.io/docs/tutorials/basic/python.html
-
+#!/usr/bin/env python2
 # Copyright 2015 gRPC authors.
 # Copyright 2019 Volvo Cars
 #

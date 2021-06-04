@@ -1,5 +1,4 @@
-#!/usr/bin/python
-"""The Python implementation of the gRPC route guide client."""
+#!/usr/bin/env python3
 
 from __future__ import print_function
 

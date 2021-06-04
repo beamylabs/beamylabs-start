@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # inspired by https://grpc.io/docs/tutorials/basic/python.html
 
 # Copyright 2015 gRPC authors.
