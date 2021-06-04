@@ -34,6 +34,8 @@ services:
     command: ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}:50051 --run_tls_server=false --allow_all_origins --server_http_max_read_timeout 0s --server_http_max_write_timeout 0s
   signal-broker:
     tty: true
+    security_opt:
+      - seccomp:unconfined
     restart: always
     # Build and name the SB image
     # build:
