@@ -1,0 +1,4 @@
+requests
+grpcio-tools
+betterproto[compiler]==2.0.0b3
+grpclib

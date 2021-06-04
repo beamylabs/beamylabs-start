@@ -1,26 +1,17 @@
 #!/usr/bin/env python3
 
+import asyncio
+
 import os
 import time
 import binascii
 
-import grpc
-
+from grpclib.client import Channel
 import sys, getopt
 
-sys.path.append("../common/generated")
-
-import network_api_pb2
-import network_api_pb2_grpc
-import system_api_pb2
-import system_api_pb2_grpc
-import common_pb2
-
 sys.path.append("../common")
-import helper
+from generated_betterproto.base import *
 from helper import *
-
-from threading import Thread, Timer
 
 
 def read_signal(stub, signal):
@@ -39,11 +30,10 @@ def read_signal(stub, signal):
         Object instance of class
 
     """
-    read_info = network_api_pb2.SignalIds(signalId=[signal])
-    return stub.ReadSignals(read_info)
+    return stub.read_signals(signal_id=[signal])
 
 
-def publish_signals(client_id, stub, signals_with_payload):
+async def publish_signals(client_id, stub, signals_with_payload):
     """Publish signals
 
     Parameters
@@ -56,21 +46,20 @@ def publish_signals(client_id, stub, signals_with_payload):
         Object instance of class
 
     """
-    publisher_info = network_api_pb2.PublisherConfig(
-        clientId=client_id,
-        signals=network_api_pb2.Signals(signal=signals_with_payload),
-        frequency=0,
-    )
     try:
-        stub.PublishSignals(publisher_info)
-    except grpc._channel._Rendezvous as err:
+        await stub.publish_signals(
+            client_id=client_id,
+            signals=Signals(signal=signals_with_payload),
+            frequency=0,
+        )
+    except Exception as err:
         print(err)
 
 
 increasing_counter = 0
 
 
-def ecu_A(stub, pause):
+async def ecu_A(stub, pause):
     """Publishes a value, read other value (published by ecu_B)
 
     Parameters
@@ -84,25 +73,21 @@ def ecu_A(stub, pause):
     while True:
         global increasing_counter
         namespace = "ecu_A"
-        clientId = common_pb2.ClientId(id="id_ecu_A")
+        clientId = ClientId(id="id_ecu_A")
 
         # Publishes value 'counter'
-        counter = common_pb2.SignalId(
-            name="counter", namespace=common_pb2.NameSpace(name=namespace)
-        )
-        counter_with_payload = network_api_pb2.Signal(
-            id=counter, integer=increasing_counter
-        )
-        publish_signals(clientId, stub, [counter_with_payload])
+        counter = SignalId(name="counter", namespace=NameSpace(name=namespace))
+        counter_with_payload = Signal(id=counter, integer=increasing_counter)
+        await publish_signals(clientId, stub, [counter_with_payload])
         print("\necu_A, seed is ", increasing_counter)
 
         time.sleep(pause)
 
         # Read the other value 'counter_times_2' and output result
-        counter_times_2 = common_pb2.SignalId(
-            name="counter_times_2", namespace=common_pb2.NameSpace(name=namespace)
+        counter_times_2 = SignalId(
+            name="counter_times_2", namespace=NameSpace(name=namespace)
         )
-        read_counter_times_2 = read_signal(stub, counter_times_2)
+        read_counter_times_2 = await read_signal(stub, counter_times_2)
         print(
             "ecu_A, (result) counter_times_2 is ",
             read_counter_times_2.signal[0].integer,
@@ -110,7 +95,7 @@ def ecu_A(stub, pause):
         increasing_counter = (increasing_counter + 1) % 4
 
 
-def ecu_B_read(stub, pause):
+async def ecu_B_read(stub, pause):
     """Read a value published by ecu_A
 
     Parameters
@@ -123,19 +108,17 @@ def ecu_B_read(stub, pause):
     """
     while True:
         namespace = "ecu_B"
-        client_id = common_pb2.ClientId(id="id_ecu_B")
+        client_id = ClientId(id="id_ecu_B")
 
         # Read value 'counter'
-        counter = common_pb2.SignalId(
-            name="counter", namespace=common_pb2.NameSpace(name=namespace)
-        )
-        read_counter = read_signal(stub, counter)
+        counter = SignalId(name="counter", namespace=NameSpace(name=namespace))
+        read_counter = await read_signal(stub, counter)
         print("ecu_B, (read) counter is ", read_counter.signal[0].integer)
 
         time.sleep(pause)
 
 
-def ecu_B_subscribe(stub):
+async def ecu_B_subscribe(stub):
     """Subscribe to a value published by ecu_A and publish doubled value back to ecu_A
 
     Parameters
@@ -145,33 +128,29 @@ def ecu_B_subscribe(stub):
 
     """
     namespace = "ecu_B"
-    client_id = common_pb2.ClientId(id="id_ecu_B")
+    client_id = ClientId(id="id_ecu_B")
 
     # Subscribe to value 'counter'
-    counter = common_pb2.SignalId(
-        name="counter", namespace=common_pb2.NameSpace(name=namespace)
-    )
-    sub_info = network_api_pb2.SubscriberConfig(
-        clientId=client_id,
-        signals=network_api_pb2.SignalIds(signalId=[counter]),
-        onChange=True,
-    )
-
+    counter = SignalId(name="counter", namespace=NameSpace(name=namespace))
     # Publish doubled value as 'counter_times_2'
     try:
-        for subs_counter in stub.SubscribeToSignals(sub_info):
+        async for subs_counter in stub.subscribe_to_signals(
+            client_id=client_id,
+            signals=SignalIds(signal_id=[counter]),
+            on_change=True,
+        ):
             for signal in subs_counter.signal:
                 print("ecu_B, (subscribe) counter is ", signal.integer)
-                counter_times_2 = common_pb2.SignalId(
+                counter_times_2 = SignalId(
                     name="counter_times_2",
-                    namespace=common_pb2.NameSpace(name=namespace),
+                    namespace=NameSpace(name=namespace),
                 )
-                signal_with_payload = network_api_pb2.Signal(
+                signal_with_payload = Signal(
                     id=counter_times_2, integer=signal.integer * 2
                 )
-                publish_signals(client_id, stub, [signal_with_payload])
+                await publish_signals(client_id, stub, [signal_with_payload])
 
-    except grpc._channel._Rendezvous as err:
+    except Exception as err:
         print(err)
 
 
@@ -189,9 +168,9 @@ def read_on_timer(stub, signals, pause):
 
     """
     while True:
-        read_info = network_api_pb2.SignalIds(signalId=signals)
+        read_info = SignalIds(signal_id=signals)
         try:
-            response = stub.ReadSignals(read_info)
+            response = stub.read_signals(read_info)
             for signal in response.signal:
                 print(
                     "  read_on_timer "
@@ -199,13 +178,13 @@ def read_on_timer(stub, signals, pause):
                     + " value "
                     + str(signal.integer)
                 )
-        except grpc._channel._Rendezvous as err:
+        except Exception as err:
             print(err)
         time.sleep(pause)
 
 
-def run(argv):
-    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
+async def main(argv):
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting tasks.
 
     Parameters
     ----------
@@ -216,7 +195,7 @@ def run(argv):
     # Checks argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1"
     # Keep this port
-    port = ":50051"
+    port = "50051"
     try:
         opts, args = getopt.getopt(argv, "h", ["ip="])
     except getopt.GetoptError:
@@ -230,51 +209,38 @@ def run(argv):
             ip = arg
 
     # Setting up stubs and configuration
-    channel = grpc.insecure_channel(ip + port)
-    network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
-    system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
-    check_license(system_stub)
+    async with Channel(host=ip, port=port) as channel:
+        network_stub = NetworkServiceStub(channel)
+        system_stub = SystemServiceStub(channel)
+        await check_license(system_stub)
 
-    upload_folder(system_stub, "configuration_udp")
-    # upload_folder(system_stub, "configuration_lin")
-    # upload_folder(system_stub, "configuration_can")
-    reload_configuration(system_stub)
+        await upload_folder(system_stub, "configuration_udp")
+        # upload_folder(system_stub, "configuration_lin")
+        # upload_folder(system_stub, "configuration_can")
+        await reload_configuration(system_stub)
 
-    # Lists available signals
-    configuration = system_stub.GetConfiguration(common_pb2.Empty())
-    for networkInfo in configuration.networkInfo:
-        print(
-            "signals in namespace ",
-            networkInfo.namespace.name,
-            system_stub.ListSignals(networkInfo.namespace),
-        )
+        # Lists available signals
+        configuration = await system_stub.get_configuration()
+        for info in configuration.network_info:
+            print(
+                "signals in namespace ",
+                info.namespace.name,
+                await system_stub.list_signals(name=info.namespace.name),
+            )
 
-    # Starting Threads
-    ecu_A_thread = Thread(
-        target=ecu_A,
-        args=(
-            network_stub,
-            1,
-        ),
-    )
-    ecu_A_thread.start()
+        # python3.7+: can use neater create_task() instead of ensure_future()
+        ecu_A_task = asyncio.ensure_future(ecu_A(network_stub, 1))
+        ecu_B_read_task = asyncio.ensure_future(ecu_B_read(network_stub, 1))
+        ecu_B_subscribe_task = asyncio.ensure_future(ecu_B_subscribe(network_stub))
 
-    ecu_B_thread_read = Thread(
-        target=ecu_B_read,
-        args=(
-            network_stub,
-            1,
-        ),
-    )
-    ecu_B_thread_read.start()
+        await ecu_A_task
 
-    ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe, args=(network_stub,))
-    ecu_B_thread_subscribe.start()
-
-    # read_signals = [common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A")), common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = "ecu_A"))]
-    # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
-    # ecu_read_on_timer.start()
+        # read_signals = [common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A")), common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = "ecu_A"))]
+        # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
+        # ecu_read_on_timer.start()
 
 
 if __name__ == "__main__":
-    run(sys.argv[1:])
+    # python3.7+: may be simplified as: asyncio.run(main(sys.argv[1:]))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main(sys.argv[1:]))
