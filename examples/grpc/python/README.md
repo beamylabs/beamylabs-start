@@ -19,9 +19,8 @@ To show available options/usage run script with -h
 python3 ecu.py -h
 ```
 
-> **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L100 (keep the port 50051)**
-
-> this example works on any linux as it uses [udp](simple_ecu/configuration_udp) per default. If you like to use [can](simple_ecu/configuration) you need a can enabled device. Then enable this [line](https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L107)
+> **make sure to provide an ip that points to your installation when running the script OR change the ip in the code on this [line](https://github.com/beamylabs/beamylabs-start/blob/0fe6746c960b1612a4818f75789712f5f2b929be/examples/grpc/python/simple_ecu/ecu.py#L220) (keep the port 50051)**
+> this example works on any linux as it uses [udp](simple_ecu/configuration_udp) per default. If you like to use [can](simple_ecu/configuration_can) you need a can enabled device. Then enable this [line](https://github.com/beamylabs/beamylabs-start/blob/0fe6746c960b1612a4818f75789712f5f2b929be/examples/grpc/python/simple_ecu/ecu.py#L242)
 
 ## Setup Windows
 Download python 3.x from [here](https://www.python.org/downloads/) 
@@ -48,8 +47,7 @@ To show available options/usage run script with -h
 python3 ecu.py -h
 ```
 
-> **make sure that this line point to your installation https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/ecu.py#L142 (keep the port 50051)**
-
+> **make sure to provide an ip that points to your installation when running the script OR change the ip in the code on this [line](https://github.com/beamylabs/beamylabs-start/blob/0fe6746c960b1612a4818f75789712f5f2b929be/examples/grpc/python/simple_ecu/ecu.py#L220) (keep the port 50051)**
 
 ## Re-generate stubs
 
