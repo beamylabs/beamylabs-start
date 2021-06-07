@@ -18,7 +18,11 @@ rm -f envfile
 touch envfile
 # trigger-upgrade.sh might pass us an env file
 if [ -n "$1" ]; then
+  printf "tags from passed envfile:\n"
+  cat "$1"
   mv -f "$1" envfile
+else
+  printf "no envfile passed.\n"
 fi
 
 # for any unset *_TAG env vars, the docker-compose yml falls back to "latest"
