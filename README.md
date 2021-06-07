@@ -1,3 +1,7 @@
+# Ongoing
+
+Go [here](https://github.com/beamylabs/beamylabs-start/discussions) to check what's ongoing and try the latest featues.
+
 # Get started with Beamy Broker
 
 ## Prerequisite
