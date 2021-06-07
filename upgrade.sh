@@ -27,6 +27,11 @@ fi
 
 # for any unset *_TAG env vars, the docker-compose yml falls back to "latest"
 
+if ! docker-compose --env-file envfile -f docker-compose-full-system.yml pull; then
+  printf "upgrade aborted, some non-existent tag?\n"
+  exit 1
+fi
+
 docker-compose --env-file envfile -f docker-compose-full-system.yml down
 
 # Upgrade docker if we're on a Raspberry Pi and version < 20.10.8
@@ -52,5 +57,4 @@ if grep -qi "raspberry" /sys/firmware/devicetree/base/model; then
   fi
 fi
 
-docker-compose --env-file envfile -f docker-compose-full-system.yml pull
 docker-compose --env-file envfile -f docker-compose-full-system.yml up -d
