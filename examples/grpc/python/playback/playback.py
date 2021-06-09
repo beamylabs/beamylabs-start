@@ -219,4 +219,4 @@ def run(argv):
 
 
 if __name__ == "__main__":
-    run(sys.argv[:1])
+    run(sys.argv[1:])
