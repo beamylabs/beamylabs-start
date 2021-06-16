@@ -66,7 +66,7 @@ def upload_folder(system_stub, folder):
 def reload_configuration(system_stub):
     request = common_pb2.Empty()
     response = system_stub.ReloadConfiguration(request, timeout=60000)
-    print(response)
+    assert response.HasField("errorMessage") == False, ("reload configuration failed error message is: %s" % response.errorMessage)
 
 
 def check_license(system_stub):
@@ -123,10 +123,9 @@ def download_and_install_license(system_stub, hash, id=None):
 
 
 # checks if signal is declared.
-# signal = common_pb2.SignalId(name="MasterReq", namespace=common_pb2.NameSpace(name = "ecu_A")
-def is_signal_declared(system_stub, signal):
+def is_signal_declared(signal, frames):
     signals = []
-    for frame_entry in system_stub.ListSignals(signal.namespace).frame:
+    for frame_entry in frames:
         signals.append(frame_entry.signalInfo.id)
         for signal_entry in frame_entry.childInfo:
             signals.append(signal_entry.id)

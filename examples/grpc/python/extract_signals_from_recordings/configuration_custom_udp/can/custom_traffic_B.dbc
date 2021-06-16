@@ -1,0 +1,45 @@
+// *************************************************************************** *
+// *                                                                           *
+// *             Mini dbc file for traffic playback.                         *
+// *                                                                           *
+// *************************************************************************** *                                                                        *
+
+
+VERSION "TrafficCAN"
+
+BO_ 80 BodyF1: 8 CCM
+ SG_ AirTemptInH : 0|13@1- (0.1, 0.0) [-256.0|255.9] "degC" CEM
+
+BO_ 81 BodyF2: 8 CEM
+ SG_ CompartmentTemp : 0|11@1+ (0.1, -60.0) [-60.0|125.0] "degC" TEM0
+
+BO_ 82 BodyF3: 8 CCM
+ SG_ EstimatedCompartmentTemp : 0|11@1+ (0.1, -60.0) [-60.0|125.0] "degC" CEM
+ SG_ HeaterCoolTemp : 11|8@1+ (1.0, -40.0) [-40.0|215.0] "degC" CEM
+
+BO_ 83 BodyF4: 8 CCM
+ SG_ EngineCoolFlow : 0|10@1+ (0.05, 0.0) [0.0|51.15] "L / min" CEM
+
+BO_ 84 BodyF5: 8 CCM
+ SG_ WindscreenTemp : 0|11@1+ (0.1, -70.0) [-70.0|134.7] "degC" CEM
+
+BO_ 1110 MotionState: 8 CEM
+ SG_ VehicleMotionCounter : 0|4@1+ (1.0, 0.0) [0.0|15.0] "NoUnit" POT, TRM
+ SG_ VehicleMotionSafe : 4|3@1+ (1.0, 0.0) [0.0|0.0] "" POT, TRM
+
+BO_ 1111 Speed: 8 VDDM
+ SG_ VehicleSpeed : 0|15@1+ (0.00391, 0.0) [0.0|125.003] "m/s" ECM, PSCM, SAS, SCL, SUM
+ SG_ VehicleSpeedCounter : 15|4@1+ (1.0, 0.0) [0.0|15.0] "NoUnit" ECM, PSCM, SAS, SCL, SUM
+ SG_ VehicleSpeedInt : 19|2@1+ (1.0, 0.0) [0.0|0.0] "" ECM, PSCM, SAS, SCL, SUM
+
+BO_ 1112 SteeringMax: 8 PSCM
+ SG_ SteerAngleMax : 0|15@1- (0.000977, 0.0) [-14.5|14.5] "rad" VDDM
+
+BO_ 1113 Steering: 8 PSCM
+ SG_ SteerForceEstimate : 0|16@1- (1.0, 0.0) [-32768.0|32767.0] "Nwt" VDDM
+ SG_ SteerAngle : 16|15@1- (0.000977, 0.0) [-14.5|14.5] "rad" VDDM
+ SG_ SteerAngleSpeed : 31|14@1- (0.007812, 0.0) [-50.0|50.0] "rad/s" VDDM
+
+BO_ 1114 Parking: 8 VDDM
+ SG_ AssistedParkAngleReq : 0|15@1- (0.000977, 0.0) [-14.5|14.5] "rad" PSCM
+ SG_ AssistedParkAngleReqCounter : 15|4@1+ (1.0, 0.0) [0.0|15.0] "NoUnit" PSCM
