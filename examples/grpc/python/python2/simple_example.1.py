@@ -25,9 +25,9 @@ import time
 
 import grpc
 
-import sys
+import sys, getopt
 
-sys.path.append("generated")
+sys.path.append("../common/generated")
 
 import network_api_pb2
 import network_api_pb2_grpc
@@ -60,8 +60,24 @@ def subscribe_to_signal(stub):
 import binascii
 
 
-def run():
-    channel = grpc.insecure_channel("localhost:50051")
+def run(argv):
+     # Checks argument passed to script, simple_example.1.py will use below ip-address if no argument is passed to the script
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print("Usage: simple_example.1.py --ip <ip_address>")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == "-h":
+            print("Usage: simple_example.1.py --ip <ip_address>")
+            sys.exit(2)
+        elif opt == "--ip":
+            ip = arg
+
+    channel = grpc.insecure_channel(ip + port)
     functional_stub = functional_api_pb2_grpc.FunctionalServiceStub(channel)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     diag_stub = diagnostics_api_pb2_grpc.DiagnosticsServiceStub(channel)
@@ -71,4 +87,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    run(sys.argv[1:])
