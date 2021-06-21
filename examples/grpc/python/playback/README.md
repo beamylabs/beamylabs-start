@@ -48,9 +48,28 @@ upload_file(
   "recordings/candump_uploaded.log",
 )
 ```
-It uploads the file with the `system_stub`, second argument points to the filepath of your file (in the playback folder it exists a sample file `recordings/traffic.log`) and third argument the path and name of the uploaded file.
+It uploads the file with the `system_stub`, second argument points to the filepath of your file (in the playback folder it exists a sample file `recordings/traffic.log`) and third argument, the path and name of the uploaded file.
 
 #### Playback
-Coming soon... 
+Next part of the script creates a list, this list can contain one or several playbacksettings. Each playbacksetting needs to have a `namespace`, a `path` and a `mode`. The script continues with starting all playbacks in the list. In code it look like this:
+```
+playbacklist = [
+  {
+    "namespace": "custom_can",
+    "path": "recordings/candump_uploaded.log",
+    "mode": traffic_api_pb2.Mode.PLAY,
+  }
+]
+# Starts playback
+status = traffic_stub.PlayTraffic(
+  traffic_api_pb2.PlaybackInfos(
+    playbackInfo=list(map(create_playback_config, playbacklist))
+  )
+)
+```
 
+> If changing the playbacklist, also copy and replace the playbacklist in function `stop_playback`, for a nice and clean exit of the script.
 
+#### Support
+More details about the Threads in the script; `read_signal`, `ecu_B_read`, `ecu_B_subscribe` or  `read_on_timer`, can be read [here](https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/README.md).
+If you have any further questions, please reach out! 
