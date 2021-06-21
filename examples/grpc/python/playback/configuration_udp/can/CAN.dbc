@@ -1,5 +1,0 @@
-VERSION "DiagnsticsCANhs"
-BO_ 1 Secured_Thrust: 8 IonEngineEcu
-BO_ 2 Secured_ThrustResponse: 8 VCU
-BO_ 3 Exposed_Thrust: 8 IonEngineEcu
-BO_ 4 Exposed_ThrustResponse: 8 VCU
