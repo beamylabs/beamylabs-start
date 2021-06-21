@@ -1,7 +1,7 @@
 # Simple ecu
 Simple_ecu folder contains two scripts, **ecu.py** and **ecu_advanced.py**. With intention to give example and inspiration to further development. To get started and to get more details of the examples, continue reading.
 ## Pre-requisites
-> If you haven't yet installed the necessary requirements to run python examples. Then we suggest you start by following instructions [here](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python#readme).
+> If you haven't yet installed the necessary requirements to run python examples. Then we suggest you start by following instructions [here](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python#readme).
 
 > Have knowledge of the ip address to your beamy broker installation, if you have the web-client running you can get the ip in the bottom left corner.
 
@@ -31,9 +31,9 @@ First we start of with setting up a connection to the beamy broker (with the ip 
 
 #### Configuration
 Simple ecu folder contains some examples of different configurations, available configurations to use are the following:
-* [configuration_can](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_can)
-* [configuration_lin](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_lin)
-* [configuration_udp](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python/simple_ecu/configuration_udp)
+* [configuration_can](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python/simple_ecu/configuration_can)
+* [configuration_lin](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python/simple_ecu/configuration_lin)
+* [configuration_udp](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python/simple_ecu/configuration_udp)
 
 The example scripts uploads and reloads configuration with the `system_stub` that was defined above. Some lines are commented and not in use, but you can easily uncomment a line to shift between configurations or feel free to use your own.
 It will look similar to this:
