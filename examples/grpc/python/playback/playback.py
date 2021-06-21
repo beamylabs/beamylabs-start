@@ -73,8 +73,8 @@ def ecu_B_read(stub, pause):
         response = read_signal(stub, steer_angle)
         print("ecu_B, (read) SteerAngle is ", response.signal[0].double)
 
-
         time.sleep(pause)
+
 
 def ecu_B_subscribe_(stub):
     """Subscribe to a value published by ecu_A and output value
@@ -85,10 +85,10 @@ def ecu_B_subscribe_(stub):
         Object instance of class
 
     """
-    
+
     namespace = "custom_can"
     client_id = common_pb2.ClientId(id="id_ecu_B")
-    
+
     # Subscribe to value 'SteerAngle'
     steer_angle = common_pb2.SignalId(
         name="SteerAngle", namespace=common_pb2.NameSpace(name=namespace)
@@ -98,7 +98,7 @@ def ecu_B_subscribe_(stub):
         signals=network_api_pb2.SignalIds(signalId=[steer_angle]),
         onChange=True,
     )
-    
+
     # Output subscribed signal
     try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
@@ -108,6 +108,7 @@ def ecu_B_subscribe_(stub):
             print("ecu_B, (subscribe) SteerAngle is ", subs_counter.signal[0])
     except grpc._channel._Rendezvous as err:
         print(err)
+
 
 def read_on_timer(stub, signals, pause):
     """Simple reading with timer, logs on purpose tabbed with double space
@@ -135,6 +136,7 @@ def read_on_timer(stub, signals, pause):
 
         time.sleep(pause)
 
+
 def create_playback_config(item):
     """Creating configuration for playback
 
@@ -142,12 +144,12 @@ def create_playback_config(item):
     ----------
     item : dict
         Dictionary containing 'path', 'namespace' and 'mode'
-    
+
     Returns
     -------
     PlaybackInfo
         Object instance of class
-    
+
     """
     playbackConfig = traffic_api_pb2.PlaybackConfig(
         fileDescription=system_api_pb2.FileDescription(path=item["path"]),
@@ -158,23 +160,21 @@ def create_playback_config(item):
         playbackMode=traffic_api_pb2.PlaybackMode(mode=item["mode"]),
     )
 
+
 def stop_playback():
     """Stop ongoing playback"""
-    channel = grpc.insecure_channel(ip)
+    channel = grpc.insecure_channel(ip + port)
     traffic_stub = traffic_api_pb2_grpc.TrafficServiceStub(channel)
-    playbacklist = [
-        {
-            "namespace": "custom_can",
-            "path": "recordings/candump_uploaded.log",
-            "mode": traffic_api_pb2.Mode.STOP,
-        }
-    ]
+    for playback in playbacklist:
+        playback["mode"] = traffic_api_pb2.Mode.STOP
+
     status = traffic_stub.PlayTraffic(
         traffic_api_pb2.PlaybackInfos(
             playbackInfo=list(map(create_playback_config, playbacklist))
         )
     )
     print("Stop traffic status is ", status)
+
 
 def exit_handler(signum, frame):
     """Custom handler for exit of script
@@ -185,11 +185,12 @@ def exit_handler(signum, frame):
         Signal number defined in pythons standard signal library
     frame : frame
         Object instance of class, stack frame
-    
+
     """
     exit_event.set()
     time.sleep(0.5)
     stop_playback()
+
 
 def run(argv):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
@@ -201,7 +202,9 @@ def run(argv):
 
     """
     global ip
-     # Checks argument passed to script, playback.py will use below ip-address if no argument is passed to the script
+    global port
+    global playbacklist
+    # Checks argument passed to script, playback.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1"
     # Keep this port
     port = ":50051"
@@ -247,7 +250,6 @@ def run(argv):
         "recordings/traffic.log",
         "recordings/candump_uploaded.log",
     )
-    # NOTE: If changing this playbacklist, also update playbacklist in function 'stop_playback'
     playbacklist = [
         {
             "namespace": "custom_can",

@@ -68,8 +68,6 @@ status = traffic_stub.PlayTraffic(
 )
 ```
 
-> If changing the playbacklist, also copy and replace the playbacklist in function `stop_playback`, for a nice and clean exit of the script.
-
 #### Support
 More details about the Threads in the script; `read_signal`, `ecu_B_read`, `ecu_B_subscribe` or  `read_on_timer`, can be read [here](https://github.com/beamylabs/beamylabs-start/blob/master/examples/grpc/python/simple_ecu/README.md).
 If you have any further questions, please reach out! 
