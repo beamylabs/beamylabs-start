@@ -63,10 +63,6 @@ def ecu_B_read(stub, pause):
 
     """
     while not exit_event.is_set():
-        # For clean exit when stopping script
-        # if exit_event.is_set():
-        #     break
-
         namespace = "custom_can"
         client_id = common_pb2.ClientId(id="id_ecu_B")
 
@@ -286,4 +282,4 @@ def run(argv):
 
 
 if __name__ == "__main__":
-    run(sys.argv[:1])
+    run(sys.argv[1:])
