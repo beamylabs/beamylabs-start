@@ -1,17 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
-cd "${0%/*}"
+cd "${0%/*}" || { printf "Can't cd to script dir?!\n"; exit 1; }
 
-if [ -z "${SIGNALBROKER_IP}" ]; then
-  printf "SIGNALBROKER_IP not set, using default values as SIGNALBROKER_IP=\"$(scripts/resolve-ip.sh wlan0)\"\n"
-  export SIGNALBROKER_IP=$(scripts/resolve-ip.sh wlan0)
+composef="docker-compose-full-system.yml"
+
+if [ ! -f "$composef" ]; then
+  printf "%: file not found\n" "$composef"
+  exit 1
 fi
 
-if [ -z "${NODE_NAME}" ]; then
-  printf "NODE_NAME not set, using default values as NODE_NAME=\"$(scripts/resolve-ip.sh eth0)\"\n"
-  export NODE_NAME=$(scripts/resolve-ip.sh eth0)
+if [ -z "$NODE_NAME" ]; then
+  NODE_NAME="$(scripts/resolve-ip.sh eth0)"
 fi
+export NODE_NAME
 
-docker-compose -f docker-compose-full-system.yml down
-docker-compose -f docker-compose-full-system.yml pull
-docker-compose -f docker-compose-full-system.yml up -d
+docker-compose -f "$composef" down
+docker-compose -f "$composef" pull
+docker-compose -f "$composef" up -d

@@ -1,53 +1,38 @@
 version: '3.2'
 services:
+
+  # served on port 8080, connects to the proxy on localhost:8081 by default
   web-client:
     restart: always
     stdin_open: true
     tty: true
-    # build:
-    #   context: ./
-    #   dockerfile: docker/Dockerfile
     image: beamylabs/beamybroker-web-client:${BEAMYWEBCLIENT_TAG:-latest}
+    network_mode: "host"
     environment:
-      SIGNAL_SERVER_HOST_NAME: ${SIGNALBROKER_IP}
-    ports:
-     - "8080:8080"
+      SIGNAL_SERVER_HOST_NAME: localhost
     depends_on:
      - proxy
-  # web-client:
-  #   build:
-  #     context: ./clientSource
-  #     dockerfile: ../docker/yarn.Dockerfile
-  #   image: signalbroker-web-client-yarn
-  #   ports:
-  #    - "8080:8080"
-  #   depends_on:
-  #    - proxy
+
   proxy:
-    # build:
-    #   context: ./docker
-    #   dockerfile: grpcwebproxy.Dockerfile
     restart: always
     image: aleksandarf/grpcwebrproxy:${GRPCWEBPROXY_TAG:-latest}
-    ports:
-      - "8081:8080"
-    command: ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:?Add SIGNALBROKER_IP to the .env file}:50051 --run_tls_server=false --allow_all_origins --server_http_max_read_timeout 0s --server_http_max_write_timeout 0s
+    network_mode: "host"
+    command: >
+      ./grpcwebproxy --server_http_debug_port=8081 --backend_addr=localhost:50051
+       --run_tls_server=false --allow_all_origins
+       --server_http_max_read_timeout=0s --server_http_max_write_timeout=0s
+
   signal-broker:
     tty: true
     restart: always
-    # Build and name the SB image
-    # build:
-    #   context: ./
-    #   dockerfile: docker/Dockerfile
     image: aleksandarf/beamybroker-server:${BEAMYBROKER_TAG:-latest}
     network_mode: "host"
-    # Mount the "configuration" folder as a volume to be make changes in the files
-    # without having to re-build the docker image every time
-    # Add CONFIG_FOLDER=../configuration_path to an .env file  
+    # Mount the folder "configuration" folder into container. Itself
+    # configurable through an environment variable (or set in a .env file).
     volumes:
       - "${CONFIG_FOLDER:-./configuration}:/signalbroker/_build/prod/rel/signal_server/configuration"
-    # # Use this line only if you need a custom command to be executed by this image
-    # # Define the your custom command in the .env file 
+    # Use this if you need to customize the command that this container runs;
+    # set the variable in a .env file.
     # command: "${CUSTOM_COMMAND}"
     environment:
       - REPLACE_OS_VARS=true
