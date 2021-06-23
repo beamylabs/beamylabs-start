@@ -27,6 +27,7 @@ import java.util.Observer;
 public class MainActivity extends AppCompatActivity implements Observer, View.OnClickListener {
 
     private BrokerDataModel aModel;
+    private SelectedDataModel  selectionModel;
 
     private Button connectButton;
     private TextView serverAdr;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
         aModel = new BrokerDataModel();
         aModel.addObserver(this);
 
+        selectionModel = new SelectedDataModel();
 
     }
 
@@ -89,8 +91,10 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
                 case R.id.connectbutton:
                     aModel.connect(serverAdr.getText().toString());
                     break;
+                case R.id.subscribebutton:
+                    selectionModel.Subscribe();
+                    break;
             }
     }
-
 
 }

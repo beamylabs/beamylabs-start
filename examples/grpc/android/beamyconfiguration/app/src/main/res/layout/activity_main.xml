@@ -23,25 +23,37 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
+
+    <Button
+        android:id="@+id/subscribebutton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        android:backgroundTint="#673AB7"
+        android:onClick="onClick"
+        android:text="subscribe"
+        android:visibility="visible" />
+
     <Button
         android:id="@+id/connectbutton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="58dp"
+
+        android:layout_marginTop="100dp"
         android:backgroundTint="#673AB7"
         android:onClick="onClick"
         android:text="Connect to broker..."
         android:visibility="visible" />
 
-
     <FrameLayout
         android:id="@+id/idTreeView"
         style="@android:style/Widget.TextView.SpinnerItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="572dp"
         android:layout_below="@id/connectbutton"
+        android:layout_marginTop="11dp"
         android:accessibilityHeading="true"
         android:addStatesFromChildren="true"
         android:animateLayoutChanges="true"
@@ -50,7 +62,9 @@
         android:contextClickable="true"
         android:defaultFocusHighlightEnabled="true"
         android:visibility="visible"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+    </FrameLayout>
 
 
 </RelativeLayout>

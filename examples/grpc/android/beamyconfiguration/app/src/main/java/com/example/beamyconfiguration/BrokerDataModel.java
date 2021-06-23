@@ -16,7 +16,7 @@ import io.grpc.ManagedChannelBuilder;
 
 public class BrokerDataModel extends Observable {
 
-    private ManagedChannel channel;
+    public static ManagedChannel channel;
     private String serverAdress;
     private int port;
 
