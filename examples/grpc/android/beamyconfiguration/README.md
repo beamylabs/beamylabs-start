@@ -115,7 +115,7 @@ Base.Configuration conf = stub.getConfiguration(request);
 
 ## Subcribing to vehicle signals
 
-Once we have the broker up and running we are able to subscribe to or publish values for individual signals such as vehicle speed. Once connected to the broker we need to identify the namespace from where the signals are coming - the upper nodes in the signal tree. Then we need to know the name of the actual signal we want to subscribe to.
+Once we have the broker up and running we are able to subscribe to or publish values for individual signals such as vehicle speed. Once connected to the broker we need to identify the namespace from where the signals are coming - the upper nodes in the signal tree displayed in the tree view. Then we need to know the name of the actual signal we want to subscribe to.
 
 ```
 stub = NetworkServiceGrpc.newBlockingStub(BrokerDataModel.channel);
@@ -123,7 +123,7 @@ stub = NetworkServiceGrpc.newBlockingStub(BrokerDataModel.channel);
 Base.ClientId clientId  = Base.ClientId.newBuilder().setId("android_client").build();
 // build a namespace, e.g where does the signal you want come form
 Base.NameSpace namespace = Base.NameSpace.newBuilder().setName("custom_can").build();
-//build a signal id for a signal which belongs to namespace
+//build a signal id for a signal and tie the signal to its namespace
 Base.SignalId sigId = Base.SignalId.newBuilder().setNamespace(namespace).setName("VehicleSpeed").build();
 
 //build a list of signals to subscribe to
@@ -132,7 +132,7 @@ subConfig = Network.SubscriberConfig.newBuilder().setClientId(clientId).setSigna
 
 ```
 
-Here we are setting up to subscribing to vehicle speed.
+Here we are setting up subscribtion for vehicle speed.
 
 ```
 java.util.Iterator<Network.Signals> response = stub.subscribeToSignals(subConfig);
@@ -142,7 +142,7 @@ Network.Signal aSignal = sigs.getSignal(i);
 aSignal.getDouble();
 ```
 
-Retrieving the signal value as a double. Use code completion in Android Studio to see different formats tailored for the specific signal which we are subscribing.
+Retrieving the signal value as a double. Use code completion in Android Studio to see different formats tailored for the specific signal which we are subscribing to - the sample application is listening tio VehicleSpeed.
 
 # Application UI (android-sub branch)
 
