@@ -121,7 +121,7 @@ Once we have the broker up and running we are able to subscribe to or publish va
 stub = NetworkServiceGrpc.newBlockingStub(BrokerDataModel.channel);
 // build a clientId, the broker uses this id for handling its clients
 Base.ClientId clientId  = Base.ClientId.newBuilder().setId("android_client").build();
-// build a namespace, e.g where does the signal you want come form
+// build a namespace, e.g where does the signal you want originates
 Base.NameSpace namespace = Base.NameSpace.newBuilder().setName("custom_can").build();
 //build a signal id for a signal and tie the signal to its namespace
 Base.SignalId sigId = Base.SignalId.newBuilder().setNamespace(namespace).setName("VehicleSpeed").build();
