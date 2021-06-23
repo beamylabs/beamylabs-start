@@ -61,7 +61,7 @@ import binascii
 
 
 def run(argv):
-     # Checks argument passed to script, simple_example.1.py will use below ip-address if no argument is passed to the script
+    # Checks argument passed to script, simple_example.1.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1"
     # Keep this port
     port = ":50051"
