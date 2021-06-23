@@ -30,7 +30,9 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
     private SelectedDataModel  selectionModel;
 
     private Button connectButton;
+    private Button subscribeButton;
     private TextView serverAdr;
+    private TextView notificationTV;
     private TreeNode root;
     private AndroidTreeView tView;
 
@@ -42,9 +44,12 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
         ViewGroup rootV = (ViewGroup) findViewById(R.id.brokeraddress);
         ViewGroup containerView = (ViewGroup) findViewById(R.id.idTreeView);
 
-
+        notificationTV = findViewById(R.id.subscription);
         serverAdr = findViewById(R.id.beamyurl);
         connectButton = findViewById(R.id.connectbutton);
+
+        subscribeButton = findViewById(R.id.connectbutton);
+        subscribeButton.setActivated(false);
 
         root = new TreeNode("Beamy-Configuration");
         tView = new AndroidTreeView(this, root);
@@ -59,19 +64,19 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
         aModel.addObserver(this);
 
         selectionModel = new SelectedDataModel();
-
+        selectionModel.addObserver(this);
     }
 
     @Override
     public void update(Observable o, Object arg) {
+        if (o instanceof BrokerDataModel) {
+            Log.println(Log.INFO, "update triggered", o.toString());
 
-       Log.println(Log.INFO,"update triggered",o.toString());
+            List<TreeData> listan = aModel.getConfData();
+            if (listan.size() > 0) {
 
-       List<TreeData> listan = aModel.getConfData();
-        if (listan.size() > 0) {
-
-            for (TreeData element : listan) {
-                String parent = element.getParent();
+                for (TreeData element : listan) {
+                    String parent = element.getParent();
                     TreeNode pNode = new TreeNode(parent).setViewHolder(new TreeViewHolder(this));
                     List<String> children = element.getChildren();
                     for (String child : children) {
@@ -79,10 +84,15 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
                         pNode.addChild(cNode);
                     }
                     root.addChild(pNode);
+                }
             }
-        }
 
-        tView.expandAll();
+            tView.expandAll();
+            subscribeButton.setActivated(true);
+        }
+        else if (o instanceof SelectedDataModel){
+            notificationTV.setText(((SelectedDataModel) o).getNote());
+        }
     }
 
     @Override
@@ -92,7 +102,12 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
                     aModel.connect(serverAdr.getText().toString());
                     break;
                 case R.id.subscribebutton:
-                    selectionModel.Subscribe();
+                    if (BrokerDataModel.channel != null) {
+                        selectionModel.Subscribe();
+                    }
+                    else{
+                        Log.println(Log.ERROR,"subscribe", "trying to subscribe without connected to broker");
+                    }
                     break;
             }
     }

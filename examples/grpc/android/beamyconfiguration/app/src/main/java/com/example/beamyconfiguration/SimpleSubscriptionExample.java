@@ -5,13 +5,18 @@
 
     import android.util.Log;
 
-    public class SimpleSubscriptionExample {
+    import java.util.Observable;
+
+    public class SimpleSubscriptionExample extends Observable {
         private Base.ClientId clientId;
         private Base.NameSpace namespace;
         private Base.SignalId sigId;
 
         private Network.SignalIds signalS;
         private Network.SubscriberConfig subConfig;
+
+        private String subscription_notification_string = "";
+        private Object sync = new Object();
 
         private  NetworkServiceGrpc.NetworkServiceBlockingStub stub;
 
@@ -20,12 +25,19 @@
             Thread thread;
 
             SubScription() {
+                // Retrieve the network service ...
+                if (BrokerDataModel.channel == null){
+                    Log.println(Log.INFO,"channel error", " need to connect to broker first");
+                }
                 stub = NetworkServiceGrpc.newBlockingStub(BrokerDataModel.channel);
-                // set the clientID
+                // build a clientId, the broker uses this id for handling its clients
                 Base.ClientId clientId  = Base.ClientId.newBuilder().setId("android_client").build();
+                // build a namespace, e.g where does the signal you want come form
                 Base.NameSpace namespace = Base.NameSpace.newBuilder().setName("custom_can").build();
+                //build a signal id for a signal which belongs to namespace
                 Base.SignalId sigId = Base.SignalId.newBuilder().setNamespace(namespace).setName("VehicleSpeed").build();
 
+                //build a list of signals to subscribe to
                 signalS = Network.SignalIds.newBuilder().addSignalId(sigId).build();
                 subConfig = Network.SubscriberConfig.newBuilder().setClientId(clientId).setSignals(signalS).build();
 
@@ -33,14 +45,18 @@
 
             public void run() {
                 while (true){
+                    // subscribe to the signals defined in constuctor.
                     java.util.Iterator<Network.Signals> response = stub.subscribeToSignals(subConfig);
                     try{
                     while (response.hasNext()) {
                         Network.Signals sigs = response.next();
                         for (int i = 0; i < sigs.getSignalCount(); i++) {
+                            // retrieve the signal value
                             Network.Signal aSignal = sigs.getSignal(i);
                             if (aSignal.getId().getName().equals("VehicleSpeed")) {
-                                Log.println(Log.INFO, "signal subscription", aSignal.toString());
+                                setNote(new Double(aSignal.getDouble()).toString());
+
+                                Log.println(Log.INFO,"speed is: " , new Double(aSignal.getDouble()).toString());
                             }
 
                         }
@@ -63,5 +79,19 @@
         public void startSubscription(){
             SubScription sub = new SubScription();
             sub.start();
+        }
+
+        public String getNote(){
+            synchronized (sync) {
+                return subscription_notification_string;
+            }
+        }
+
+        public void setNote(String note){
+            synchronized (sync)  {
+                subscription_notification_string = note;
+            }
+            setChanged();
+            notifyObservers();
         }
     }

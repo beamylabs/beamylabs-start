@@ -112,3 +112,5 @@ Base.Configuration conf = stub.getConfiguration(request);
 ...
 
 ```
+
+![UI instructions](instr.PNG)
