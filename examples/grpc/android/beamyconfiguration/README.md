@@ -142,7 +142,7 @@ Network.Signal aSignal = sigs.getSignal(i);
 aSignal.getDouble();
 ```
 
-Retrieving the signal value as a double. Use code completion in Android Studio to see different formats tailored for the specific signal which we are subscribing to - the sample application is listening tio VehicleSpeed.
+Retrieving the signal value as a double. Use code completion in Android Studio to see different formats tailored for the specific signal which we are subscribing to - the sample application is listening to VehicleSpeed.
 
 # Application UI (android-sub branch)
 
