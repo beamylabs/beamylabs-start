@@ -144,6 +144,12 @@ aSignal.getDouble();
 
 Retrieving the signal value as a double. Use code completion in Android Studio to see different formats tailored for the specific signal which we are subscribing to - the sample application is listening to VehicleSpeed.
 
+# Playback web interface
+
+The Beamy broker comes with a web UI that lets you select which signals to view and also with a playback interface.
+
+![playback](playbackweb.png)
+
 # Application UI 
 
 Follow the instructions below to run the application. Use the broker web application at 8080 to run the playback setup to replay signals.
