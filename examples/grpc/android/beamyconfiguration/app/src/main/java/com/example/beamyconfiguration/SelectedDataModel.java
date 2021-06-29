@@ -14,16 +14,40 @@ import java.util.Observer;
 
 public class SelectedDataModel extends Observable implements Observer {
 
+    private static SelectedDataModel  currentInstance = null;
+
     SimpleSubscriptionExample subscribeToSpeedExample;
-    public SelectedDataModel(){
+    SubscribeToSelectedSignal subscribeToSelectedSignal;
+
+    private  SelectedDataModel(){
+
         subscribeToSpeedExample = new SimpleSubscriptionExample();
+        subscribeToSelectedSignal = new SubscribeToSelectedSignal();
+
+    }
+
+    private Object nodeName = null;
+
+    public static SelectedDataModel getInstance(){
+        if (currentInstance  == null){
+            currentInstance = new SelectedDataModel();
+        }
+        return currentInstance;
     }
 
     private String note="";
 
     public void Subscribe(){
-        subscribeToSpeedExample.addObserver(this);
-        subscribeToSpeedExample.startSubscription();
+        // uncomment if you want to listen to speed hardcoded to custom_can namespace
+        // subscribeToSpeedExample.addObserver(this);
+        // subscribeToSpeedExample.startSubscription();
+
+        // comment out if you want to uncomment the above.
+        subscribeToSelectedSignal.addObserver(this);
+        if (nodeName != null) {
+            TreeData signalNode = BrokerDataModel.getInstance().FindNameSpace(nodeName.toString());
+            subscribeToSelectedSignal.startSubscription(signalNode);
+        }
     }
 
     @Override
@@ -38,4 +62,13 @@ public class SelectedDataModel extends Observable implements Observer {
         return note;
     }
 
+    public void AddValue(Object value){
+        nodeName = value.toString();
+        Log.println(Log.INFO,"select data model", value.toString() + " added " );
+    }
+
+    public void RemoveValue(Object value){
+        Log.println(Log.INFO,"select data model", value.toString() + " removed " );
+        nodeName = null;
+    }
 }

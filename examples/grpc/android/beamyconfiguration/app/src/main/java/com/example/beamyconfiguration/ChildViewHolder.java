@@ -32,7 +32,7 @@ public class ChildViewHolder extends TreeNode.BaseNodeViewHolder<String> {
 
     public ChildViewHolder(Context context) {
         super(context);
-         // dataSelection = SelectedDataModel.getInstance();
+         dataSelection = SelectedDataModel.getInstance();
     }
 
 
@@ -53,18 +53,21 @@ public class ChildViewHolder extends TreeNode.BaseNodeViewHolder<String> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 node.setSelected(isChecked);
-              /*  if (node.isSelected()){
-                    dataSelection.addValue(node.getValue().toString(),node.getParent().getValue().toString());
+                if (node.isSelected()){
+                    if (node.isLeaf()) {
+                        dataSelection.AddValue(node.getValue());
+                        Log.println(Log.INFO,"LEAF ", node.getValue().toString());
+                    }
                 }else{
-                    dataSelection.remove(node.getValue().toString());
-                }*/
+                    dataSelection.RemoveValue(node.getValue());
+                }
             }
         });
         nodeSelector.setChecked(node.isSelected());
 
-        if (node.isLastChild()) {
+       /* if (node.isLastChild()) {
             view.findViewById(R.id.bot_line).setVisibility(View.INVISIBLE);
-        }
+        }*/
 
         return view;
 

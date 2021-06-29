@@ -60,27 +60,45 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
 
         containerView.addView(tView.getView());
 
-        aModel = new BrokerDataModel();
+        aModel = BrokerDataModel.getInstance();
         aModel.addObserver(this);
 
-        selectionModel = new SelectedDataModel();
+        selectionModel = SelectedDataModel.getInstance();
         selectionModel.addObserver(this);
+    }
+
+    private void clearTreeView(){
+
+        while (root.getChildren().size() > 0) {
+            List<TreeNode> children = root.getChildren();
+            TreeNode child = children.get(0);
+            root.deleteChild(child);
+        }
+
     }
 
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof BrokerDataModel) {
+            clearTreeView();
             Log.println(Log.INFO, "update triggered", o.toString());
 
-            List<TreeData> listan = aModel.getConfData();
-            if (listan.size() > 0) {
+            TreeData listan = aModel.getConfData();
+            aModel.PrintTree(listan);
 
-                for (TreeData element : listan) {
-                    String parent = element.getParent();
-                    TreeNode pNode = new TreeNode(parent).setViewHolder(new TreeViewHolder(this));
-                    List<String> children = element.getChildren();
-                    for (String child : children) {
-                        TreeNode cNode = new TreeNode(child).setViewHolder(new ChildViewHolder(this));
+            if (listan.getChildren() != null) {
+                List<TreeData> children = listan.getChildren();
+                for (TreeData element : children) {
+                    TreeData parent = element.getParent();
+                    TreeNode pNode = new TreeNode(element.getName()).setViewHolder(new ChildViewHolder(this));
+                    List<TreeData> granchildren = element.getChildren();
+                    for (TreeData child : granchildren) {
+                        TreeNode cNode = new TreeNode(child.getName()).setViewHolder(new ChildViewHolder(this));
+                        List<TreeData> grangranchildren = child.getChildren();
+                        for (TreeData childchild : grangranchildren){
+                            TreeNode ccNode = new TreeNode(childchild.getName()).setViewHolder(new ChildViewHolder(this));
+                            cNode.addChild(ccNode);
+                        }
                         pNode.addChild(cNode);
                     }
                     root.addChild(pNode);
@@ -88,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
             }
 
             tView.expandAll();
+            tView.collapseAll();
             subscribeButton.setActivated(true);
         }
         else if (o instanceof SelectedDataModel){
