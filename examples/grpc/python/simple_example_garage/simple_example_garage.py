@@ -24,6 +24,18 @@ from helper import *
 
 
 def set_fan_speed(stub, value, freq):
+    """Set fan speed
+
+    Parameters
+    ----------
+    stub : FunctionalServiceStub
+        Object instance of class
+    value : Value
+        Object instance of class
+    freq : int
+        Frequency
+
+    """
     source_g = common_pb2.ClientId(id="app_identifier")
     value_g = functional_api_pb2.Value(payload=value)
     response = stub.SetFanSpeed(
@@ -34,6 +46,14 @@ def set_fan_speed(stub, value, freq):
 
 # make sure you have VirtualCanInterface namespace in interfaces.json
 def subscribe_to_fan_signal(stub):
+    """Subscribe to fan signal
+
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+
+    """
     source = common_pb2.ClientId(id="app_identifier")
     namespace = common_pb2.NameSpace(name="VirtualCanInterface")
     signal = common_pb2.SignalId(name="BenchC_c_2", namespace=namespace)
@@ -55,6 +75,14 @@ import codecs
 # https://en.wikipedia.org/wiki/OBD-II_PIDs
 # Make sure to reference the diagnostics.dbc in your interfaces.json (which is already refrenced)
 def read_diagnostics_odb(stub):
+    """Read diagnostics ODB
+
+    Parameters
+    ----------
+    stub : DiagnosticsServiceStub
+        Object instance of class
+
+    """
     source = common_pb2.ClientId(id="app_identifier")
     namespace = common_pb2.NameSpace(name="DiagnosticsCanInterface")
     upLink = common_pb2.SignalId(name="DiagReqBroadCastFrame_2015", namespace=namespace)
@@ -75,6 +103,14 @@ def read_diagnostics_odb(stub):
 
 
 def read_diagnostics_vin(stub):
+    """Read diagnostics VIN
+
+    Parameters
+    ----------
+    stub : DiagnosticsServiceStub
+        Object instance of class
+
+    """
     source = common_pb2.ClientId(id="app_identifier")
     namespace = common_pb2.NameSpace(name="ChassisCANhs")
     upLink = common_pb2.SignalId(
@@ -97,6 +133,14 @@ def read_diagnostics_vin(stub):
 
 # make sure you have VirtualCanInterface namespace in interfaces.json
 def subscribe_to_arbitration(stub):
+    """Subscribe to arbitration
+
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+
+    """
     source = common_pb2.ClientId(id="app_identifier")
     namespace = common_pb2.NameSpace(name="VirtualCanInterface")
     signal = common_pb2.SignalId(name="BenchC_c_5", namespace=namespace)
@@ -114,6 +158,14 @@ def subscribe_to_arbitration(stub):
 
 # make sure you have VirtualCanInterface namespace in interfaces.json
 def publish_signals(stub):
+    """Publish signals
+
+    Parameters
+    ----------
+    stub : NetworkServiceStub
+        Object instance of class
+
+    """
     source = common_pb2.ClientId(id="app_identifier")
     namespace = common_pb2.NameSpace(name="VirtualCanInterface")
 
@@ -144,6 +196,14 @@ def publish_signals(stub):
 
 
 def run(argv):
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting functions.
+
+    Parameters
+    ----------
+    argv : list
+        Arguments passed when starting script
+
+    """
     # Checks argument passed to script, simple_example_garage.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1"
     # Keep this port
@@ -163,6 +223,7 @@ def run(argv):
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     diag_stub = diagnostics_api_pb2_grpc.DiagnosticsServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
+    functional_stub = functional_api_pb2_grpc.FunctionalServiceStub(channel)
 
     upload_folder(system_stub, "configuration")
     reload_configuration(system_stub)
