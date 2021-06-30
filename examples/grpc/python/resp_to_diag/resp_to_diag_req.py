@@ -24,7 +24,18 @@ import binascii
 
 
 def publish_signals(client_id, stub, diag_frame_resp):
+    """Publish signals
 
+    Parameters
+    ----------
+    client_id : ClientId
+        Object instance of class
+    stub : NetworkServiceStub
+        Object instance of class
+    diag_frame_resp : SignalId
+        Object instance of class
+
+    """
     signal_with_payload = network_api_pb2.Signal(id=diag_frame_resp)
     signal_with_payload.raw = b"\x01\x02\x03\x04\x05\x06\x07\x08"
     # signal_with_payload.raw = binascii.unhexlify("0102030405060708")
@@ -40,6 +51,20 @@ def publish_signals(client_id, stub, diag_frame_resp):
 
 
 def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
+    """Subscribe to diag
+
+    Parameters
+    ----------
+    client_id : ClientId
+        Object instance of class
+    stub : NetworkServiceStub
+        Object instance of class
+    diag_frame_req : SignalId
+        Object instance of class
+    diag_frame_resp : SignalId
+        Object instance of class
+
+    """
     sub_info = network_api_pb2.SubscriberConfig(
         clientId=client_id,
         signals=network_api_pb2.SignalIds(signalId=[diag_frame_req]),
@@ -56,7 +81,15 @@ def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
 
 
 def run(argv):
-     # Checks argument passed to script, resp_to_diag_req.py will use below ip-address if no argument is passed to the script
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting subscription.
+
+    Parameters
+    ----------
+    argv : list
+        Arguments passed when starting script
+
+    """
+    # Checks argument passed to script, resp_to_diag_req.py will use below ip-address if no argument is passed to the script
     ip = "127.0.0.1"
     # Keep this port
     port = ":50051"
