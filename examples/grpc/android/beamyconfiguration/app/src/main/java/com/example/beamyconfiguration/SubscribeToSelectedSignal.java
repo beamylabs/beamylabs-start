@@ -39,6 +39,7 @@ public class SubscribeToSelectedSignal extends Observable {
             selectedNode = node;
             if (BrokerDataModel.channel == null){
                 Log.println(Log.INFO,"channel error", " need to connect to broker first");
+                return;
             }
             stub = NetworkServiceGrpc.newBlockingStub(BrokerDataModel.channel);
             // build a clientId, the broker uses this id for handling its clients
