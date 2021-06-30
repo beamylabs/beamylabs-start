@@ -78,26 +78,26 @@ public class BrokerDataModel extends Observable {
         }
     }
 
-    private TreeData found = null;
-    private void Search(TreeData data,String signalName){
-        String name1 = data.getName();
-        Log.println(Log.INFO,"compare ", name1 + " " + signalName);
-        if (data.getName().equals(signalName)){
-            found = data;
-        }else if(data.getChildren() != null){
+    private TreeData Search_R(TreeData data, String signalName){
+        if (data.getName().equals(signalName)) {
+            return data;
+        }
+        if (data.getChildren() != null){
+            TreeData temp;
             List<TreeData> children = data.getChildren();
             for (TreeData child : children ){
-                Search(child,signalName);
+                temp = Search_R(child, signalName);
+                if (temp!=null){
+                    return temp;
+                }
             }
         }
+        return null;
     }
 
     public TreeData FindNameSpace(String signalName){
         if (beamyConfData != null){
-            Search(beamyConfData,signalName);
-            if (found != null){
-                return found;
-            }
+            return Search_R(beamyConfData,signalName);
         }
 
         return null;
