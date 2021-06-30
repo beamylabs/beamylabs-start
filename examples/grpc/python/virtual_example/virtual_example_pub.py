@@ -24,7 +24,7 @@ Note that there is no need to specify a database for this kind of signals.
 """
 import grpc
 
-import sys
+import sys, getopt
 
 sys.path.append("../common/generated")
 
@@ -47,9 +47,33 @@ __email__ = "aalonso@volvocars.com"
 __status__ = "Development"
 
 
-if __name__ == "__main__":
+def run(argv):
+    """Main function, checking arguments passed to script, setting up stub and publishes signals with user input.
+
+    Parameters
+    ----------
+    argv : list
+        Arguments passed when starting script
+
+    """
+    # Checks argument passed to script, virtual_example_pub.py will use below ip-address if no argument is passed to the script
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print("Usage: virtual_example_pub.py --ip <ip_address>")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == "-h":
+            print("Usage: virtual_example_pub.py --ip <ip_address>")
+            sys.exit(2)
+        elif opt == "--ip":
+            ip = arg
+
     # Create a channel
-    channel = grpc.insecure_channel("localhost:50051")
+    channel = grpc.insecure_channel(ip + port)
     # Create the stub
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     # For 10 messages
@@ -77,3 +101,6 @@ if __name__ == "__main__":
                 network_stub.PublishSignals(publisher_info)
             except grpc._channel._Rendezvous as err:
                 print(err)
+
+if __name__ == "__main__":
+    run(sys.argv[1:])
