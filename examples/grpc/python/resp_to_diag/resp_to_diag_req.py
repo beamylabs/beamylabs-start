@@ -56,8 +56,10 @@ def subscribe_to_diag(client_id, stub, diag_frame_req, diag_frame_resp):
 
 
 def run(argv):
-    # This script will use below ip-address if no argument is passed to the script
-    ip = "127.0.0.1:50051"
+     # Checks argument passed to script, resp_to_diag_req.py will use below ip-address if no argument is passed to the script
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
     try:
         opts, args = getopt.getopt(argv, "h", ["ip="])
     except getopt.GetoptError:
@@ -70,7 +72,7 @@ def run(argv):
         elif opt == "--ip":
             ip = arg
 
-    channel = grpc.insecure_channel(ip)
+    channel = grpc.insecure_channel(ip + port)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     client_id = common_pb2.ClientId(id="app_identifier")
