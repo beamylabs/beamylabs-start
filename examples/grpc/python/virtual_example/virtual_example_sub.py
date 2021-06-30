@@ -23,7 +23,7 @@ Each time we capture a number we publish it as the value of signal 'virtual_sign
 """
 import grpc
 
-import sys
+import sys, getopt
 
 sys.path.append("../common/generated")
 
@@ -47,8 +47,32 @@ __email__ = "aalonso@volvocars.com"
 __status__ = "Development"
 
 
-if __name__ == "__main__":
-    channel = grpc.insecure_channel("localhost:50051")
+def run(argv):
+    """Main function, checking arguments passed to script, setting up stub and subscribes to signals.
+
+    Parameters
+    ----------
+    argv : list
+        Arguments passed when starting script
+
+    """
+    # Checks argument passed to script, virtual_example_sub.py will use below ip-address if no argument is passed to the script
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print("Usage: virtual_example_sub.py --ip <ip_address>")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == "-h":
+            print("Usage: virtual_example_sub.py --ip <ip_address>")
+            sys.exit(2)
+        elif opt == "--ip":
+            ip = arg
+
+    channel = grpc.insecure_channel(ip + port)
     # Create the system stup, to upload relevant confiuration
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
@@ -72,3 +96,6 @@ if __name__ == "__main__":
             print(response)
     except grpc._channel._Rendezvous as err:
         print(err)
+
+if __name__ == "__main__":
+    run(sys.argv[1:])
