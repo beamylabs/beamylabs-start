@@ -6,7 +6,7 @@ import time
 
 import grpc
 
-import sys
+import sys, getopt
 
 sys.path.append("../common/generated")
 
@@ -143,8 +143,23 @@ def publish_signals(stub):
         print(err)
 
 
-def run():
-    channel = grpc.insecure_channel("127.0.0.1:50051")
+def run(argv):
+    # Checks argument passed to script, simple_example_garage.py will use below ip-address if no argument is passed to the script
+    ip = "127.0.0.1"
+    # Keep this port
+    port = ":50051"
+    try:
+        opts, args = getopt.getopt(argv, "h", ["ip="])
+    except getopt.GetoptError:
+        print("Usage: simple_example_garage.py --ip <ip_address>")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == "-h":
+            print("Usage: simple_example_garage.py --ip <ip_address>")
+            sys.exit(2)
+        elif opt == "--ip":
+            ip = arg
+    channel = grpc.insecure_channel(ip + port)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     diag_stub = diagnostics_api_pb2_grpc.DiagnosticsServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
@@ -172,4 +187,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    run(sys.argv[1:])
