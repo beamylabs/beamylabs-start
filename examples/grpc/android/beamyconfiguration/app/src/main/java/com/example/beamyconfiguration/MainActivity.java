@@ -84,12 +84,17 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
             Log.println(Log.INFO, "update triggered", o.toString());
 
             TreeData listan = aModel.getConfData();
-            aModel.PrintTree(listan);
 
+            if (listan == null){
+                Log.println(Log.ERROR, " connection", " connecting to broker failed");
+                return;
+            }
+
+            aModel.PrintTree(listan);
             if (listan.getChildren() != null) {
                 List<TreeData> children = listan.getChildren();
                 for (TreeData element : children) {
-                    TreeData parent = element.getParent();
+                    // TreeData parent = element.getParent();
                     TreeNode pNode = new TreeNode(element.getName()).setViewHolder(new ChildViewHolder(this));
                     List<TreeData> granchildren = element.getChildren();
                     for (TreeData child : granchildren) {

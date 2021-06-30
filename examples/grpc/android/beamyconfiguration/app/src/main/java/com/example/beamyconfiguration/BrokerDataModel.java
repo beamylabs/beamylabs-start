@@ -78,30 +78,29 @@ public class BrokerDataModel extends Observable {
         }
     }
 
-    private TreeData Search(TreeData data,String signalName){
+    private TreeData found = null;
+    private void Search(TreeData data,String signalName){
+        String name1 = data.getName();
+        Log.println(Log.INFO,"compare ", name1 + " " + signalName);
         if (data.getName().equals(signalName)){
-            return data.getParent().getParent();
-
-        }else if(data.getNodeType() != NodeType.SIGNAL){
+            found = data;
+        }else if(data.getChildren() != null){
             List<TreeData> children = data.getChildren();
             for (TreeData child : children ){
-                return Search(child,signalName);
+                Search(child,signalName);
             }
         }
-        return null;
     }
 
     public TreeData FindNameSpace(String signalName){
-        String val = "";
-        TreeData data = null;
         if (beamyConfData != null){
-            data = Search(beamyConfData,signalName);
-            if (data != null){
-                return data;
+            Search(beamyConfData,signalName);
+            if (found != null){
+                return found;
             }
         }
 
-        return data;
+        return null;
     }
 
     private class LongOperation extends AsyncTask<String, Void, String> {

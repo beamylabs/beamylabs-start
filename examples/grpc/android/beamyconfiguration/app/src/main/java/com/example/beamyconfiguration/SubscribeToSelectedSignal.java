@@ -27,16 +27,16 @@ public class SubscribeToSelectedSignal extends Observable {
         if (BrokerDataModel.channel == null){
             Log.println(Log.INFO,"channel error", " need to connect to broker first");
         }
-        stub = NetworkServiceGrpc.newBlockingStub(BrokerDataModel.channel);
-        //
     }
 
     class SubScription implements Runnable {
 
         Thread thread;
+        TreeData selectedNode;
 
         SubScription(TreeData node) {
             // Retrieve the network service ...
+            selectedNode = node;
             if (BrokerDataModel.channel == null){
                 Log.println(Log.INFO,"channel error", " need to connect to broker first");
             }
@@ -66,10 +66,9 @@ public class SubscribeToSelectedSignal extends Observable {
                         for (int i = 0; i < sigs.getSignalCount(); i++) {
                             // retrieve the signal value
                             Network.Signal aSignal = sigs.getSignal(i);
-                            if (aSignal.getId().getName().equals("VehicleSpeed")) {
-                                setNote(new Double(aSignal.getDouble()).toString());
-
-                                Log.println(Log.INFO,"speed is: " , new Double(aSignal.getDouble()).toString());
+                            if (aSignal.getId().getName().equals(selectedNode.getName())) {
+                                setNote(selectedNode.getName() + " = " + new Double(aSignal.getDouble()).toString());
+                                Log.println(Log.INFO,selectedNode.getName() + "is: " , new Double(aSignal.getDouble()).toString());
                             }
 
                         }
@@ -91,8 +90,13 @@ public class SubscribeToSelectedSignal extends Observable {
 
     public void startSubscription(TreeData node){
 
-        SubscribeToSelectedSignal.SubScription sub = new SubscribeToSelectedSignal.SubScription(node);
-        sub.start();
+        if (node != null) {
+            SubscribeToSelectedSignal.SubScription sub = new SubscribeToSelectedSignal.SubScription(node);
+            sub.start();
+        }else{
+            Log.println(Log.ERROR, "signal name", " not found ");
+        }
+
 
     }
 

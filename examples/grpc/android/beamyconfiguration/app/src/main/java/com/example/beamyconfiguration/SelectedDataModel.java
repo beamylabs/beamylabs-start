@@ -53,7 +53,9 @@ public class SelectedDataModel extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg){
         Log.println(Log.INFO,"sub","changed");
-        note = subscribeToSpeedExample.getNote();
+        // uncomment if you want to run hardcoded against vehicle speed
+        // note = subscribeToSpeedExample.getNote();
+        note = subscribeToSelectedSignal.getNote();
         setChanged();
         notifyObservers();
     }

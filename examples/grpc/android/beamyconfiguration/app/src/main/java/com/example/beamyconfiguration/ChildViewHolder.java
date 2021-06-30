@@ -4,6 +4,7 @@
 package com.example.beamyconfiguration;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class ChildViewHolder extends TreeNode.BaseNodeViewHolder<String> {
     private CheckBox nodeSelector;
     private SelectedDataModel dataSelection;
 
+
     public ChildViewHolder(Context context) {
         super(context);
          dataSelection = SelectedDataModel.getInstance();
@@ -44,7 +46,8 @@ public class ChildViewHolder extends TreeNode.BaseNodeViewHolder<String> {
 
         tvValue = (TextView) view.findViewById(R.id.node_value);
         tvValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
-        tvValue.setTextColor( ContextCompat.getColorStateList(context, R.color.colorGreen));
+        tvValue.setTextColor( ContextCompat.getColorStateList(context, R.color.colorPrimaryDark));
+        // tvValue.setBackgroundColor(ContextCompat.getColorStateList(context, R.color.colorGreen));
         tvValue.setText(value);
 
 
