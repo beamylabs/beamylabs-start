@@ -2,7 +2,7 @@
 Playback folder contains one script, **playback.py**. The script can start one or multiple playbacks and holds various functions to listen and/or subscribe to signals. This with intention to give example and inspiration to further development. To get started and to get more details of the examples, continue reading.
 
 ## Pre-requisites
-> If you haven't yet installed the necessary requirements to run python examples. Then we suggest you start by following instructions [here](https://github.com/beamylabs/beamylabs-start/tree/improve-sample-and-docs/examples/grpc/python#readme).
+> If you haven't yet installed the necessary requirements to run python examples. Then we suggest you start by following instructions [here](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python#readme).
 
 > Have knowledge of the ip address to your beamy broker installation, if you have the web-client running you can get the ip in the bottom left corner.
 

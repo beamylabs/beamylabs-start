@@ -8,7 +8,7 @@ Simple_ecu folder contains two scripts, **ecu.py** and **ecu_advanced.py**. With
 ## Get started
 ### Options
 The scripts ecu.py and ecu_advanced.py can be started with options `-h` or `--ip <ip_address>`.
-* `--ip <ip_address>` - Points to the ip of your beamy broker installation, if this option is not used the scripts will use ip `127.0.0.1`. For example start the script by typing: `python3 ecu.py --ip 192.168.0.xxx`
+* `--ip <ip_address>` - Points to the ip of your beamy broker installation, if this option is not used the scripts will use ip `127.0.0.1`. For example start the script by typing: `python3 ecu.py --ip 192.168.xxx.xxx`
 * `-h` - Help, shows available options for script, run `python3 ecu.py -h`
 
 ### Default instructions
