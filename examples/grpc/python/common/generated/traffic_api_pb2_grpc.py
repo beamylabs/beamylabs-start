@@ -20,24 +20,9 @@ class TrafficServiceStub(object):
         request_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
         response_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
         )
-    self.StartPlayback = channel.stream_stream(
-        '/base.TrafficService/StartPlayback',
-        request_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
-        response_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
-        )
-    self.RecordTraffic = channel.unary_unary(
-        '/base.TrafficService/RecordTraffic',
-        request_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
-        response_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
-        )
-    self.ListRecording = channel.unary_unary(
-        '/base.TrafficService/ListRecording',
+    self.PlayTrafficStatus = channel.unary_stream(
+        '/base.TrafficService/PlayTrafficStatus',
         request_serializer=common__pb2.Empty.SerializeToString,
-        response_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
-        )
-    self.DeleteRecording = channel.unary_unary(
-        '/base.TrafficService/DeleteRecording',
-        request_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
         response_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
         )
 
@@ -53,28 +38,7 @@ class TrafficServiceServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def StartPlayback(self, request_iterator, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def RecordTraffic(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def ListRecording(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def DeleteRecording(self, request, context):
+  def PlayTrafficStatus(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -89,24 +53,9 @@ def add_TrafficServiceServicer_to_server(servicer, server):
           request_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
           response_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
       ),
-      'StartPlayback': grpc.stream_stream_rpc_method_handler(
-          servicer.StartPlayback,
-          request_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
-          response_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
-      ),
-      'RecordTraffic': grpc.unary_unary_rpc_method_handler(
-          servicer.RecordTraffic,
-          request_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
-          response_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
-      ),
-      'ListRecording': grpc.unary_unary_rpc_method_handler(
-          servicer.ListRecording,
+      'PlayTrafficStatus': grpc.unary_stream_rpc_method_handler(
+          servicer.PlayTrafficStatus,
           request_deserializer=common__pb2.Empty.FromString,
-          response_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
-      ),
-      'DeleteRecording': grpc.unary_unary_rpc_method_handler(
-          servicer.DeleteRecording,
-          request_deserializer=traffic__api__pb2.PlaybackInfos.FromString,
           response_serializer=traffic__api__pb2.PlaybackInfos.SerializeToString,
       ),
   }
