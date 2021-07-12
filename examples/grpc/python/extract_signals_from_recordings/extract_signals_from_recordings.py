@@ -62,6 +62,21 @@ def signal_list():
         )
     )
 
+# subscribe to signals
+def monitor_streams(traffic_stub, networks):
+    a = len(networks)
+    try:
+        for traffic_status in traffic_stub.PlayTrafficStatus(common_pb2.Empty()):
+            for traffic_info in traffic_status.playbackInfo:
+                print("traffic status is %s " % (traffic_info))
+                if traffic_info.playbackMode.mode == traffic_api_pb2.Mode.STOP:
+                    a = a - 1
+            if a == 0:
+                print("All streams stopped")
+                sys.exit(0)
+
+    except grpc._channel._Rendezvous as err:
+        print(err)
 
 # subscribe to signals
 def ecu_B_subscribe(stub, signals, onChange, fun):
@@ -170,6 +185,12 @@ def run(argv):
     upload_folder(system_stub, "configuration_custom_udp")
     reload_configuration(system_stub)
 
+    thread_monitor_streams = Thread(
+        target=monitor_streams,
+        args=(traffic_stub, playback_resources()),
+    )
+    thread_monitor_streams.start()
+
     # get namespace avalibale
     namespaces_and_signals = {}
     configuration = system_stub.GetConfiguration(common_pb2.Empty())
@@ -227,8 +248,10 @@ def run(argv):
         'producing %s, stop by hitting crtl-c. Try "tail -f %s"'
         % (target_filename, target_filename)
     )
-    # time.sleep(10)
-    # csv_file.close()
+
+    thread_monitor_streams.join()
+    csv_file.close()
+    print("done!")
 
 
 if __name__ == "__main__":
