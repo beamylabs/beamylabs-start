@@ -7,17 +7,13 @@ package base;
 
 service TrafficService {
   rpc PlayTraffic (PlaybackInfos) returns (PlaybackInfos) {}
-  rpc StartPlayback (stream PlaybackInfos) returns (stream PlaybackInfos) {}
-  rpc RecordTraffic (PlaybackInfos) returns (PlaybackInfos) {}
-  rpc ListRecording (Empty) returns (PlaybackInfos) {}
-  rpc DeleteRecording (PlaybackInfos) returns (PlaybackInfos) {}
 }
 
 enum Mode {
   PLAY = 0;
   PAUSE = 1;
   STOP = 2;
-  RECORDING = 3;
+  RECORD = 3;
 }
 
 message PlaybackMode {

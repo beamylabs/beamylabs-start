@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11traffic_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\x1a\x10system_api.proto\"[\n\x0cPlaybackMode\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x12\r\n\x03\x45OF\x18\x03 \x01(\tH\x00\x12\x1a\n\x04mode\x18\x04 \x01(\x0e\x32\n.base.ModeH\x00\x42\x08\n\x06status\"9\n\rPlaybackInfos\x12(\n\x0cplaybackInfo\x18\x01 \x03(\x0b\x32\x12.base.PlaybackInfo\"d\n\x0ePlaybackConfig\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"f\n\x0cPlaybackInfo\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12(\n\x0cplaybackMode\x18\x02 \x01(\x0b\x32\x12.base.PlaybackMode*4\n\x04Mode\x12\x08\n\x04PLAY\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\x08\n\x04STOP\x10\x02\x12\r\n\tRECORDING\x10\x03\x32\xbd\x02\n\x0eTrafficService\x12\x39\n\x0bPlayTraffic\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00\x12?\n\rStartPlayback\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00(\x01\x30\x01\x12;\n\rRecordTraffic\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00\x12\x33\n\rListRecording\x12\x0b.base.Empty\x1a\x13.base.PlaybackInfos\"\x00\x12=\n\x0f\x44\x65leteRecording\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x11traffic_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\x1a\x10system_api.proto\"[\n\x0cPlaybackMode\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x12\r\n\x03\x45OF\x18\x03 \x01(\tH\x00\x12\x1a\n\x04mode\x18\x04 \x01(\x0e\x32\n.base.ModeH\x00\x42\x08\n\x06status\"9\n\rPlaybackInfos\x12(\n\x0cplaybackInfo\x18\x01 \x03(\x0b\x32\x12.base.PlaybackInfo\"d\n\x0ePlaybackConfig\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"f\n\x0cPlaybackInfo\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12(\n\x0cplaybackMode\x18\x02 \x01(\x0b\x32\x12.base.PlaybackMode*1\n\x04Mode\x12\x08\n\x04PLAY\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\x08\n\x04STOP\x10\x02\x12\n\n\x06RECORD\x10\x03\x32K\n\x0eTrafficService\x12\x39\n\x0bPlayTraffic\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00\x62\x06proto3')
   ,
   dependencies=[common__pb2.DESCRIPTOR,system__api__pb2.DESCRIPTOR,])
 
@@ -46,14 +46,14 @@ _MODE = _descriptor.EnumDescriptor(
       serialized_options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='RECORDING', index=3, number=3,
+      name='RECORD', index=3, number=3,
       serialized_options=None,
       type=None),
   ],
   containing_type=None,
   serialized_options=None,
   serialized_start=417,
-  serialized_end=469,
+  serialized_end=466,
 )
 _sym_db.RegisterEnumDescriptor(_MODE)
 
@@ -61,7 +61,7 @@ Mode = enum_type_wrapper.EnumTypeWrapper(_MODE)
 PLAY = 0
 PAUSE = 1
 STOP = 2
-RECORDING = 3
+RECORD = 3
 
 
 
@@ -277,49 +277,13 @@ _TRAFFICSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=472,
-  serialized_end=789,
+  serialized_start=468,
+  serialized_end=543,
   methods=[
   _descriptor.MethodDescriptor(
     name='PlayTraffic',
     full_name='base.TrafficService.PlayTraffic',
     index=0,
-    containing_service=None,
-    input_type=_PLAYBACKINFOS,
-    output_type=_PLAYBACKINFOS,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='StartPlayback',
-    full_name='base.TrafficService.StartPlayback',
-    index=1,
-    containing_service=None,
-    input_type=_PLAYBACKINFOS,
-    output_type=_PLAYBACKINFOS,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='RecordTraffic',
-    full_name='base.TrafficService.RecordTraffic',
-    index=2,
-    containing_service=None,
-    input_type=_PLAYBACKINFOS,
-    output_type=_PLAYBACKINFOS,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='ListRecording',
-    full_name='base.TrafficService.ListRecording',
-    index=3,
-    containing_service=None,
-    input_type=common__pb2._EMPTY,
-    output_type=_PLAYBACKINFOS,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='DeleteRecording',
-    full_name='base.TrafficService.DeleteRecording',
-    index=4,
     containing_service=None,
     input_type=_PLAYBACKINFOS,
     output_type=_PLAYBACKINFOS,

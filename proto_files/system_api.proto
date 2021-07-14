@@ -62,9 +62,8 @@ message FileUploadResponse{
 
 message FileDownloadResponse{
     oneof data {
-        FileDescription fileDescription = 1;
-        bytes chunk = 4;
-        string errorMessage = 3;
+        bytes chunk = 1;
+        string errorMessage = 2;
     };
 }
 
