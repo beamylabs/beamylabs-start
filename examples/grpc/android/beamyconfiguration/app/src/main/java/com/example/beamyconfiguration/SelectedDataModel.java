@@ -45,7 +45,7 @@ public class SelectedDataModel extends Observable implements Observer {
         // comment out if you want to uncomment the above.
         subscribeToSelectedSignal.addObserver(this);
         if (nodeName != null) {
-            TreeData signalNode = BrokerDataModel.getInstance().FindNameSpace(nodeName.toString());
+            TreeData signalNode = BrokerDataModel.getInstance().findNameSpace(nodeName.toString());
             subscribeToSelectedSignal.startSubscription(signalNode);
         }
     }
@@ -64,12 +64,12 @@ public class SelectedDataModel extends Observable implements Observer {
         return note;
     }
 
-    public void AddValue(Object value){
+    public void addValue(Object value){
         nodeName = value.toString();
         Log.println(Log.INFO,"select data model", value.toString() + " added " );
     }
 
-    public void RemoveValue(Object value){
+    public void removeValue(Object value){
         Log.println(Log.INFO,"select data model", value.toString() + " removed " );
         nodeName = null;
     }

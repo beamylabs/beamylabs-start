@@ -58,11 +58,11 @@ public class ChildViewHolder extends TreeNode.BaseNodeViewHolder<String> {
                 node.setSelected(isChecked);
                 if (node.isSelected()){
                     if (node.isLeaf()) {
-                        dataSelection.AddValue(node.getValue());
+                        dataSelection.addValue(node.getValue());
                         Log.println(Log.INFO,"LEAF ", node.getValue().toString());
                     }
                 }else{
-                    dataSelection.RemoveValue(node.getValue());
+                    dataSelection.removeValue(node.getValue());
                 }
             }
         });

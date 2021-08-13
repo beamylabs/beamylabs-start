@@ -51,7 +51,7 @@ public class TreeData {
         return ret;
     }
 
-    public void SetName(String name){
+    public void setName(String name){
         this.name = name;
     }
 

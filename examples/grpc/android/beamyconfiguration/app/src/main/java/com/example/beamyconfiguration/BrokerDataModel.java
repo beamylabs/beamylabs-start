@@ -65,20 +65,20 @@ public class BrokerDataModel extends Observable {
         }
     }
 
-    public void PrintTree(TreeData data){
+    public void printTree(TreeData data){
         if (data != null) {
             Log.println(Log.INFO," Tree" , data.getName());
             if (data.getChildren() != null){
                 List<TreeData> children = data.getChildren();
                 for (TreeData i: children ) {
-                    PrintTree(i);
+                    printTree(i);
                     Log.println(Log.INFO," -------- " , "----------");
                 }
             }
         }
     }
 
-    private TreeData Search_R(TreeData data, String signalName){
+    private TreeData search_R(TreeData data, String signalName){
         if (data.getName().equals(signalName)) {
             return data;
         }
@@ -86,7 +86,7 @@ public class BrokerDataModel extends Observable {
             TreeData temp;
             List<TreeData> children = data.getChildren();
             for (TreeData child : children ){
-                temp = Search_R(child, signalName);
+                temp = search_R(child, signalName);
                 if (temp!=null){
                     return temp;
                 }
@@ -95,9 +95,9 @@ public class BrokerDataModel extends Observable {
         return null;
     }
 
-    public TreeData FindNameSpace(String signalName){
+    public TreeData findNameSpace(String signalName){
         if (beamyConfData != null){
-            return Search_R(beamyConfData,signalName);
+            return search_R(beamyConfData,signalName);
         }
 
         return null;

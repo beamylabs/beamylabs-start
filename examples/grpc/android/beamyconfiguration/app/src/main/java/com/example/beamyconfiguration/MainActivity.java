@@ -90,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements Observer, View.On
                 return;
             }
 
-            aModel.PrintTree(listan);
+            aModel.printTree(listan);
+
             if (listan.getChildren() != null) {
                 List<TreeData> children = listan.getChildren();
                 for (TreeData element : children) {
-                    // TreeData parent = element.getParent();
                     TreeNode pNode = new TreeNode(element.getName()).setViewHolder(new ChildViewHolder(this));
                     List<TreeData> granchildren = element.getChildren();
                     for (TreeData child : granchildren) {

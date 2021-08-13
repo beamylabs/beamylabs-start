@@ -61,6 +61,8 @@ public class SubscribeToSelectedSignal extends Observable {
             while (true){
                 // subscribe to the signals defined in constuctor.
                 java.util.Iterator<Network.Signals> response = stub.subscribeToSignals(subConfig);
+
+
                 try{
                     while (response.hasNext()) {
                         Network.Signals sigs = response.next();
