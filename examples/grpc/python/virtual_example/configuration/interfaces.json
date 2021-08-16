@@ -2,10 +2,8 @@
   "default_namespace": "VirtualInterface",
   "chains": [
     {
-      "type": "can",
-      "namespace": "VirtualInterface",
-      "device_name": "vcan0",
-      "human_file": "human/benchc.json"
+      "type": "virtual",
+      "namespace": "VirtualInterface"
     }
   ],
   "gateway": {
