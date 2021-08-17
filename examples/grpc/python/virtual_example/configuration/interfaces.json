@@ -3,6 +3,7 @@
   "chains": [
     {
       "type": "virtual",
+      "device_name": "virtual",
       "namespace": "VirtualInterface"
     }
   ],
