@@ -58,8 +58,8 @@ if __name__ == "__main__":
     # Create the stub
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     # Create a signal
-    namespace = common_pb2.NameSpace(name="VirtualInterface")
-    signal = common_pb2.SignalId(name="virtual_signal", namespace=namespace)
+    namespace = common_pb2.NameSpace(name="local_namespace")
+    signal = common_pb2.SignalId(name="EndOfLineSigOverByte3", namespace=namespace)
     # Create a subscriber config
     client_id = common_pb2.ClientId(id="virtual_example_sub")
     signals = network_api_pb2.SignalIds(signalId=[signal])

@@ -61,8 +61,8 @@ if __name__ == "__main__":
             print(f"{input_value} is not a number. Only numbers are allowed")
         else:
             # Create a signal
-            namespace = common_pb2.NameSpace(name="VirtualInterface")
-            signal = common_pb2.SignalId(name="virtual_signal", namespace=namespace)
+            namespace = common_pb2.NameSpace(name="local_namespace")
+            signal = common_pb2.SignalId(name="EndOfLineSigOverByte3", namespace=namespace)
             # Add payload to the signal
             signal_with_payload = network_api_pb2.Signal(id=signal)
             signal_with_payload.integer = signal_value

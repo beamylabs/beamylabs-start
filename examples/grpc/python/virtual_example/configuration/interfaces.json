@@ -5,6 +5,15 @@
       "type": "virtual",
       "device_name": "virtual",
       "namespace": "VirtualInterface"
+    },
+    {
+      "namespace": "local_namespace",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "device_name": "ecu_A",
+      "server_port": 2001,
+      "target_host": "127.0.0.1",
+      "target_port": 2000
     }
   ],
   "gateway": {
