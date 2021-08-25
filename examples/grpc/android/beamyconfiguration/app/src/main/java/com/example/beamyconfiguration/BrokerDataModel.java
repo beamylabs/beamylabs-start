@@ -16,18 +16,28 @@ import io.grpc.ManagedChannelBuilder;
 
 public class BrokerDataModel extends Observable {
 
-    private ManagedChannel channel;
+    public static ManagedChannel channel = null;
     private String serverAdress;
     private int port;
 
     private  List<Base.NetworkInfo> networkinfo = null;
-    private  List<TreeData> beamyConfData =  null;
+    private  TreeData beamyConfData =  null;
+    private static BrokerDataModel currentInstance = null;
 
-    public BrokerDataModel() {
+    private BrokerDataModel() {
 
     }
 
-    public List getConfData(){
+
+    public static BrokerDataModel getInstance(){
+        if (currentInstance  == null){
+            currentInstance = new BrokerDataModel();
+        }
+        return currentInstance;
+    }
+
+
+    public TreeData getConfData(){
         return this.beamyConfData;
     }
 
@@ -55,6 +65,44 @@ public class BrokerDataModel extends Observable {
         }
     }
 
+    public void printTree(TreeData data){
+        if (data != null) {
+            Log.println(Log.INFO," Tree" , data.getName());
+            if (data.getChildren() != null){
+                List<TreeData> children = data.getChildren();
+                for (TreeData i: children ) {
+                    printTree(i);
+                    Log.println(Log.INFO," -------- " , "----------");
+                }
+            }
+        }
+    }
+
+    private TreeData search_R(TreeData data, String signalName){
+        if (data.getName().equals(signalName)) {
+            return data;
+        }
+        if (data.getChildren() != null){
+            TreeData temp;
+            List<TreeData> children = data.getChildren();
+            for (TreeData child : children ){
+                temp = search_R(child, signalName);
+                if (temp!=null){
+                    return temp;
+                }
+            }
+        }
+        return null;
+    }
+
+    public TreeData findNameSpace(String signalName){
+        if (beamyConfData != null){
+            return search_R(beamyConfData,signalName);
+        }
+
+        return null;
+    }
+
     private class LongOperation extends AsyncTask<String, Void, String> {
 
         @Override
@@ -70,6 +118,7 @@ public class BrokerDataModel extends Observable {
                     Base.Empty request = Base.Empty.newBuilder().build();
                     System.Configuration conf = stub.getConfiguration(request);
 
+                    TreeData root = new TreeData("Beamy-Signal-Tree",NodeType.UNKNOWN);
                     // Retrieve information on current Beamy configuration.
                     networkinfo = conf.getNetworkInfoList();
                     for (Base.NetworkInfo i : networkinfo) {
@@ -84,27 +133,40 @@ public class BrokerDataModel extends Observable {
                         Base.Frames signals = stub.listSignals(i.getNamespace());
 
                         // log frame names per namespace
-                        TreeData dataPoint = new TreeData();
+                        TreeData dataPoint = new TreeData(namespacename,NodeType.SPACE);
+                        dataPoint.setParent(root);
+                        root.addChild(dataPoint);
                         Log.println(Log.INFO, "signals", namespacename);
-                        dataPoint.setParent(namespacename);
 
                         // add the signal name within the frame to a list of available signals
                         for (int findex = 0; findex < signals.getFrameCount(); findex++) {
-                            dataPoint.addChild(signals.getFrame(findex).getSignalInfo().getId().getName());
+                            TreeData child = dataPoint.addChild(new TreeData(signals.getFrame(
+                                    findex).getSignalInfo().getId().getName(),NodeType.FRAME));
+                            child.setParent(dataPoint);
                             Log.println(Log.INFO, "SIG: ", signals.getFrame(findex).getSignalInfo().getId().getName());
+                            List<Base.SignalInfo> signalsperframe = signals.getFrame(findex).getChildInfoList();
+                            for (int framesignalindex = 0; framesignalindex < signalsperframe.size(); framesignalindex++){
+                                Base.SignalInfo sInfo = signalsperframe.get(framesignalindex);
+                                TreeData granChild = new TreeData(sInfo.getId().getName(),NodeType.SIGNAL);
+                                granChild.setParent(child);
+                                child.addChild(granChild);
+                                Log.println(Log.INFO,"signal info ", " " + sInfo.getId().getName());
+                            }
                         }
 
-                        if (!beamyConfData.contains(dataPoint)) {
-                            beamyConfData.add(dataPoint);
-                        }
                     }
 
+                    beamyConfData = root;
+
                 }catch(Exception ex){
+                    ex.printStackTrace();
                     Log.println(Log.ERROR,"gRPC connection", "could not connect to " + serverAdress + ":" + port);
                 }
             }
             return "Executed";
         }
+
+
 
         @Override
         protected void onPostExecute(String result) {
@@ -115,13 +177,14 @@ public class BrokerDataModel extends Observable {
 
         @Override
         protected void onPreExecute() {
-            beamyConfData = new ArrayList<TreeData>(10);
+            // beamyConfData = new ArrayList<TreeData>(10);
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
 
         }
+
     }
 
 }

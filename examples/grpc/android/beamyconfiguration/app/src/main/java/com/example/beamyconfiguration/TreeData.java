@@ -3,27 +3,42 @@
  */
 package com.example.beamyconfiguration;
 
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+enum NodeType{
+    UNKNOWN,
+    SPACE,
+    FRAME,
+    SIGNAL
+}
+
 public class TreeData {
 
-    private String parent;
-    private List children = null;
+    private TreeData parent = null;
+    private List<TreeData> children = null;
+    private String name;
+    private NodeType type = NodeType.UNKNOWN;
 
-    public TreeData(){
-        children = new ArrayList<String>(100);
+    public TreeData(String name, NodeType type){
+        this.type = type;
+        this.name = name;
+        children = new ArrayList<TreeData>(100);
     }
+    public void setParent(TreeData parent){
 
-    public void setParent(String parent){
         this.parent = parent;
     }
 
-    public void addChild(String child){
+    public TreeData addChild(TreeData child){
         children.add(child);
+        return child;
     }
 
-    public String getParent(){
+    public TreeData getParent(){
         return parent;
     }
 
@@ -32,7 +47,20 @@ public class TreeData {
     }
 
     public boolean equals(Object obj){
-        boolean ret = ((TreeData)obj).parent.equals(parent);
+        boolean ret = ((TreeData)obj).name.equals(parent.getName());
         return ret;
     }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public NodeType getNodeType() {
+        return this.type;
+    }
 }
+

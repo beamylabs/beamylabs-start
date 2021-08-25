@@ -23,34 +23,63 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
+
+    <Button
+        android:id="@+id/subscribebutton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        android:backgroundTint="#673AB7"
+        android:onClick="onClick"
+        android:text="subscribe"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/subscription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:autoSizeTextType="none"
+        android:enabled="true"
+        android:singleLine="true"
+        android:text="@string/noti_note"
+        android:textColor="#E91E63"
+        android:textIsSelectable="true"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
     <Button
         android:id="@+id/connectbutton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="58dp"
+
+        android:layout_marginTop="100dp"
         android:backgroundTint="#673AB7"
         android:onClick="onClick"
         android:text="Connect to broker..."
         android:visibility="visible" />
 
-
     <FrameLayout
         android:id="@+id/idTreeView"
         style="@android:style/Widget.TextView.SpinnerItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="572dp"
         android:layout_below="@id/connectbutton"
+        android:layout_marginTop="11dp"
         android:accessibilityHeading="true"
         android:addStatesFromChildren="true"
         android:animateLayoutChanges="true"
-        android:background="#070707"
-        android:backgroundTint="#100F0F"
+        android:background="@color/colorPrimaryDark"
+        android:backgroundTint="#9E9C96"
         android:contextClickable="true"
         android:defaultFocusHighlightEnabled="true"
         android:visibility="visible"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+    </FrameLayout>
 
 
 </RelativeLayout>

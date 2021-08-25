@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">BeamyConfiguration</string>
-    <string name="first_adr">172.20.32.38:50051</string>
+    <string name="first_adr">172.20.32.48:50051</string>
+    <string name="noti_note"> {subscription notes}</string>
     <string name="my_node">Node</string>
 </resources>
