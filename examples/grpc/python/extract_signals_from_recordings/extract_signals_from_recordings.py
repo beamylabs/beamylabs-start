@@ -140,7 +140,7 @@ def get_value(signal):
         return signal.integer
     elif signal.HasField("double"):
         return signal.double
-    elif signal.HasFiles("arbitration"):
+    elif signal.HasField("arbitration"):
         return signal.arbitration
     else:
         return "empty"
