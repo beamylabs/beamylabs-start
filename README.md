@@ -16,6 +16,25 @@ Clone this repository and make sure you have `docker` and `docker-compose`
 installed, then run:
 
 ```bash
+docker-compose up -d
+```
+
+This command only needs to be run once. It is persistant over system reboot --
+the containers will be restarted after a reboot, over and over again.
+
+Point your web browser at the machine running Beamybroker, an address like
+`http://192.0.2.42:8080/`. If you are connected to a hosted WLAN Access Point
+like `beamylabs`, the address should be `http://192.168.4.1:8080/`.
+
+NOTE: if you change your interface settings you must restart by do doing
+[STOP](#stop) and the start it again like above.
+
+### Start in distributed mode
+
+If you want to run Beamybroker in the special distributed mode, its node name
+needs to be set. Run it like this:
+
+```bash
 NODE_NAME=$(scripts/resolve-ip.sh eth0) docker-compose up -d
 ```
 
@@ -23,17 +42,6 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) docker-compose up -d
 ethernet connection is called `eth0`. If that's not the case, you need to
 change `eth0` to the correct name. (Hint: you can can find your interface name
 using `ifconfig` or `ipconfig`).
-
-Running the above `docker-compose` command only needs to be done once. It is
-persistant over system reboot, and will restart the containers upon reboot,
-over and over again.
-
-Point your web browser at the machine running Beamybroker, an address like
-`http://192.0.2.42:8080/`. If you are connected to a hosted WLAN Access Point
-like `beamylabs`, the address should be `http://192.168.4.1:8080/`.
-
-BEWARE: if you change your your interface settings you must restart by do doing
-[STOP](#stop)/[START](#start)
 
 ## Stop
 
@@ -56,6 +64,16 @@ Alternatively, just pull the latest container images manually:
 
 ```base
 docker-compose pull
+```
+
+### Upgrade through the web interface
+
+It is possible to trigger an upgrade through the Beamybroker web interface.
+This require a service to be running. To install and start this service (only
+needed once):
+
+```bash
+sudo scripts/install-service.sh
 ```
 
 ## Use a specific version (advanced feature)

@@ -1,12 +1,6 @@
 # Note on scripts
 
-## Install the upgrade service
-
-```
-sudo ./install-service.sh
-```
-
-### Debug
+## Debug the upgrade service
 
 ```
 sudo systemctl start beamylabs-upgrade.service
