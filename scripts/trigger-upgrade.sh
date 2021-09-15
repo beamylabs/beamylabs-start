@@ -6,9 +6,9 @@ inotifywait -m -r configuration/ -e create -e moved_to \
 
   printf "* trigger by upgrade file, tags picked up from the file:\n"
   envf="$(mktemp -t upgrade-env.XXXX)"
-  # filter out only legal env var/vals
-  grep -E '^(BEAMYBROKER|GRPCWEBPROXY|BEAMYWEBCLIENT)_TAG="[a-zA-Z0-9][-.a-zA-Z0-9]{0,127}"$' "$path/$file"\
-   | tee "$envf"
+  # pick up precisely the var/vars that we care about from the upgrade file
+  pattern='^(BEAMYBROKER|GRPCWEBPROXY|BEAMYWEBCLIENT)_TAG="[a-zA-Z0-9][-.a-zA-Z0-9]{0,127}"$'
+  grep -E "$path/$file" "$pattern" | tee "$envf"
 
   printf "* git pull\n"
   git pull
