@@ -49,7 +49,7 @@ using `ifconfig` or `ipconfig`).
 docker-compose down
 ```
 
-## Upgrade
+## Upgrade (optionally in distributed mode)
 
 When you upgrade; remember to upgrade **THIS** repository as well `git pull`,
 as examples are continuously updated and improved. You will also find the
@@ -57,13 +57,20 @@ latest pre-generated grpc files in this repository.
 
 ```bash
 git pull
-NODE_NAME=$(scripts/resolve-ip.sh eth0) ./upgrade.sh
+./upgrade.sh
 ```
 
 Alternatively, just pull the latest container images manually:
 
 ```base
 docker-compose pull
+```
+
+If you are running in distributed mode, the same required node name should be
+passed to the script, similar to when you first started the system:
+
+```base
+NODE_NAME=$(scripts/resolve-ip.sh eth0) ./upgrade.sh
 ```
 
 ### Upgrade through the web interface
