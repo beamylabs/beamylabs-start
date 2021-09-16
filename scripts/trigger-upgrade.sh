@@ -8,7 +8,7 @@ inotifywait -m -r configuration/ -e create -e moved_to \
   envf="$(mktemp -t upgrade-env.XXXX)"
   # pick up precisely the var/vars that we care about from the upgrade file
   pattern='^(BEAMYBROKER|GRPCWEBPROXY|BEAMYWEBCLIENT)_TAG="[a-zA-Z0-9][-.a-zA-Z0-9]{0,127}"$'
-  grep -E "$path/$file" "$pattern" | tee "$envf"
+  grep -E -e "$pattern" "$path/$file" | tee "$envf"
 
   printf "* git pull\n"
   git pull
