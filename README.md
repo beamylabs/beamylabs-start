@@ -7,6 +7,8 @@ what's ongoing and try the latest featues.
 
 ## Prerequisite
 
+Docker version 20.10.8 or later is required.
+
 To be able to get going; that is docker pull, you need custom credentials.
 Contact us at https://www.beamylabs.com
 
