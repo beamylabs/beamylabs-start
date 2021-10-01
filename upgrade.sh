@@ -16,9 +16,9 @@ export NODE_NAME
 
 docker-compose -f "$composef" down
 
-# Upgrade docker if we're on beamy device and version < 20.10.8
+# Upgrade docker if we're on a Raspberry Pi and version < 20.10.8
 # We should be run as user "pi" and assume we can do password-less sudo.
-if grep -q "ssid=beamylabs" /etc/hostapd/hostapd.conf; then
+if grep -qi "raspberry" /sys/firmware/devicetree/base/model; then
   # Make apt-update not exit when a repo changes suite (buster changed from
   # stable to oldstable in August 2021). Required for the get-docker.sh script
   # to complete, but done here because seems useful to have in place in case of
