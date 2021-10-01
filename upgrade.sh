@@ -1,6 +1,10 @@
 #!/bin/bash
 
-cd "${0%/*}" || { printf "Can't cd to script dir?!\n"; exit 1; }
+scriptd="$(cd &>/dev/null -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+if ! cd "$scriptd"; then
+  printf "Can't cd to script dir '%s'?!\n" "$scriptd"
+  exit 1
+fi
 
 composef="docker-compose-full-system.yml"
 
