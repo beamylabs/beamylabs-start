@@ -65,3 +65,7 @@ if [ -n "$rpi" ]; then
 fi
 
 docker-compose --env-file envfile -f docker-compose-full-system.yml up -d
+
+if [ -n "$rpi" ]; then
+  sudo systemctl restart beamylabs-upgrade
+fi

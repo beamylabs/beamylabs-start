@@ -15,6 +15,10 @@ inotifywait -m -r configuration/ -e create -e moved_to \
 
   printf "* trying to upgrade system\n"
   ./upgrade.sh "$envf"
+
+  # The above upgrade.sh must be the last thing done here, as this script might
+  # decide to restart the beamylabs-upgrade service (to ensure that latest
+  # trigger-upgrade.sh is running).
 done
 
 exit 0
