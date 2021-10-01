@@ -1,9 +1,20 @@
 #!/bin/bash
-inotifywait -m -r configuration/ -e create -e moved_to |
-    while read path action file; do
-        if [[ "$file" =~ upgrade$ ]]; then # time to upgrade
-            echo "trying to upgrade system"
-            git pull 
-            /bin/bash upgrade.sh
-        fi
-    done
+
+inotifywait -m -r configuration/ -e create -e moved_to \
+ | while read -r path _action file; do
+  [[ "$file" != "upgrade" ]] && continue
+
+  printf "* trigger by upgrade file, tags picked up from the file:\n"
+  envf="$(mktemp -t upgrade-env.XXXX)"
+  # pick up precisely the var/vars that we care about from the upgrade file
+  pattern='^(BEAMYBROKER|GRPCWEBPROXY|BEAMYWEBCLIENT)_TAG="[a-zA-Z0-9][-.a-zA-Z0-9]{0,127}"$'
+  grep -E -e "$pattern" "$path/$file" | tee "$envf"
+
+  printf "* git pull\n"
+  git pull
+
+  printf "* trying to upgrade system\n"
+  ./upgrade.sh "$envf"
+done
+
+exit 0
