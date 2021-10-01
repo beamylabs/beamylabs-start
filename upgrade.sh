@@ -38,9 +38,12 @@ fi
 
 docker-compose --env-file envfile -f docker-compose-full-system.yml down
 
+rpi=
+grep &>/dev/null -i "raspberry" /sys/firmware/devicetree/base/model && rpi="rpi"
+
 # Upgrade docker if we're on a Raspberry Pi and version < 20.10.8
 # We should be run as user "pi" and assume we can do password-less sudo.
-if grep -qi "raspberry" /sys/firmware/devicetree/base/model; then
+if [ -n "$rpi" ]; then
   # Make apt-update not exit when a repo changes suite (buster changed from
   # stable to oldstable in August 2021). Required for the get-docker.sh script
   # to complete, but done here because seems useful to have in place in case of
