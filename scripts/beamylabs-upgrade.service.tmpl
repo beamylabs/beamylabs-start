@@ -3,12 +3,12 @@ Description=Beamy Upgrade Service
 After=docker.service
 
 [Service]
-ExecStart=/bin/bash ./scripts/trigger-upgrade.sh
-WorkingDirectory=/home/pi/beamylabs-start
+ExecStart=@BEAMYHOME@/scripts/trigger-upgrade.sh
+WorkingDirectory=@BEAMYHOME@
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
-User=pi
+User=@BEAMYUSER@
 
 [Install]
 WantedBy=multi-user.target
