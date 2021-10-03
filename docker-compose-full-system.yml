@@ -10,7 +10,7 @@ services:
     ports:
       - "8080:8080"
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:${SIGNALBROKER_IP:-host-gateway}"
     environment:
       SIGNAL_SERVER_HOST_NAME: ${SIGNALBROKER_IP:-host.docker.internal}
     depends_on:
@@ -22,7 +22,7 @@ services:
     ports:
       - "8081:8080"
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:${SIGNALBROKER_IP:-host-gateway}"
     command: >
       ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:-host.docker.internal}:50051
        --run_tls_server=false --allow_all_origins
