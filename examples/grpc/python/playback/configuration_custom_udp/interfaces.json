@@ -7,6 +7,30 @@
       "type": "virtual"
     },
     {
+      "namespace": "ecu_A",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "server_port": 2001,
+      "target_host": "127.0.0.1",
+      "target_port": 2000
+    },
+    {
+      "namespace": "ecu_B",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "server_port": 2000,
+      "target_host": "127.0.0.1",
+      "target_port": 2001
+    },
+    {
+      "namespace": "ecu_C",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "server_port": 2010,
+      "target_host": "127.0.0.1",
+      "target_port": 2011
+    },
+    {
       "namespace": "custom_can",
       "type": "udp",
       "dbc_file": "can/custom_traffic.dbc",

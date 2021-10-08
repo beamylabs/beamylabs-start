@@ -254,14 +254,14 @@ def run(argv):
 
     upload_file(
         system_stub,
-        "configuration_udp/recordings/candump.log",
+        "configuration_custom_udp/recordings/candump.log",
         "recordings/candump_uploaded.log",
     )
 
     time.sleep(1)
     recordlist = [
         {
-            "namespace": "test_can",
+            "namespace": "custom_can",
             "path": "recordings/candump_uploaded_recorded.log",
             "mode": traffic_api_pb2.Mode.RECORD,
         },
@@ -275,7 +275,7 @@ def run(argv):
 
     playbacklist = [
         {
-            "namespace": "test_can",
+            "namespace": "custom_can",
             "path": "recordings/candump_uploaded.log",
             "mode": traffic_api_pb2.Mode.PLAY,
         },
@@ -290,7 +290,7 @@ def run(argv):
             "mode": traffic_api_pb2.Mode.PLAY,
         },
     ]
-    # expect candump_.log does not exist, this errorstring will be returned
+    # expect candump_.log does not exist, thus error string will be returned
     status = traffic_stub.PlayTraffic(
         traffic_api_pb2.PlaybackInfos(
             playbackInfo=list(map(create_playback_config, playbacklist))
