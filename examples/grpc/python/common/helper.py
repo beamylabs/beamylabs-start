@@ -46,11 +46,16 @@ def upload_file(stub, path, dest_path):
 
 
 def download_file(stub, path, dest_path):
-     file = open(dest_path, "wb")
-     for response in stub.DownloadFile(system_api_pb2.FileDescription(path = path.replace(ntpath.sep, posixpath.sep))):
-         assert response.HasField("errorMessage") == False, "Error uploading file, message is: %s" % response.errorMessage
-         file.write(response.chunk)
-     file.close()
+    file = open(dest_path, "wb")
+    for response in stub.DownloadFile(
+        system_api_pb2.FileDescription(path=path.replace(ntpath.sep, posixpath.sep))
+    ):
+        assert response.HasField("errorMessage") == False, (
+            "Error uploading file, message is: %s" % response.errorMessage
+        )
+        file.write(response.chunk)
+    file.close()
+
 
 from glob import glob
 
@@ -127,6 +132,7 @@ def download_and_install_license(system_stub, hash, id=None):
     system_stub.SetLicense(
         system_api_pb2.License(termsAgreement=True, data=license_bytes)
     )
+
 
 # checks if signal is declared.
 # signal = common_pb2.SignalId(name="MasterReq", namespace=common_pb2.NameSpace(name = "ecu_A")
