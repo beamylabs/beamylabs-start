@@ -241,7 +241,7 @@ def run(argv):
             system_stub.ListSignals(networkInfo.namespace),
         )
 
-    ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe, args=(network_stub,))
+    ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe_, args=(network_stub,))
     ecu_B_thread_subscribe.start()
 
     # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
