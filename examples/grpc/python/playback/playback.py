@@ -241,8 +241,7 @@ def run(argv):
             system_stub.ListSignals(networkInfo.namespace),
         )
 
-
-    ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe, args = (network_stub,))
+    ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe, args=(network_stub,))
     ecu_B_thread_subscribe.start()
 
     # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
@@ -253,28 +252,60 @@ def run(argv):
     # for entries in playback_status:
     #     print(entries)
 
-    upload_file(system_stub, "configuration_udp/recordings/candump.log", "recordings/candump_uploaded.log")
+    upload_file(
+        system_stub,
+        "configuration_udp/recordings/candump.log",
+        "recordings/candump_uploaded.log",
+    )
 
     time.sleep(1)
     recordlist = [
-        {"namespace": "test_can", "path": "recordings/candump_uploaded_recorded.log", "mode": traffic_api_pb2.Mode.RECORD},
+        {
+            "namespace": "test_can",
+            "path": "recordings/candump_uploaded_recorded.log",
+            "mode": traffic_api_pb2.Mode.RECORD,
+        },
     ]
-    status_record = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, recordlist))))
+    status_record = traffic_stub.PlayTraffic(
+        traffic_api_pb2.PlaybackInfos(
+            playbackInfo=list(map(create_playback_config, recordlist))
+        )
+    )
     print("record traffic result is ", status_record)
 
-    playbacklist =  [
-        {"namespace": "test_can", "path": "recordings/candump_uploaded.log", "mode": traffic_api_pb2.Mode.PLAY},
-        {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.Mode.PLAY},
-        {"namespace": "ecu_C", "path": "recordings/candump_.log", "mode": traffic_api_pb2.Mode.PLAY}
+    playbacklist = [
+        {
+            "namespace": "test_can",
+            "path": "recordings/candump_uploaded.log",
+            "mode": traffic_api_pb2.Mode.PLAY,
+        },
+        {
+            "namespace": "ecu_A",
+            "path": "recordings/candump.log",
+            "mode": traffic_api_pb2.Mode.PLAY,
+        },
+        {
+            "namespace": "ecu_C",
+            "path": "recordings/candump_.log",
+            "mode": traffic_api_pb2.Mode.PLAY,
+        },
     ]
     # expect candump_.log does not exist, this errorstring will be returned
-    status = traffic_stub.PlayTraffic(traffic_api_pb2.PlaybackInfos(playbackInfo = list(map(create_playback_config, playbacklist))))
+    status = traffic_stub.PlayTraffic(
+        traffic_api_pb2.PlaybackInfos(
+            playbackInfo=list(map(create_playback_config, playbacklist))
+        )
+    )
     print("play traffic result is ", status)
-    
+
     time.sleep(1)
 
     # now stop recording and download the recorded file
-    download_file(system_stub, "recordings/candump_uploaded_recorded.log", "candump_uploaded_recorded_downloaded.log")  
+    download_file(
+        system_stub,
+        "recordings/candump_uploaded_recorded.log",
+        "candump_uploaded_recorded_downloaded.log",
+    )
     print("file is now downloaded")
 
     # Starting Threads
