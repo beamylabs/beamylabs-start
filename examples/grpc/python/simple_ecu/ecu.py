@@ -88,13 +88,13 @@ def ecu_A(stub, pause):
 
         # Publishes value 'counter'
         counter = common_pb2.SignalId(
-            name="counter", namespace=common_pb2.NameSpace(name=namespace)
+            name="TestFr06", namespace=common_pb2.NameSpace(name=namespace)
         )
         counter_with_payload = network_api_pb2.Signal(
-            id=counter, integer=increasing_counter
+            id=counter, raw=b"\x01\x02"
         )
         publish_signals(clientId, stub, [counter_with_payload])
-        print("\necu_A, seed is ", increasing_counter)
+        print("\necu_A, seed is ", counter_with_payload)
 
         time.sleep(pause)
 
@@ -149,19 +149,19 @@ def ecu_B_subscribe(stub):
 
     # Subscribe to value 'counter'
     counter = common_pb2.SignalId(
-        name="counter", namespace=common_pb2.NameSpace(name=namespace)
+        name="TestFr06", namespace=common_pb2.NameSpace(name=namespace)
     )
     sub_info = network_api_pb2.SubscriberConfig(
         clientId=client_id,
         signals=network_api_pb2.SignalIds(signalId=[counter]),
-        onChange=True,
+        onChange=False,
     )
 
     # Publish doubled value as 'counter_times_2'
     try:
         for subs_counter in stub.SubscribeToSignals(sub_info):
             for signal in subs_counter.signal:
-                print("ecu_B, (subscribe) counter is ", signal.integer)
+                print("ecu_B, (subscribe) counter is ", signal)
                 counter_times_2 = common_pb2.SignalId(
                     name="counter_times_2",
                     namespace=common_pb2.NameSpace(name=namespace),
