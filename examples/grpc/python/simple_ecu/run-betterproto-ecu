@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+
+wd="$(pwd)"
+
+# Generate
+cd ../common
+if [ ! -e generated_betterproto ]; then
+  mkdir -p generated_betterproto
+  python -m grpc_tools.protoc -I../../../../proto_files --python_betterproto_out=./generated_betterproto ../../../../proto_files/*
+fi
+cd "$wd"
+
+# Setup virtualenv
+if [ ! -e venv-betterproto ]; then
+  python3 -m venv venv-betterproto
+fi
+. ./venv-betterproto/bin/activate
+
+# Install req
+pip install -r requirements-betterproto.txt
+
+./ecu.py

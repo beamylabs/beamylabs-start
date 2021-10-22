@@ -1,8 +1,6 @@
 ##################### START BOILERPLATE ####################################################
 
-import system_api_pb2
-import system_api_pb2_grpc
-import common_pb2
+from generated_betterproto.base import *
 import os
 
 import hashlib
@@ -21,18 +19,16 @@ def get_sha256(file):
 def generate_data(file, dest_path, chunk_size, sha256):
     for x in itertools.count(start=0):
         if x == 0:
-            fileDescription = system_api_pb2.FileDescription(
-                sha256=sha256, path=dest_path
-            )
-            yield system_api_pb2.FileUploadRequest(fileDescription=fileDescription)
+            desc = FileDescription(sha256=sha256, path=dest_path)
+            yield FileUploadRequest(desc)
         else:
             buf = file.read(chunk_size)
             if not buf:
                 break
-            yield system_api_pb2.FileUploadRequest(chunk=buf)
+            yield FileUploadRequest(chunk=buf)
 
 
-def upload_file(stub, path, dest_path):
+async def upload_file(stub, path, dest_path):
     sha256 = get_sha256(path)
     print(sha256)
     file = open(path, "rb")
@@ -41,14 +37,14 @@ def upload_file(stub, path, dest_path):
     upload_iterator = generate_data(
         file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256
     )
-    response = stub.UploadFile(upload_iterator)
+    response = await stub.upload_file(upload_iterator)
     print("uploaded", path, response)
 
 
 from glob import glob
 
 
-def upload_folder(system_stub, folder):
+async def upload_folder(system_stub, folder):
     files = [
         y
         for x in os.walk(folder)
@@ -60,20 +56,20 @@ def upload_folder(system_stub, folder):
         % folder
     )
     for file in files:
-        upload_file(system_stub, file, file.replace(folder, ""))
+        await upload_file(system_stub, file, file.replace(folder, ""))
 
 
-def reload_configuration(system_stub):
-    request = common_pb2.Empty()
-    response = system_stub.ReloadConfiguration(request, timeout=60000)
+async def reload_configuration(system_stub):
+    # TODO how to pass timeout=60000?
+    response = await system_stub.reload_configuration()
     print(response)
+    return response
 
 
-def check_license(system_stub):
-    status = system_stub.GetLicenseInfo(common_pb2.Empty()).status
-    assert status == system_api_pb2.LicenseStatus.VALID, (
-        "Check your license, status is: %d" % status
-    )
+async def check_license(system_stub):
+    res = await system_stub.get_license_info()
+    status = res.status
+    assert status == LicenseStatus.VALID, "Check your license, status is: %d" % status
 
 
 import requests
