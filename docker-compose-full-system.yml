@@ -7,6 +7,8 @@ services:
     stdin_open: true
     tty: true
     image: beamylabs/beamybroker-web-client:${BEAMYWEBCLIENT_TAG:-latest}
+    volumes:
+      - "${CONFIG_FOLDER:-./configuration}:/service_client/configuration"
     ports:
       - "8080:8080"
     extra_hosts:
