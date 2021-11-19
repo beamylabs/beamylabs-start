@@ -1,5 +1,4 @@
 {
-  "default_namespace": "VirtualInterface",
   "chains": [
     {
       "device_name": "virtual",
@@ -10,7 +9,6 @@
       "namespace": "ecu_A",
       "type": "udp",
       "dbc_file": "can/test.dbc",
-      "device_name": "ecu_A",
       "server_port": 2001,
       "target_host": "127.0.0.1",
       "target_port": 2000,
@@ -20,7 +18,6 @@
       "namespace": "ecu_B",
       "type": "udp",
       "dbc_file": "can/test.dbc",
-      "device_name": "ecu_B",
       "server_port": 2000,
       "target_host": "127.0.0.1",
       "target_port": 2001,
@@ -30,7 +27,6 @@
       "namespace": "test_can",
       "type": "udp",
       "dbc_file": "can/test.dbc",
-      "device_name": "test_can",
       "server_port": 2003,
       "target_host": "127.0.0.1",
       "target_port": 2004,
@@ -38,7 +34,6 @@
     }
   ],
   "gateway": {
-    "gateway_pid": "gateway_pid",
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
