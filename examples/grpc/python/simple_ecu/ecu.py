@@ -7,6 +7,7 @@ import binascii
 import grpc
 
 import sys, getopt
+import argparse
 
 sys.path.append("../common/generated")
 
@@ -160,15 +161,6 @@ def ecu_B_subscribe(stub):
                 print("ecu_B, (subscribe) counter is ", signal.integer)
 
                 signal_with_payload = signal_creator.signal_with_payload("counter_times_2", namespace, ("integer", signal.integer * 2))
-                # counter_times_2 = common_pb2.SignalId(
-                #     name="counter_times_2",
-                #     namespace=common_pb2.NameSpace(name=namespace),
-                # )
-                # signal_with_payload = network_api_pb2.Signal(
-                #     id=counter_times_2, integer=signal.integer * 2
-                # )
-
-
                 publish_signals(client_id, stub, [signal_with_payload])
 
     except grpc._channel._Rendezvous as err:
@@ -203,8 +195,32 @@ def read_on_timer(stub, signals, pause):
             print(err)
         time.sleep(pause)
 
+def main(argv):
+    parser = argparse.ArgumentParser(
+        description="Provide address to Beambroker"
+    )
+    parser.add_argument(
+        "-ip",
+        "--ip",
+        type=str,
+        help="IP address of the Beamy Broker",
+        required=False,
+        default="127.0.0.1",
+    )
+    parser.add_argument(
+        "-port",
+        "--port",
+        type=str,
+        help="grpc port used on Beamy Broker",
+        required=False,
+        default="50051",
+    )
+    args = parser.parse_args()
+    run(args.ip, args.port)
 
-def run(argv):
+
+
+def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
 
     Parameters
@@ -213,24 +229,8 @@ def run(argv):
         Arguments passed when starting script
 
     """
-    # Checks argument passed to script, ecu.py will use below ip-address if no argument is passed to the script
-    ip = "127.0.0.1"
-    # Keep this port
-    port = ":50051"
-    try:
-        opts, args = getopt.getopt(argv, "h", ["ip="])
-    except getopt.GetoptError:
-        print("Usage: ecu.py --ip <ip_address>")
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == "-h":
-            print("Usage: ecu.py --ip <ip_address>")
-            sys.exit(2)
-        elif opt == "--ip":
-            ip = arg
-
     # Setting up stubs and configuration
-    channel = grpc.insecure_channel(ip + port)
+    channel = grpc.insecure_channel(ip + ":" + port)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
@@ -279,5 +279,8 @@ def run(argv):
     # ecu_read_on_timer.start()
 
 
+# if __name__ == "__main__":
+#     run(sys.argv[1:])
+
 if __name__ == "__main__":
-    run(sys.argv[1:])
+    main(sys.argv[1:])
