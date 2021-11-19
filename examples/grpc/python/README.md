@@ -32,8 +32,8 @@ Follow the installer
 
 Run shell (terminal or powershell) as administrator, install necessary tools via pip
 ```
-python -m pip instaLL grpcio-tools
-python -m pip install grpcio-tools protobuf
+python3 -m pip install grpcio-tools
+python3 -m pip install grpcio-tools protobuf
 ```
 Example; from [here](simple_ecu/) run
 ```
