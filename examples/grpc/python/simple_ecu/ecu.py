@@ -16,12 +16,17 @@ import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
 
+
 sys.path.append("../common")
+sys.path.append("../signaltools")
 import helper
 from helper import *
 
 from threading import Thread, Timer
 
+from signalcreator import SignalCreator
+
+signal_creator = None
 
 def read_signal(stub, signal):
     """Read signals
@@ -87,21 +92,15 @@ def ecu_A(stub, pause):
         clientId = common_pb2.ClientId(id="id_ecu_A")
 
         # Publishes value 'counter'
-        counter = common_pb2.SignalId(
-            name="counter", namespace=common_pb2.NameSpace(name=namespace)
-        )
-        counter_with_payload = network_api_pb2.Signal(
-            id=counter, integer=increasing_counter
-        )
+        counter_with_payload = signal_creator.signal_with_payload("counter", namespace, ("integer", increasing_counter))
         publish_signals(clientId, stub, [counter_with_payload])
         print("\necu_A, seed is ", increasing_counter)
 
         time.sleep(pause)
 
         # Read the other value 'counter_times_2' and output result
-        counter_times_2 = common_pb2.SignalId(
-            name="counter_times_2", namespace=common_pb2.NameSpace(name=namespace)
-        )
+        counter_times_2 = signal_creator.signal("counter_times_2", namespace)
+        
         read_counter_times_2 = read_signal(stub, counter_times_2)
         print(
             "ecu_A, (result) counter_times_2 is ",
@@ -123,12 +122,11 @@ def ecu_B_read(stub, pause):
     """
     while True:
         namespace = "ecu_B"
-        client_id = common_pb2.ClientId(id="id_ecu_B")
+        # client_id = common_pb2.ClientId(id="id_ecu_B")
 
         # Read value 'counter'
-        counter = common_pb2.SignalId(
-            name="counter", namespace=common_pb2.NameSpace(name=namespace)
-        )
+        counter = signal_creator.signal("counter", namespace)
+        
         read_counter = read_signal(stub, counter)
         print("ecu_B, (read) counter is ", read_counter.signal[0].integer)
 
@@ -148,9 +146,7 @@ def ecu_B_subscribe(stub):
     client_id = common_pb2.ClientId(id="id_ecu_B")
 
     # Subscribe to value 'counter'
-    counter = common_pb2.SignalId(
-        name="counter", namespace=common_pb2.NameSpace(name=namespace)
-    )
+    counter = signal_creator.signal("counter", namespace)
     sub_info = network_api_pb2.SubscriberConfig(
         clientId=client_id,
         signals=network_api_pb2.SignalIds(signalId=[counter]),
@@ -162,13 +158,17 @@ def ecu_B_subscribe(stub):
         for subs_counter in stub.SubscribeToSignals(sub_info):
             for signal in subs_counter.signal:
                 print("ecu_B, (subscribe) counter is ", signal.integer)
-                counter_times_2 = common_pb2.SignalId(
-                    name="counter_times_2",
-                    namespace=common_pb2.NameSpace(name=namespace),
-                )
-                signal_with_payload = network_api_pb2.Signal(
-                    id=counter_times_2, integer=signal.integer * 2
-                )
+
+                signal_with_payload = signal_creator.signal_with_payload("counter_times_2", namespace, ("integer", signal.integer * 2))
+                # counter_times_2 = common_pb2.SignalId(
+                #     name="counter_times_2",
+                #     namespace=common_pb2.NameSpace(name=namespace),
+                # )
+                # signal_with_payload = network_api_pb2.Signal(
+                #     id=counter_times_2, integer=signal.integer * 2
+                # )
+
+
                 publish_signals(client_id, stub, [signal_with_payload])
 
     except grpc._channel._Rendezvous as err:
@@ -239,6 +239,9 @@ def run(argv):
     # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
     reload_configuration(system_stub)
+
+    global signal_creator
+    signal_creator = SignalCreator(system_stub)
 
     # Lists available signals
     configuration = system_stub.GetConfiguration(common_pb2.Empty())
