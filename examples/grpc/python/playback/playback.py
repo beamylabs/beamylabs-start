@@ -241,24 +241,25 @@ def run(argv):
             system_stub.ListSignals(networkInfo.namespace),
         )
 
-    ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe_, args=(network_stub,))
-    ecu_B_thread_subscribe.start()
+    # Optonally start threads
+    # ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe_, args=(network_stub,))
+    # ecu_B_thread_subscribe.start()
 
-    # playback_status = traffic_stub.StartPlayback(playback_interator([{"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}, {"namespace": "test_can", "path": "recordings/candump.log", "mode": 0}]))
-    # playback_status = traffic_stub.StartPlayback(playback_interator([
-    #     {"namespace": "test_can", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY},
-    #     {"namespace": "ecu_A", "path": "recordings/candump.log", "mode": traffic_api_pb2.PlaybackMode.PLAY}
-    #     ]))
-    # for entries in playback_status:
-    #     print(entries)
+    # ecu_B_thread_read = Thread(
+    #     target=ecu_B_read,
+    #     args=(
+    #         network_stub,
+    #         1,
+    #     ),
+    # )
+    # ecu_B_thread_read.start()
 
     upload_file(
         system_stub,
-        "configuration_custom_udp/recordings/candump.log",
+        "recordings/traffic.log",
         "recordings/candump_uploaded.log",
     )
 
-    time.sleep(1)
     recordlist = [
         {
             "namespace": "custom_can",
@@ -298,7 +299,20 @@ def run(argv):
     )
     print("play traffic result is ", status)
 
-    time.sleep(1)
+    time.sleep(5)
+
+    recordlist = [
+        {
+            "namespace": "custom_can",
+            "path": "recordings/candump_uploaded_recorded.log",
+            "mode": traffic_api_pb2.Mode.STOP,
+        },
+    ]
+    status_record = traffic_stub.PlayTraffic(
+        traffic_api_pb2.PlaybackInfos(
+            playbackInfo=list(map(create_playback_config, recordlist))
+        )
+    )
 
     # now stop recording and download the recorded file
     download_file(
@@ -307,16 +321,6 @@ def run(argv):
         "candump_uploaded_recorded_downloaded.log",
     )
     print("file is now downloaded")
-
-    # Starting Threads
-    ecu_B_thread_read = Thread(
-        target=ecu_B_read,
-        args=(
-            network_stub,
-            1,
-        ),
-    )
-    ecu_B_thread_read.start()
 
     # ecu_B_thread_subscribe  = Thread(target = ecu_B_subscribe_, args = (network_stub,))
     # ecu_B_thread_subscribe.start()
