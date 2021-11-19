@@ -113,66 +113,8 @@ def ecu_A(stub, pause):
         increasing_counter = (increasing_counter + 1) % 4
 
 
-def ecu_B_read(stub, pause):
-    """Read a value published by ecu_A
-
-    Parameters
-    ----------
-    stub : NetworkServiceStub
-        Object instance of class
-    pause : int
-        Amount of time to pause, in seconds
-
-    """
-    while True:
-        namespace = "ecu_B"
-
-        # Read value 'counter'
-        counter = signal_creator.signal("counter", namespace)
-
-        read_counter = read_signal(stub, counter)
-        print("ecu_B, (read) counter is ", read_counter.signal[0].integer)
-
-        time.sleep(pause)
-
-
-# def ecu_B_subscribe(stub):
-#     """Subscribe to a value published by ecu_A and publish doubled value back to ecu_A
-
-#     Parameters
-#     ----------
-#     stub : NetworkServiceStub
-#         Object instance of class
-
-#     """
-#     namespace = "ecu_B"
-#     client_id = common_pb2.ClientId(id="id_ecu_B")
-
-#     # Subscribe to value 'counter'
-#     counter = signal_creator.signal("counter", namespace)
-#     sub_info = network_api_pb2.SubscriberConfig(
-#         clientId=client_id,
-#         signals=network_api_pb2.SignalIds(signalId=[counter]),
-#         onChange=True,
-#     )
-
-#     # Publish doubled value as 'counter_times_2'
-#     try:
-#         for subs_counter in stub.SubscribeToSignals(sub_info):
-#             for signal in subs_counter.signal:
-#                 print("ecu_B, (subscribe) counter is ", signal.integer)
-
-#                 signal_with_payload = signal_creator.signal_with_payload(
-#                     "counter_times_2", namespace, ("integer", signal.integer * 2)
-#                 )
-#                 publish_signals(client_id, stub, [signal_with_payload])
-
-#     except grpc._channel._Rendezvous as err:
-#         print(err)
-
-
 def read_on_timer(stub, signals, pause):
-    """Simple reading with timer, logs on purpose tabbed with double space
+    """Simple reading with timer
 
     Parameters
     ----------
@@ -189,12 +131,7 @@ def read_on_timer(stub, signals, pause):
         try:
             response = stub.ReadSignals(read_info)
             for signal in response.signal:
-                print(
-                    "  read_on_timer "
-                    + signal.id.name
-                    + " value "
-                    + str(signal.integer)
-                )
+                print(f"ecu_B, (read) counter is {get_value(signal)}")
         except grpc._channel._Rendezvous as err:
             print(err)
         time.sleep(pause)
@@ -207,7 +144,7 @@ def get_value(signal):
         return signal.integer
     elif signal.HasField("double"):
         return signal.double
-    elif signal.HasFiles("arbitration"):
+    elif signal.HasField("arbitration"):
         return signal.arbitration
     else:
         return "empty"
@@ -291,6 +228,8 @@ def run(ip, port):
         )
 
     # Starting Threads
+
+    # ecu a, this is where we publish
     ecu_A_thread = Thread(
         target=ecu_A,
         args=(
@@ -330,22 +269,12 @@ def run(ip, port):
     )
     ecu_B_sub_thread.start()
 
-    # ecu_b also read the value using a timer.
-    ecu_B_thread_read = Thread(
-        target=ecu_B_read,
-        args=(
-            network_stub,
-            1,
-        ),
+    # ecu b, additonaly, read using timer.
+    read_signals = [signal_creator.signal("counter", "ecu_B")]
+    ecu_read_on_timer = Thread(
+        target=read_on_timer, args=(network_stub, read_signals, 1)
     )
-    ecu_B_thread_read.start()
-
-    # ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe, args=(network_stub,))
-    # ecu_B_thread_subscribe.start()
-
-    # read_signals = [common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A")), common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = "ecu_A"))]
-    # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
-    # ecu_read_on_timer.start()
+    ecu_read_on_timer.start()
 
 
 if __name__ == "__main__":
