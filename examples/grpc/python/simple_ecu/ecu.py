@@ -29,6 +29,7 @@ from signalcreator import SignalCreator
 
 signal_creator = None
 
+
 def read_signal(stub, signal):
     """Read signals
 
@@ -93,7 +94,9 @@ def ecu_A(stub, pause):
         clientId = common_pb2.ClientId(id="id_ecu_A")
 
         # Publishes value 'counter'
-        counter_with_payload = signal_creator.signal_with_payload("counter", namespace, ("integer", increasing_counter))
+        counter_with_payload = signal_creator.signal_with_payload(
+            "counter", namespace, ("integer", increasing_counter)
+        )
         publish_signals(clientId, stub, [counter_with_payload])
         print("\necu_A, seed is ", increasing_counter)
 
@@ -101,7 +104,7 @@ def ecu_A(stub, pause):
 
         # Read the other value 'counter_times_2' and output result
         counter_times_2 = signal_creator.signal("counter_times_2", namespace)
-        
+
         read_counter_times_2 = read_signal(stub, counter_times_2)
         print(
             "ecu_A, (result) counter_times_2 is ",
@@ -127,7 +130,7 @@ def ecu_B_read(stub, pause):
 
         # Read value 'counter'
         counter = signal_creator.signal("counter", namespace)
-        
+
         read_counter = read_signal(stub, counter)
         print("ecu_B, (read) counter is ", read_counter.signal[0].integer)
 
@@ -160,7 +163,9 @@ def ecu_B_subscribe(stub):
             for signal in subs_counter.signal:
                 print("ecu_B, (subscribe) counter is ", signal.integer)
 
-                signal_with_payload = signal_creator.signal_with_payload("counter_times_2", namespace, ("integer", signal.integer * 2))
+                signal_with_payload = signal_creator.signal_with_payload(
+                    "counter_times_2", namespace, ("integer", signal.integer * 2)
+                )
                 publish_signals(client_id, stub, [signal_with_payload])
 
     except grpc._channel._Rendezvous as err:
@@ -195,10 +200,9 @@ def read_on_timer(stub, signals, pause):
             print(err)
         time.sleep(pause)
 
+
 def main(argv):
-    parser = argparse.ArgumentParser(
-        description="Provide address to Beambroker"
-    )
+    parser = argparse.ArgumentParser(description="Provide address to Beambroker")
     parser.add_argument(
         "-ip",
         "--ip",
@@ -217,7 +221,6 @@ def main(argv):
     )
     args = parser.parse_args()
     run(args.ip, args.port)
-
 
 
 def run(ip, port):
@@ -278,9 +281,6 @@ def run(ip, port):
     # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
     # ecu_read_on_timer.start()
 
-
-# if __name__ == "__main__":
-#     run(sys.argv[1:])
 
 if __name__ == "__main__":
     main(sys.argv[1:])
