@@ -103,9 +103,10 @@ def ecu_A(stub, pause):
         time.sleep(pause)
 
         # Read the other value 'counter_times_2' and output result
-        counter_times_2 = signal_creator.signal("counter_times_2", namespace)
 
-        read_counter_times_2 = read_signal(stub, counter_times_2)
+        read_counter_times_2 = read_signal(
+            stub, signal_creator.signal("counter_times_2", namespace)
+        )
         print(
             "ecu_A, (result) counter_times_2 is ",
             read_counter_times_2.signal[0].integer,
@@ -196,14 +197,7 @@ def main(argv):
 
 
 def run(ip, port):
-    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads.
-
-    Parameters
-    ----------
-    argv : list
-        Arguments passed when starting script
-
-    """
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
     channel = grpc.insecure_channel(ip + ":" + port)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
@@ -229,7 +223,7 @@ def run(ip, port):
 
     # Starting Threads
 
-    # ecu a, this is where we publish
+    # ecu a, this is where we publish, and
     ecu_A_thread = Thread(
         target=ecu_A,
         args=(
