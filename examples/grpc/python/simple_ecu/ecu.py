@@ -126,7 +126,6 @@ def ecu_B_read(stub, pause):
     """
     while True:
         namespace = "ecu_B"
-        # client_id = common_pb2.ClientId(id="id_ecu_B")
 
         # Read value 'counter'
         counter = signal_creator.signal("counter", namespace)
@@ -137,39 +136,39 @@ def ecu_B_read(stub, pause):
         time.sleep(pause)
 
 
-def ecu_B_subscribe(stub):
-    """Subscribe to a value published by ecu_A and publish doubled value back to ecu_A
+# def ecu_B_subscribe(stub):
+#     """Subscribe to a value published by ecu_A and publish doubled value back to ecu_A
 
-    Parameters
-    ----------
-    stub : NetworkServiceStub
-        Object instance of class
+#     Parameters
+#     ----------
+#     stub : NetworkServiceStub
+#         Object instance of class
 
-    """
-    namespace = "ecu_B"
-    client_id = common_pb2.ClientId(id="id_ecu_B")
+#     """
+#     namespace = "ecu_B"
+#     client_id = common_pb2.ClientId(id="id_ecu_B")
 
-    # Subscribe to value 'counter'
-    counter = signal_creator.signal("counter", namespace)
-    sub_info = network_api_pb2.SubscriberConfig(
-        clientId=client_id,
-        signals=network_api_pb2.SignalIds(signalId=[counter]),
-        onChange=True,
-    )
+#     # Subscribe to value 'counter'
+#     counter = signal_creator.signal("counter", namespace)
+#     sub_info = network_api_pb2.SubscriberConfig(
+#         clientId=client_id,
+#         signals=network_api_pb2.SignalIds(signalId=[counter]),
+#         onChange=True,
+#     )
 
-    # Publish doubled value as 'counter_times_2'
-    try:
-        for subs_counter in stub.SubscribeToSignals(sub_info):
-            for signal in subs_counter.signal:
-                print("ecu_B, (subscribe) counter is ", signal.integer)
+#     # Publish doubled value as 'counter_times_2'
+#     try:
+#         for subs_counter in stub.SubscribeToSignals(sub_info):
+#             for signal in subs_counter.signal:
+#                 print("ecu_B, (subscribe) counter is ", signal.integer)
 
-                signal_with_payload = signal_creator.signal_with_payload(
-                    "counter_times_2", namespace, ("integer", signal.integer * 2)
-                )
-                publish_signals(client_id, stub, [signal_with_payload])
+#                 signal_with_payload = signal_creator.signal_with_payload(
+#                     "counter_times_2", namespace, ("integer", signal.integer * 2)
+#                 )
+#                 publish_signals(client_id, stub, [signal_with_payload])
 
-    except grpc._channel._Rendezvous as err:
-        print(err)
+#     except grpc._channel._Rendezvous as err:
+#         print(err)
 
 
 def read_on_timer(stub, signals, pause):
@@ -199,6 +198,42 @@ def read_on_timer(stub, signals, pause):
         except grpc._channel._Rendezvous as err:
             print(err)
         time.sleep(pause)
+
+
+def get_value(signal):
+    if signal.raw != b"":
+        return "0x" + binascii.hexlify(signal.raw).decode("ascii")
+    elif signal.HasField("integer"):
+        return signal.integer
+    elif signal.HasField("double"):
+        return signal.double
+    elif signal.HasFiles("arbitration"):
+        return signal.arbitration
+    else:
+        return "empty"
+
+
+def act_on_signal(client_id, stub, sub_signals, on_change, fun):
+    while True:
+        sub_info = network_api_pb2.SubscriberConfig(
+            clientId=client_id,
+            signals=network_api_pb2.SignalIds(signalId=sub_signals),
+            onChange=on_change,
+        )
+        try:
+            subscripton = stub.SubscribeToSignals(sub_info, timeout=10)
+            print("waiting for signal...")
+            for subs_counter in subscripton:
+                fun(subs_counter.signal)
+
+        except grpc.RpcError as e:
+            try:
+                subscripton.cancel()
+            except grpc.RpcError as e2:
+                pass
+
+        except grpc._channel._Rendezvous as err:
+            print(err)
 
 
 def main(argv):
@@ -265,6 +300,37 @@ def run(ip, port):
     )
     ecu_A_thread.start()
 
+    # ecu b, we do this with lambda.
+    ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
+
+    double_and_publish = lambda signals: (
+        # we only have on signal, get it.
+        # print(f"signals arrived {signals}"),
+        print(f"ecu_B, (subscribe) counter is {get_value(signals[0])}"),
+        publish_signals(
+            ecu_b_client_id,
+            network_stub,
+            [
+                signal_creator.signal_with_payload(
+                    "counter_times_2", "ecu_B", ("integer", get_value(signals[0]) * 2)
+                )
+            ],
+        ),
+    )
+
+    ecu_B_sub_thread = Thread(
+        target=act_on_signal,
+        args=(
+            ecu_b_client_id,
+            network_stub,
+            [signal_creator.signal("counter", "ecu_B")],
+            True,  # only report when signal changes
+            double_and_publish,
+        ),
+    )
+    ecu_B_sub_thread.start()
+
+    # ecu_b also read the value using a timer.
     ecu_B_thread_read = Thread(
         target=ecu_B_read,
         args=(
@@ -274,8 +340,8 @@ def run(ip, port):
     )
     ecu_B_thread_read.start()
 
-    ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe, args=(network_stub,))
-    ecu_B_thread_subscribe.start()
+    # ecu_B_thread_subscribe = Thread(target=ecu_B_subscribe, args=(network_stub,))
+    # ecu_B_thread_subscribe.start()
 
     # read_signals = [common_pb2.SignalId(name="counter", namespace=common_pb2.NameSpace(name = "ecu_A")), common_pb2.SignalId(name="TestFr06_Child02", namespace=common_pb2.NameSpace(name = "ecu_A"))]
     # ecu_read_on_timer  = Thread(target = read_on_timer, args = (network_stub, read_signals, 10))
