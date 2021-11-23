@@ -20,7 +20,7 @@ services:
 
   proxy:
     restart: always
-    image: aleksandarf/grpcwebrproxy:${GRPCWEBPROXY_TAG:-latest}
+    image: beamylabs/grpcwebproxy:${GRPCWEBPROXY_TAG:-latest}
     ports:
       - "8081:8080"
     extra_hosts:
@@ -33,7 +33,7 @@ services:
   signal-broker:
     tty: true
     restart: always
-    image: aleksandarf/beamybroker-server:${BEAMYBROKER_TAG:-latest}
+    image: beamylabs/beamybroker-server:${BEAMYBROKER_TAG:-latest}
     network_mode: "host"
     # Mount the folder "configuration" folder into container. Itself
     # configurable through an environment variable (or set in a .env file).
