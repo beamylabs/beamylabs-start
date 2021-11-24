@@ -141,7 +141,7 @@ def read_on_timer(stub, signals, pause):
         try:
             response = stub.ReadSignals(read_info)
             for signal in response.signal:
-                print(f"ecu_B, (read) counter is {get_value(signal)}")
+                print(f"ecu_B, (read) {signal.id.name} is {get_value(signal)}")
         except grpc._channel._Rendezvous as err:
             print(err)
         time.sleep(pause)
@@ -286,7 +286,11 @@ def run(ip, port):
     ecu_B_sub_thread.start()
 
     # ecu b, bonus, periodically, read using timer.
-    read_signals = [signal_creator.signal("counter", "ecu_B")]
+    read_signals = [
+        signal_creator.signal("counter", "ecu_B"),
+        # add any number of signals from any namespace
+        # signal_creator.signal("TestFr04", "ecu_B"),
+    ]
     ecu_read_on_timer = Thread(
         target=read_on_timer, args=(network_stub, read_signals, 1)
     )
