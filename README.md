@@ -93,7 +93,7 @@ To pull a specific version you can specify custom tag for `BEAMYBROKER_TAG` or
 `BEAMYWEBCLIENT_TAG`, as in:
 
 ```bash
-BEAMYBROKER_TAG=v0.0.7-4-g12 docker-compose pull
+BEAMYBROKER_TAG=v0.0.7-4-g12 docker-compose up -d
 ```
 
 ## API - gRPC

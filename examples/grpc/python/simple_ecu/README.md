@@ -1,21 +1,30 @@
 # Simple ecu
-Simple_ecu folder contains two scripts, **ecu.py** and **ecu_advanced.py**. With intention to give example and inspiration to further development. To get started and to get more details of the examples, continue reading.
+Simple_ecu folder contains **ecu.py**. With intention to give example and inspiration to further development. To get started and to get more details of the examples, continue reading.
 ## Pre-requisites
-> If you haven't yet installed the necessary requirements to run python examples. Then we suggest you start by following instructions [here](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python#readme).
 
 > Have knowledge of the ip address to your beamy broker installation, if you have the web-client running you can get the ip in the bottom left corner.
 
 ## Get started
+
+from *this* location run:
+```
+pip install -r requirements.txt
+```
+
+> if you don't have python3 installed go [here](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python#readme) 
 ### Options
-The scripts ecu.py and ecu_advanced.py can be started with options `-h` or `--ip <ip_address>`.
-* `--ip <ip_address>` - Points to the ip of your beamy broker installation, if this option is not used the scripts will use ip `127.0.0.1`. For example start the script by typing: `python3 ecu.py --ip 192.168.0.xxx`
+
+ecu.py can be started with options `-h` or `--ip <ip_address>`.
+* `--ip <ip_address>` - Points to the ip of your beamy broker installation, if this option is not used the scripts will use ip `127.0.0.1`. For example start the script by typing:
+```bash 
+python3 ecu.py --ip 192.168.0.xxx
+```
 * `-h` - Help, shows available options for script, run `python3 ecu.py -h`
 
 ### Default instructions
 * Run shell (terminal, powershell, etc.).
 * From [this folder](.) run
-  * `python3 ecu.py --ip <ip_address>` or
-  * `python3 ecu_advanced.py --ip <ip_address>` - for a more advanced example
+  * `python3 ecu.py --ip <ip_address>`
 
 ### Overview
 A bunch of things are going on in this examples and it all starts in the main function `def run(argv):`. Lets break it down.
@@ -90,7 +99,6 @@ try:
 except grpc._channel._Rendezvous as err:
   print(err)
 ```
-The script `ecu_advanced.py` has a second subscribe function, with the main purpose to show that it's possible to subscribe multiple times to the same signal but also to show a variant on how to subscribe to multiple signals at once.
 
 #### Support
 If you have any further questions, please reach out! 

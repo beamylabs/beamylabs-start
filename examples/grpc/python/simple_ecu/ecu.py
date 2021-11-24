@@ -196,6 +196,20 @@ def main(argv):
     run(args.ip, args.port)
 
 
+def double_and_publish(network_stub, client_id, signals):
+    for signal in signals:
+        print(f"ecu_B, (subscribe) counter is {get_value(signal)}")
+        publish_signals(
+            client_id,
+            network_stub,
+            [
+                signal_creator.signal_with_payload(
+                    "counter_times_2", "ecu_B", ("integer", get_value(signals[0]) * 2)
+                )
+            ],
+        )
+
+
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
@@ -236,19 +250,8 @@ def run(ip, port):
     # ecu b, we do this with lambda.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
 
-    double_and_publish = lambda signals: (
-        # we only have on signal, get it.
-        # print(f"signals arrived {signals}"),
-        print(f"ecu_B, (subscribe) counter is {get_value(signals[0])}"),
-        publish_signals(
-            ecu_b_client_id,
-            network_stub,
-            [
-                signal_creator.signal_with_payload(
-                    "counter_times_2", "ecu_B", ("integer", get_value(signals[0]) * 2)
-                )
-            ],
-        ),
+    double_and_publish = lambda signals: double_and_publish(
+        network_stub, ecu_b_client_id, signals
     )
 
     ecu_B_sub_thread = Thread(
@@ -257,6 +260,7 @@ def run(ip, port):
             ecu_b_client_id,
             network_stub,
             [signal_creator.signal("counter", "ecu_B")],
+            # [signal_creator.signal("some_other_signal", "ecu_B")],
             True,  # only report when signal changes
             double_and_publish,
         ),
