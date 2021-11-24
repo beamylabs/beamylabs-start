@@ -19,6 +19,7 @@ Simple ecu simulates 2 ecu:s which are connected (using `LIN`/`CAN`/`udp`) (defa
 
 ## Get started
 
+start by cloning `beamylabs-start` then go here 
 from *this* location run:
 ```
 pip install -r requirements.txt
