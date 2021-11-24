@@ -1,5 +1,10 @@
 # Simple python example
 
+
+## Quick start
+
+
+If you have `python3` installed jump ahead to [this](simple_ecu/README.md) guide.
 ## Setup
 ```bash
 pip3 install --upgrade pip
@@ -9,10 +14,6 @@ pip3 install grpcio requests protobuf
 Example; from [here](simple_ecu/) run
 ```
 python3 ecu.py --ip <ip_address>
-```
-for a more advanced example
-```
-python3 ecu_advanced.py --ip <ip_address>
 ```
 
 To show available options/usage run script with -h 
@@ -38,10 +39,6 @@ python3 -m pip install grpcio-tools protobuf
 Example; from [here](simple_ecu/) run
 ```
 python3 ecu.py --ip <ip_address>
-```
-for a more advanced example
-```
-python3 ecu_advanced.py --ip <ip_address>
 ```
 
 To show available options/usage run script with -h

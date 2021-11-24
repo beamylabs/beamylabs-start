@@ -94,10 +94,19 @@ def ecu_A(stub, pause):
         clientId = common_pb2.ClientId(id="id_ecu_A")
 
         # Publishes value 'counter'
-        counter_with_payload = signal_creator.signal_with_payload(
-            "counter", namespace, ("integer", increasing_counter)
+        publish_signals(
+            clientId,
+            stub,
+            [
+                signal_creator.signal_with_payload(
+                    "counter", namespace, ("integer", increasing_counter)
+                ),
+                # add any number of signals here
+                # signal_creator.signal_with_payload(
+                #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d"))
+                # ),
+            ],
         )
-        publish_signals(clientId, stub, [counter_with_payload])
         print("\necu_A, seed is ", increasing_counter)
 
         time.sleep(pause)
@@ -132,7 +141,7 @@ def read_on_timer(stub, signals, pause):
         try:
             response = stub.ReadSignals(read_info)
             for signal in response.signal:
-                print(f"ecu_B, (read) counter is {get_value(signal)}")
+                print(f"ecu_B, (read) {signal.id.name} is {get_value(signal)}")
         except grpc._channel._Rendezvous as err:
             print(err)
         time.sleep(pause)
@@ -196,6 +205,25 @@ def main(argv):
     run(args.ip, args.port)
 
 
+def double_and_publish(network_stub, client_id, trigger, signals):
+    for signal in signals:
+        print(f"ecu_B, (subscribe) {signal.id.name} {get_value(signal)}")
+        if signal.id == trigger:
+            publish_signals(
+                client_id,
+                network_stub,
+                [
+                    signal_creator.signal_with_payload(
+                        "counter_times_2", "ecu_B", ("integer", get_value(signal) * 2)
+                    ),
+                    # add any number of signals/frames here
+                    # signal_creator.signal_with_payload(
+                    #     "TestFr04", "ecu_B", ("raw", binascii.unhexlify("0a0b0c0d"))
+                    # )
+                ],
+            )
+
+
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
@@ -233,38 +261,36 @@ def run(ip, port):
     )
     ecu_A_thread.start()
 
-    # ecu b, we do this with lambda.
+    # ecu b, we do this with lambda refering to double_and_publish.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
-
-    double_and_publish = lambda signals: (
-        # we only have on signal, get it.
-        # print(f"signals arrived {signals}"),
-        print(f"ecu_B, (subscribe) counter is {get_value(signals[0])}"),
-        publish_signals(
-            ecu_b_client_id,
-            network_stub,
-            [
-                signal_creator.signal_with_payload(
-                    "counter_times_2", "ecu_B", ("integer", get_value(signals[0]) * 2)
-                )
-            ],
-        ),
-    )
 
     ecu_B_sub_thread = Thread(
         target=act_on_signal,
         args=(
             ecu_b_client_id,
             network_stub,
-            [signal_creator.signal("counter", "ecu_B")],
+            [
+                signal_creator.signal("counter", "ecu_B"),
+                # here you can add any signal from any namespace
+                # signal_creator.signal("TestFr04", "ecu_B"),
+            ],
             True,  # only report when signal changes
-            double_and_publish,
+            lambda signals: double_and_publish(
+                network_stub,
+                ecu_b_client_id,
+                signal_creator.signal("counter", "ecu_B"),
+                signals,
+            ),
         ),
     )
     ecu_B_sub_thread.start()
 
-    # ecu b, additonaly, read using timer.
-    read_signals = [signal_creator.signal("counter", "ecu_B")]
+    # ecu b, bonus, periodically, read using timer.
+    read_signals = [
+        signal_creator.signal("counter", "ecu_B"),
+        # add any number of signals from any namespace
+        # signal_creator.signal("TestFr04", "ecu_B"),
+    ]
     ecu_read_on_timer = Thread(
         target=read_on_timer, args=(network_stub, read_signals, 1)
     )

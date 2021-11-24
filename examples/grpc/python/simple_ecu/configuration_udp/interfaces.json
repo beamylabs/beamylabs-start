@@ -11,8 +11,7 @@
       "dbc_file": "can/test.dbc",
       "server_port": 2001,
       "target_host": "127.0.0.1",
-      "target_port": 2000,
-      "fixed_payload_size": 8
+      "target_port": 2000
     },
     {
       "namespace": "ecu_B",
@@ -20,8 +19,7 @@
       "dbc_file": "can/test.dbc",
       "server_port": 2000,
       "target_host": "127.0.0.1",
-      "target_port": 2001,
-      "fixed_payload_size": 8
+      "target_port": 2001
     },
     {
       "namespace": "test_can",
@@ -29,8 +27,7 @@
       "dbc_file": "can/test.dbc",
       "server_port": 2003,
       "target_host": "127.0.0.1",
-      "target_port": 2004,
-      "fixed_payload_size": 8
+      "target_port": 2004
     }
   ],
   "gateway": {
