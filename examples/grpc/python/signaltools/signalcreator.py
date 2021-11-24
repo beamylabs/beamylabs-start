@@ -27,7 +27,7 @@ class SignalCreator:
         k = (sinfo.id.namespace.name, sinfo.id.name)
         if k in self._sinfos:
             raise Exception(f"duplicate (namespace,signal): {k}")
-        self._sinfos[k] = True
+        self._sinfos[k] = sinfo.metaData
 
     def signal(self, name, namespace):
         k = (namespace, name)
@@ -37,13 +37,15 @@ class SignalCreator:
             name=name, namespace=common_pb2.NameSpace(name=namespace)
         )
 
-    def signal_with_payload(self, name, namespace, value_pair):
+    def signal_with_payload(self, name, namespace, value_pair, allow_malformed = False):
         signal = self.signal(name, namespace)
 
         key, value = value_pair
         types = ["integer", "double", "raw", "arbitration"]
         if key not in types:
             raise Exception(f"type must be one of: {types}")
+        if key is "raw" and allow_malformed is False:
+            assert len(value)*8 == self._sinfos[(namespace, name)].size, f"payload size missmatch, expected {self._sinfos[(namespace, name)].size/8} bytes"
         params = {"id": signal, key: value}
         return network_api_pb2.Signal(**params)
 
