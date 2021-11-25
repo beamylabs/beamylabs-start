@@ -74,9 +74,6 @@ def publish_signals(client_id, stub, signals_with_payload):
         print(err)
 
 
-increasing_counter = 0
-
-
 def ecu_A(stub, pause):
     """Publishes a value, read other value (published by ecu_B)
 
@@ -88,10 +85,10 @@ def ecu_A(stub, pause):
         Amount of time to pause, in seconds
 
     """
+    increasing_counter = 0
+    namespace = "ecu_A"
+    clientId = common_pb2.ClientId(id="id_ecu_A")
     while True:
-        global increasing_counter
-        namespace = "ecu_A"
-        clientId = common_pb2.ClientId(id="id_ecu_A")
 
         # Publishes value 'counter'
         publish_signals(
