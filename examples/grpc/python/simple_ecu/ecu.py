@@ -100,7 +100,7 @@ def ecu_A(stub, pause):
                 ),
                 # add any number of signals here
                 # signal_creator.signal_with_payload(
-                #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d"), False)
+                #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d")), False
                 # ),
             ],
         )
@@ -215,7 +215,7 @@ def double_and_publish(network_stub, client_id, trigger, signals):
                     ),
                     # add any number of signals/frames here
                     # signal_creator.signal_with_payload(
-                    #     "TestFr04", "ecu_B", ("raw", binascii.unhexlify("0a0b0c0d"), False)
+                    #     "TestFr04", "ecu_B", ("raw", binascii.unhexlify("0a0b0c0d")), False
                     # )
                 ],
             )
