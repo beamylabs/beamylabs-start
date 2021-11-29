@@ -50,7 +50,7 @@ def read_signal(stub, signal):
     return stub.ReadSignals(read_info)
 
 
-def publish_signals(client_id, stub, signals_with_payload):
+def publish_signals(client_id, stub, signals_with_payload, frequency=0):
     """Publish signals
 
     Parameters
@@ -66,7 +66,7 @@ def publish_signals(client_id, stub, signals_with_payload):
     publisher_info = network_api_pb2.PublisherConfig(
         clientId=client_id,
         signals=network_api_pb2.Signals(signal=signals_with_payload),
-        frequency=0,
+        frequency=frequency,
     )
     try:
         stub.PublishSignals(publisher_info)
@@ -248,16 +248,6 @@ def run(ip, port):
 
     # Starting Threads
 
-    # ecu a, this is where we publish, and
-    ecu_A_thread = Thread(
-        target=ecu_A,
-        args=(
-            network_stub,
-            1,
-        ),
-    )
-    ecu_A_thread.start()
-
     # ecu b, we do this with lambda refering to double_and_publish.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
 
@@ -281,6 +271,16 @@ def run(ip, port):
         ),
     )
     ecu_B_sub_thread.start()
+
+    # ecu a, this is where we publish, and
+    ecu_A_thread = Thread(
+        target=ecu_A,
+        args=(
+            network_stub,
+            1,
+        ),
+    )
+    ecu_A_thread.start()
 
     # ecu b, bonus, periodically, read using timer.
     read_signals = [
