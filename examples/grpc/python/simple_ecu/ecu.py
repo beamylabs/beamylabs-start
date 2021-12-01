@@ -97,7 +97,9 @@ def ecu_A(stub, pause):
     clientId = common_pb2.ClientId(id="id_ecu_A")
     while True:
 
+        print("\necu_A, seed is ", increasing_counter)
         # Publishes value 'counter'
+
         publish_signals(
             clientId,
             stub,
@@ -111,7 +113,6 @@ def ecu_A(stub, pause):
                 # ),
             ],
         )
-        print("\necu_A, seed is ", increasing_counter)
 
         time.sleep(pause)
 
@@ -165,28 +166,28 @@ def get_value(signal):
 
 
 def act_on_signal(client_id, stub, sub_signals, on_change, fun, on_subcribed=None):
-    while True:
-        sub_info = network_api_pb2.SubscriberConfig(
-            clientId=client_id,
-            signals=network_api_pb2.SignalIds(signalId=sub_signals),
-            onChange=on_change,
-        )
+    sub_info = network_api_pb2.SubscriberConfig(
+        clientId=client_id,
+        signals=network_api_pb2.SignalIds(signalId=sub_signals),
+        onChange=on_change,
+    )
+    try:
+        subscripton = stub.SubscribeToSignals(sub_info, timeout=None)
+        if on_subcribed:
+            on_subcribed(subscripton)
+        print("waiting for signal...")
+        for subs_counter in subscripton:
+            fun(subs_counter.signal)
+
+    except grpc.RpcError as e:
         try:
-            subscripton = stub.SubscribeToSignals(sub_info, timeout=None)
-            if on_subcribed:
-                on_subcribed(subscripton)
-            print("waiting for signal...")
-            for subs_counter in subscripton:
-                fun(subs_counter.signal)
+            subscripton.cancel()
+        except grpc.RpcError as e2:
+            pass
 
-        except grpc.RpcError as e:
-            try:
-                subscripton.cancel()
-            except grpc.RpcError as e2:
-                pass
-
-        except grpc._channel._Rendezvous as err:
-            print(err)
+    except grpc._channel._Rendezvous as err:
+        print(err)
+    print("subscription terminated")
 
 
 def main(argv):
@@ -277,12 +278,12 @@ def run(ip, port):
                 signal_creator.signal("counter", "ecu_B"),
                 signals,
             ),
-            lambda subscripton: (q.put(subscripton)),
+            lambda subscripton: (q.put(("id_ecu_B", subscripton))),
         ),
     )
     ecu_B_sub_thread.start()
     # wait for subscription to settle
-    q.get()
+    ecu, subscription = q.get()
 
     # ecu a, this is where we publish, and
     ecu_A_thread = Thread(
@@ -304,6 +305,9 @@ def run(ip, port):
         target=read_on_timer, args=(network_stub, read_signals, 1)
     )
     ecu_read_on_timer.start()
+
+    # once we are done we could cancel subscription
+    # subscription.cancel()
 
 
 if __name__ == "__main__":
