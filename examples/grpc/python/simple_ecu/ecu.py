@@ -24,10 +24,12 @@ import helper
 from helper import *
 
 from threading import Thread, Timer
+import queue
 
 from signalcreator import SignalCreator
 
 signal_creator = None
+q = queue.Queue()
 
 
 def read_signal(stub, signal):
@@ -74,6 +76,11 @@ def publish_signals(client_id, stub, signals_with_payload, frequency=0):
         print(err)
 
 
+def printer(signals):
+    for signal in signals:
+        print(f"{signal.id.name} {signal.id.namespace.name} {get_value(signal)}")
+
+
 def ecu_A(stub, pause):
     """Publishes a value, read other value (published by ecu_B)
 
@@ -98,7 +105,7 @@ def ecu_A(stub, pause):
                 signal_creator.signal_with_payload(
                     "counter", namespace, ("integer", increasing_counter)
                 ),
-                # add any number of signals here
+                # add any number of signals here, make sure that all signals/frames are unique.
                 # signal_creator.signal_with_payload(
                 #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d")), False
                 # ),
@@ -157,7 +164,7 @@ def get_value(signal):
         return "empty"
 
 
-def act_on_signal(client_id, stub, sub_signals, on_change, fun):
+def act_on_signal(client_id, stub, sub_signals, on_change, fun, on_subcribed=None):
     while True:
         sub_info = network_api_pb2.SubscriberConfig(
             clientId=client_id,
@@ -165,7 +172,9 @@ def act_on_signal(client_id, stub, sub_signals, on_change, fun):
             onChange=on_change,
         )
         try:
-            subscripton = stub.SubscribeToSignals(sub_info, timeout=10)
+            subscripton = stub.SubscribeToSignals(sub_info, timeout=None)
+            if on_subcribed:
+                on_subcribed(subscripton)
             print("waiting for signal...")
             for subs_counter in subscripton:
                 fun(subs_counter.signal)
@@ -268,9 +277,12 @@ def run(ip, port):
                 signal_creator.signal("counter", "ecu_B"),
                 signals,
             ),
+            lambda subscripton: (q.put(subscripton)),
         ),
     )
     ecu_B_sub_thread.start()
+    # wait for subscription to settle
+    q.get()
 
     # ecu a, this is where we publish, and
     ecu_A_thread = Thread(
