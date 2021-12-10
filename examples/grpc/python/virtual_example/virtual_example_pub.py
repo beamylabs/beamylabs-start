@@ -25,6 +25,7 @@ Note that there is no need to specify a database for this kind of signals.
 import grpc
 
 import sys
+import binascii
 
 sys.path.append("../common/generated")
 
@@ -52,6 +53,8 @@ if __name__ == "__main__":
     channel = grpc.insecure_channel("localhost:50051")
     # Create the stub
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
+    # create the identifier of *this* client
+    client_id = common_pb2.ClientId(id="virtual_example_pub")
     # For 10 messages
     for _ in range(10):
         input_value = input("Enter a number: ")
@@ -62,12 +65,14 @@ if __name__ == "__main__":
         else:
             # Create a signal
             namespace = common_pb2.NameSpace(name="VirtualInterface")
-            signal = common_pb2.SignalId(name="virtual_signal", namespace=namespace)
+            signal = common_pb2.SignalId(name="my_madeup_virtual_signal", namespace=namespace)
             # Add payload to the signal
             signal_with_payload = network_api_pb2.Signal(id=signal)
-            signal_with_payload.integer = signal_value
+            # 20 bytes chosen as an arbitrary number
+            signal_with_payload.raw = signal_value.to_bytes(20, 'big')
+            # long vectors are valid on virtual networks!
+            # signal_with_payload.integer = signal_value
             # Create a publisher config
-            client_id = common_pb2.ClientId(id="virtual_example_pub")
             signals = network_api_pb2.Signals(signal=(signal_with_payload,))
             publisher_info = network_api_pb2.PublisherConfig(
                 clientId=client_id, signals=signals, frequency=0

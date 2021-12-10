@@ -22,7 +22,7 @@ Each time we capture a number we publish it as the value of signal 'virtual_sign
 
 """
 import grpc
-
+import binascii
 import sys
 
 sys.path.append("../common/generated")
@@ -46,29 +46,45 @@ __maintainer__ = "Alvaro Alonso"
 __email__ = "aalonso@volvocars.com"
 __status__ = "Development"
 
+def get_value(signal):
+    if signal.raw != b"":
+        return "0x" + binascii.hexlify(signal.raw).decode("ascii")
+    elif signal.HasField("integer"):
+        return signal.integer
+    elif signal.HasField("double"):
+        return signal.double
+    elif signal.HasField("arbitration"):
+        return signal.arbitration
+    else:
+        return "empty"
+
 
 if __name__ == "__main__":
+    # Create a channel
     channel = grpc.insecure_channel("localhost:50051")
     # Create the system stup, to upload relevant confiuration
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
     upload_folder(system_stub, "configuration")
     reload_configuration(system_stub)
-    # Create a channel
+    # create the identifier of *this* client
+    client_id = common_pb2.ClientId(id="virtual_example_sub")
     # Create the stub
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
     # Create a signal
     namespace = common_pb2.NameSpace(name="VirtualInterface")
-    signal = common_pb2.SignalId(name="virtual_signal", namespace=namespace)
+    signal = common_pb2.SignalId(name="my_madeup_virtual_signal", namespace=namespace)
     # Create a subscriber config
-    client_id = common_pb2.ClientId(id="virtual_example_sub")
     signals = network_api_pb2.SignalIds(signalId=[signal])
     sub_info = network_api_pb2.SubscriberConfig(
         clientId=client_id, signals=signals, onChange=False
     )
     # Subscribe
-    try:
-        for response in network_stub.SubscribeToSignals(sub_info):
-            print(response)
-    except grpc._channel._Rendezvous as err:
-        print(err)
+    while True:
+        try:
+            for response in network_stub.SubscribeToSignals(sub_info, timeout=None):
+                for signal in response.signal:
+                    print(f"received {signal.id.name} value is {get_value(signal)}")
+
+        except grpc._channel._Rendezvous as err:
+            print(err)
