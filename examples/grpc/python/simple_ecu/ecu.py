@@ -32,7 +32,7 @@ signal_creator = None
 q = queue.Queue()
 
 
-def read_signal(stub, signal):
+def read_signals(stub, signal):
     """Read signals
 
     Parameters
@@ -48,8 +48,11 @@ def read_signal(stub, signal):
         Object instance of class
 
     """
-    read_info = network_api_pb2.SignalIds(signalId=[signal])
-    return stub.ReadSignals(read_info)
+    try:
+        read_info = network_api_pb2.SignalIds(signalId=[signal])
+        return stub.ReadSignals(read_info)
+    except grpc._channel._Rendezvous as err:
+        print(err)
 
 
 def publish_signals(client_id, stub, signals_with_payload, frequency=0):
@@ -118,13 +121,11 @@ def ecu_A(stub, pause):
 
         # Read the other value 'counter_times_2' and output result
 
-        read_counter_times_2 = read_signal(
+        read_signal_response = read_signals(
             stub, signal_creator.signal("counter_times_2", namespace)
         )
-        print(
-            "ecu_A, (result) counter_times_2 is ",
-            read_counter_times_2.signal[0].integer,
-        )
+        for signal in read_signal_response.signal:
+            print(f"ecu_A, (result) {signal.id.name} is {get_value(signal)}")
         increasing_counter = (increasing_counter + 1) % 4
 
 
@@ -296,14 +297,12 @@ def run(ip, port):
     ecu_A_thread.start()
 
     # ecu b, bonus, periodically, read using timer.
-    read_signals = [
+    signals = [
         signal_creator.signal("counter", "ecu_B"),
         # add any number of signals from any namespace
         # signal_creator.signal("TestFr04", "ecu_B"),
     ]
-    ecu_read_on_timer = Thread(
-        target=read_on_timer, args=(network_stub, read_signals, 1)
-    )
+    ecu_read_on_timer = Thread(target=read_on_timer, args=(network_stub, signals, 1))
     ecu_read_on_timer.start()
 
     # once we are done we could cancel subscription
