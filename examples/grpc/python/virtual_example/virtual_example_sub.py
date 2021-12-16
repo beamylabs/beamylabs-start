@@ -36,6 +36,7 @@ import common_pb2
 sys.path.append("../common")
 import helper
 from helper import *
+import time
 
 
 __author__ = "Aleksandar Filipov and Alvaro Alonso"
@@ -88,3 +89,5 @@ if __name__ == "__main__":
 
         except grpc._channel._Rendezvous as err:
             print(err)
+        time.sleep(1)
+        print("subscription dropped, retrying")

@@ -53,6 +53,10 @@ if __name__ == "__main__":
     channel = grpc.insecure_channel("localhost:50051")
     # Create the stub
     network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
+    system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
+    check_license(system_stub)
+    upload_folder(system_stub, "configuration")
+    reload_configuration(system_stub)
     # create the identifier of *this* client
     client_id = common_pb2.ClientId(id="virtual_example_pub")
     # For 10 messages
