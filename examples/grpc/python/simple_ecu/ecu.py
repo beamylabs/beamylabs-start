@@ -188,6 +188,7 @@ def act_on_signal(client_id, stub, sub_signals, on_change, fun, on_subcribed=Non
 
     except grpc._channel._Rendezvous as err:
         print(err)
+    # reload, alternatively non-existing signal
     print("subscription terminated")
 
 
