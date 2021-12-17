@@ -42,6 +42,7 @@ def upload_file(stub, path, dest_path):
         file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256
     )
     response = stub.UploadFile(upload_iterator)
+    assert response.finished == True, "Failed uploading file %s message. Status is: %s" % (file, response)
     print("uploaded", path, response)
 
 
@@ -145,5 +146,17 @@ def is_signal_declared(system_stub, signal):
     found = signal in signals
     return found
 
+def all_frames(system_stub, namespace):
+    frames = []
+    for frame_entry in system_stub.ListSignals(namespace).frame:
+        frames.append(frame_entry.signalInfo.id)
+    return frames
 
+def all_signals_in_frame(system_stub, frame):
+    signals = []
+    for frame_entry in system_stub.ListSignals(frame.namespace).frame:
+        if frame_entry.signalInfo.id.name == frame.name:
+            for signal in frame_entry.childInfo:
+                signals.append(signal.id)
+    return signals
 ##################### END BOILERPLATE ####################################################
