@@ -134,16 +134,4 @@ def download_and_install_license(system_stub, hash, id=None):
     )
 
 
-# checks if signal is declared.
-# signal = common_pb2.SignalId(name="MasterReq", namespace=common_pb2.NameSpace(name = "ecu_A")
-def is_signal_declared(system_stub, signal):
-    signals = []
-    for frame_entry in system_stub.ListSignals(signal.namespace).frame:
-        signals.append(frame_entry.signalInfo.id)
-        for signal_entry in frame_entry.childInfo:
-            signals.append(signal_entry.id)
-    found = signal in signals
-    return found
-
-
 ##################### END BOILERPLATE ####################################################
