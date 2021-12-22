@@ -234,6 +234,23 @@ def double_and_publish(network_stub, client_id, trigger, signals):
             )
 
 
+def modify_signal_publish_frame(network_stub, client_id, signals):
+    publish_list = []
+    signal_to_modify = signal_creator.signal("TestFr07_Child02", "ecu_B")
+    for signal in signals:
+        if signal.id == signal_to_modify:
+            updated_signal = signal_creator.signal_with_payload(
+                signal.id.name,
+                signal.id.namespace.name,
+                ("integer", get_value(signal) + 1)
+                #  "counter_times_2", "ecu_B", ("integer", get_value(signal) * 1)
+            )
+            publish_list.append(updated_signal)
+        else:
+            publish_list.append(signal)
+    publish_signals(client_id, network_stub, publish_list)
+
+
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
@@ -259,17 +276,56 @@ def run(ip, port):
             system_stub.ListSignals(networkInfo.namespace),
         )
 
-    all_frames = signal_creator.frames("ecu_B")
-    all_signals = signal_creator.signals_in_frame("TestFr06", all_frames[0].namespace.name)
-    frame_name = signal_creator.frame_by_signal("counter", "ecu_B")
-    all_signals = signal_creator.signals_in_frame(frame_name.name, frame_name.namespace.name)
+    # all_frames = signal_creator.frames("ecu_B")
+    # all_signals = signal_creator.signals_in_frame("TestFr06", all_frames[0].namespace.name)
     # Starting Threads
+
+    # ecu a, we do this with lambda refering to modify_signal_publish_frame.
+    ecu_a_client_id_2 = common_pb2.ClientId(id="id_ecu_A_listener")
+
+    frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_A")
+    all_signals_in_frame = signal_creator.signals_in_frame(
+        frame_name.name, frame_name.namespace.name
+    )
+
+    ecu_A_sub_thread_2 = Thread(
+        target=act_on_signal,
+        args=(
+            ecu_a_client_id_2,
+            network_stub,
+            [] + all_signals_in_frame,
+            False,  # True = only report when signal changes
+            lambda signals: modify_signal_publish_frame(
+                network_stub,
+                ecu_a_client_id_2,
+                signals,
+            ),
+        ),
+    )
+    ecu_A_sub_thread_2.start()
+
+    # ecu b just log signals
+    ecu_b_client_id_2 = common_pb2.ClientId(id="id_ecu_B_listener")
+
+    frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_B")
+    all_signals_in_frame = signal_creator.signals_in_frame(
+        frame_name.name, frame_name.namespace.name
+    )
+
+    ecu_B_sub_thread_2 = Thread(
+        target=act_on_signal,
+        args=(
+            ecu_b_client_id_2,
+            network_stub,
+            [] + all_signals_in_frame,
+            False,  # True = only report when signal changes
+            lambda signals: printer(signals),
+        ),
+    )
+    ecu_B_sub_thread_2.start()
 
     # ecu b, we do this with lambda refering to double_and_publish.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
-
-    # all signals in frame TestFr06
-    # all_signals_in_frame(signal_creator.signal("TestFr06", "ecu_B"))
 
     ecu_B_sub_thread = Thread(
         target=act_on_signal,
@@ -280,8 +336,8 @@ def run(ip, port):
                 signal_creator.signal("counter", "ecu_B"),
                 # here you can add any signal from any namespace
                 # signal_creator.signal("TestFr04", "ecu_B"),
-            ] + all_signals,
-            False,  # only report when signal changes
+            ],
+            False,  # True = only report when signal changes
             lambda signals: double_and_publish(
                 network_stub,
                 ecu_b_client_id,
