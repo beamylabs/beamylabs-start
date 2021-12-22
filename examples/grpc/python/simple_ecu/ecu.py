@@ -110,6 +110,12 @@ def ecu_A(stub, pause):
                 signal_creator.signal_with_payload(
                     "counter", namespace, ("integer", increasing_counter)
                 ),
+                # signal_creator.signal_with_payload(
+                #     "TestFr07_Child01_UB", namespace, ("integer", 1)
+                # ),
+                # signal_creator.signal_with_payload(
+                #     "TestFr07_Child02_UB", namespace, ("integer", 1)
+                # ),
                 # add any number of signals here, make sure that all signals/frames are unique.
                 # signal_creator.signal_with_payload(
                 #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d")), False
@@ -236,7 +242,7 @@ def double_and_publish(network_stub, client_id, trigger, signals):
 
 def modify_signal_publish_frame(network_stub, client_id, signals):
     publish_list = []
-    signal_to_modify = signal_creator.signal("TestFr07_Child02", "ecu_B")
+    signal_to_modify = signal_creator.signal("TestFr07_Child02", "ecu_A")
     for signal in signals:
         if signal.id == signal_to_modify:
             updated_signal = signal_creator.signal_with_payload(
@@ -281,7 +287,7 @@ def run(ip, port):
     # Starting Threads
 
     # ecu a, we do this with lambda refering to modify_signal_publish_frame.
-    ecu_a_client_id_2 = common_pb2.ClientId(id="id_ecu_A_listener")
+    ecu_a_client_id_2 = common_pb2.ClientId(id="id_ecu_A_doubler")
 
     frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_A")
     all_signals_in_frame = signal_creator.signals_in_frame(
@@ -304,8 +310,8 @@ def run(ip, port):
     )
     ecu_A_sub_thread_2.start()
 
-    # ecu b just log signals
-    ecu_b_client_id_2 = common_pb2.ClientId(id="id_ecu_B_listener")
+    # ecu b just log signals - use same client it to avoid local bouncing
+    ecu_b_client_id_2 = common_pb2.ClientId(id="id_ecu_B")
 
     frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_B")
     all_signals_in_frame = signal_creator.signals_in_frame(
@@ -319,7 +325,10 @@ def run(ip, port):
             network_stub,
             [] + all_signals_in_frame,
             False,  # True = only report when signal changes
-            lambda signals: printer(signals),
+            lambda signals: (
+                print("ecu_B BOUNCED frame "),
+                printer(signals),
+            )
         ),
     )
     ecu_B_sub_thread_2.start()
