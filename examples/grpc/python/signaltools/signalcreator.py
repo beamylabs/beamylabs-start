@@ -34,15 +34,15 @@ class SignalCreator:
             raise Exception(f"duplicate (namespace,signal): {k}")
         self._sinfos[k] = sinfo.metaData
 
-    def signal(self, name, namespace):
-        k = (namespace, name)
-        if (k not in self._sinfos) and (namespace not in self._virtual):
+    def signal(self, name, namespace_name):
+        k = (namespace_name, name)
+        if (k not in self._sinfos) and (namespace_name not in self._virtual):
             raise Exception(f"signal not declared (namespace, signal): {k}")
         return common_pb2.SignalId(
-            name=name, namespace=common_pb2.NameSpace(name=namespace)
+            name=name, namespace=common_pb2.NameSpace(name=namespace_name)
         )
 
-    def all_frames(self, namespace_name):
+    def frames(self, namespace_name):
         all_frames = []
         for finfo in self._networks[namespace_name].frame:
             all_frames.append(self.signal(finfo.signalInfo.id.name, namespace_name))
@@ -61,15 +61,15 @@ class SignalCreator:
         assert all_signals != [], f"frame {name} {namespace_name} does not have childs"
         return all_signals
 
-    def signal_with_payload(self, name, namespace, value_pair, allow_malformed = False):
-        signal = self.signal(name, namespace)
+    def signal_with_payload(self, name, namespace_name, value_pair, allow_malformed = False):
+        signal = self.signal(name, namespace_name)
 
         key, value = value_pair
         types = ["integer", "double", "raw", "arbitration"]
         if key not in types:
             raise Exception(f"type must be one of: {types}")
         if key is "raw" and allow_malformed is False:
-            assert len(value)*8 == self._sinfos[(namespace, name)].size, f"payload size missmatch, expected {self._sinfos[(namespace, name)].size/8} bytes"
+            assert len(value)*8 == self._sinfos[(namespace_name, name)].size, f"payload size missmatch, expected {self._sinfos[(namespace_name, name)].size/8} bytes"
         params = {"id": signal, key: value}
         return network_api_pb2.Signal(**params)
 
