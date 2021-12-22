@@ -49,6 +49,13 @@ class SignalCreator:
             # all_frames.append(finfo) 
         return all_frames
 
+    def frame_by_signal(self, name, namespace_name):
+        for finfo in self._networks[namespace_name].frame:
+            for sinfo in finfo.childInfo:
+                if sinfo.id.name == name:
+                    return self.signal(finfo.signalInfo.id.name, namespace_name)
+        raise Exception(f"signal not declared (namespace, signal): {namespace_name} {name}")
+
     def signals_in_frame(self, name, namespace_name):
         all_signals = []
         frame = None
