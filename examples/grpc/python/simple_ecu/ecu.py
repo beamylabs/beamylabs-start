@@ -100,7 +100,7 @@ def ecu_A(stub, pause):
     clientId = common_pb2.ClientId(id="id_ecu_A")
     while True:
 
-        print("\necu_A, seed is ", increasing_counter)
+        print("\necu_A, seed/counter is ", increasing_counter)
         # Publishes value 'counter'
 
         publish_signals(
@@ -216,6 +216,7 @@ def main(argv):
 
 def double_and_publish(network_stub, client_id, trigger, signals):
     for signal in signals:
+        # print(f"signals contains {signals}")
         print(f"ecu_B, (subscribe) {signal.id.name} {get_value(signal)}")
         if signal.id == trigger:
             publish_signals(
@@ -258,10 +259,17 @@ def run(ip, port):
             system_stub.ListSignals(networkInfo.namespace),
         )
 
+    all_frames = signal_creator.frames("ecu_B")
+    all_signals = signal_creator.signals_in_frame("TestFr06", all_frames[0].namespace.name)
+    frame_name = signal_creator.frame_by_signal("counter", "ecu_B")
+    all_signals = signal_creator.signals_in_frame(frame_name.name, frame_name.namespace.name)
     # Starting Threads
 
     # ecu b, we do this with lambda refering to double_and_publish.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
+
+    # all signals in frame TestFr06
+    # all_signals_in_frame(signal_creator.signal("TestFr06", "ecu_B"))
 
     ecu_B_sub_thread = Thread(
         target=act_on_signal,
@@ -272,8 +280,8 @@ def run(ip, port):
                 signal_creator.signal("counter", "ecu_B"),
                 # here you can add any signal from any namespace
                 # signal_creator.signal("TestFr04", "ecu_B"),
-            ],
-            True,  # only report when signal changes
+            ] + all_signals,
+            False,  # only report when signal changes
             lambda signals: double_and_publish(
                 network_stub,
                 ecu_b_client_id,
@@ -304,7 +312,7 @@ def run(ip, port):
         # signal_creator.signal("TestFr04", "ecu_B"),
     ]
     ecu_read_on_timer = Thread(target=read_on_timer, args=(network_stub, signals, 1))
-    ecu_read_on_timer.start()
+    # ecu_read_on_timer.start()
 
     # once we are done we could cancel subscription
     # subscription.cancel()
