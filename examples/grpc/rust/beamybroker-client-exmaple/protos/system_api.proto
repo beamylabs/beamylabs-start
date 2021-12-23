@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package base;
+
+service SystemService {
+  rpc GetConfiguration (Empty) returns (Configuration) {}
+  rpc ListSignals (NameSpace) returns (Frames) {}
+  rpc UploadFileChunk (FileUploadChunkRequest) returns (FileUploadResponse) {}
+  rpc UploadFile (stream FileUploadRequest) returns (FileUploadResponse) {}
+  rpc DownloadFile (FileDescription) returns (stream FileDownloadResponse) {}
+// will not return until new configuration is tested an active, make sure to set timeout to a large value. (fibex on pi > 50s)
+  rpc ReloadConfiguration (Empty) returns (ReloadMessage) {}
+  rpc GetLicenseInfo (Empty) returns (LicenseInfo) {}
+  rpc SetLicense (License) returns (LicenseInfo) {}
+}
+
+message Configuration {
+  repeated NetworkInfo networkInfo = 1;
+  bytes interfacesJson = 2;
+  string publicAddress = 4;
+  string serverVersion = 5;
+}
+
+message ReloadMessage{
+    oneof status {
+      Configuration configuration = 1;
+      string errorMessage = 2;
+    }
+}
+
+message FileDescription{
+//  sha256 is base16 encoded and not relevant when downloading
+    string sha256 = 1;
+    string path = 2;
+}
+
+message FileUploadRequest{
+    oneof data {
+      FileDescription fileDescription = 1;
+      bytes chunk = 2;
+    }
+}
+
+message FileUploadChunkRequest{
+    FileDescription fileDescription = 1;
+    uint32 chunks = 2;
+    uint32 chunkId = 3;
+    bytes chunk = 4;
+    bool cancelUpload = 5;
+    uint32 uploadTimeout = 6;
+}
+
+message FileUploadResponse{
+    oneof data {
+        bool finished = 1;
+        bool cancelled = 2;
+        string errorMessage = 3;
+    };
+}
+
+message FileDownloadResponse{
+    oneof data {
+        bytes chunk = 1;
+        string errorMessage = 2;
+    };
+}
+
+enum LicenseStatus {
+  UNSET = 0;
+  VALID = 1;
+  EXPIRED = 2;
+  BADDATE = 3;
+  WRONGMACHINE = 4;
+  INCOMPLETEJSON = 5;
+  INVALIDJSON = 6;
+  BADSIGNATURE = 7;
+  MALFORMED = 8;
+  SERVERERROR = 9;
+  NOTERMSAGREEMENT = 10;
+}
+
+message LicenseInfo {
+  LicenseStatus status = 1;
+  // verbatim json from the license data (if base64-decodable)
+  bytes json = 2;
+  // extracted from json for convenience
+  string expires = 3;
+  // info to use when requesting a new license
+  string requestId = 4;
+  bytes requestMachineId = 5;
+}
+
+message License {
+  bytes data = 1;
+  bool termsAgreement = 2;
+}
