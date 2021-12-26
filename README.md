@@ -108,6 +108,14 @@ Pre generated files and samples are avaliable for a selection of
 inspiration by how it's done for python
 [here](examples/grpc/python/README.md#re-generate-stubs).
 
+## System configuration
+
+Beamy Broker is configured using a `interfaces.json` an example can be found [here](examples/grpc/python/simple_ecu/configuration_can). All resources/files referenced needs to be provided to the server. There are several to configure Beamy Broker.
+- Using web interface, `http://127.0.0.1:8080/#/configuration`
+- Using code as done [here](examples/grpc/python/simple_ecu/ecu.py) where a folder is uploaded using `upload_folder` with all relevant file followed by a `reload_configuration`. This is recomended since it allows all clients to be self sufficent, allowing simple code sharing.
+
+> an extensive reference can be found [here](configuration/interfaces_referense.json)
+
 ## Inspiration - get started
 
 - [python](examples/grpc/python/README.md)

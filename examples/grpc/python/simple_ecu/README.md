@@ -63,6 +63,7 @@ It will look similar to this:
 upload_folder(system_stub, "configuration_udp")
 # upload_folder(system_stub, "configuration_lin")
 # upload_folder(system_stub, "configuration_can")
+# upload_folder(system_stub, "configuration_canfd")
 reload_configuration(system_stub)
 ```
 > For `CAN`/`LIN` to work you need seperate HW.
@@ -81,7 +82,7 @@ ecu_A_thread.start()
 ```
 The function `ecu_A` will publish one or multiple signals which then can be caught and read by ecu_B. In this examples `ecu_A` also reads a value that's been published by ecu_B.
 
-Next up we see a thread called `ecu_B_sub_thread` which shows how to subscribe to signals that has been published by ecu_A. The thread `ecu_read_on_timer` is a synchronous variant of this and also has the purpose to read.
+We also see a thread called `ecu_B_sub_thread` which shows how to subscribe to signals that has been published by ecu_A. The thread `ecu_read_on_timer` is a synchronous variant of this and also has the purpose to read.
 
 `ecu_B_sub_thread` thread uses `act_on_signal` which will invoke provided function (here a lambda) once a subscrpition is triggered on any of the provided signals.
 ```python

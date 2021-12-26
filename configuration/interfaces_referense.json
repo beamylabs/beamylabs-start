@@ -1,60 +1,105 @@
 {
-  "default_namespace": "VirtualCanInterface",
   "chains": [
     {
+      "_comment": [
+        "advanced",
+        "to generate long, names as in frame.signal"
+      ],
+      "short_names": false,
+      "__comment": [
+        "advanced",
+        "use timestamps provided by transiver, currently only supported for type flexray"
+      ],
+      "time_stamp": "hardware"
+    },
+    {
+      "_comment": [
+        "vanilla can interface"
+      ],
       "type": "can",
       "namespace": "PhysicalCanInterface",
       "device_name": "can0",
       "dbc_file": "can_files/can_one.dbc"
     },
     {
+      "_comment": [
+        "vanilla canfd interface"
+      ],
       "type": "canfd",
       "namespace": "PhysicalCanFDInterface",
       "device_name": "can1",
       "dbc_file": "can_files/canfd_one.dbc"
     },
     {
-      "type": "can",
-      "namespace": "VirtualCanInterface",
+      "_comment": [
+        "vanilla vcan interface supported by linux"
+      ],
+      "type": "virtual",
+      "namespace": "VCanInterface",
       "device_name": "vcan1",
-      "dbc_file": "can_files/can_two.dbc"
+      "dbc_file": "can_files/can_one.dbc"
     },
     {
+      "_comment": [
+        "vanilla canfd interface",
+        "useful for communicating between apps, use unique client_id in each client to prevent signal bouncing",
+        "as in getting echo of owned signal"
+      ],
+      "device_name": "virtual",
+      "namespace": "VirtualInterface",
+      "type": "virtual"
+    },
+    {
+      "_comment": [
+        "udp interface can be paired with ldf, fibex for dbc file"
+      ],
       "namespace": "UDPCanInterface",
       "type": "udp",
       "dbc_file": "can_files/can_three.dbc",
       "device_name": "udp2",
       "server_port": 2001,
       "target_host": "127.0.0.1",
-      "target_port": 2000,
-      "fixed_payload_size": 8
+      "target_port": 2000
     },
     {
+      "_comment": [
+        "lin node configured with DHCP ip"
+      ],
       "namespace": "LinSlave",
       "type": "lin",
       "config": {
         "device_identifier": 1,
         "server_port": 2014,
-        "target_host": null,
         "target_port": 2013
       },
-      "device_name": "lin",
       "node_mode": "slave",
       "ldf_file": "ldf_files/lin_one.ldf",
-      "schedule_file": "ldf_files/lin_one.ldf",
-      "schedule_table_name": "linoneSchedule",
+      "schedule_autostart": false
+    },
+    {
+      "_comment": [
+        "lin node configured with STATIC ip"
+      ],
+      "namespace": "LinSlave",
+      "type": "lin",
+      "config": {
+        "device_identifier": 1,
+        "target_host": "192.168.1.20",
+        "server_port": 2014,
+        "target_port": 2013
+      },
+      "node_mode": "slave",
+      "ldf_file": "ldf_files/lin_one.ldf",
       "schedule_autostart": false
     },
     {
       "namespace": "LinMaster",
       "type": "lin",
       "config": {
-        "device_identifier": 1,
+        "device_identifier": 2,
         "server_port": 2015,
-        "target_host": null,
         "target_port": 2016
       },
-      "device_name": "lin",
       "node_mode": "master",
       "ldf_file": "ldf_files/lin_one.ldf",
       "schedule_file": "ldf_files/lin_one.ldf",
@@ -62,6 +107,9 @@
       "schedule_autostart": true
     },
     {
+      "_comment": [
+        "defaults to MX30 flexray device."
+      ],
       "type": "flexray",
       "device_name": "flexray0",
       "namespace": "FlexrayBackbone",
@@ -72,33 +120,59 @@
       "fibex_file": "fibex_files/flexray.xml"
     },
     {
-      "device_name": "virtual",
-      "namespace": "VirtualInterface",
-      "type": "virtual"
+      "_comment": [
+        "Technica CM CAN COMBO support, target_host refers to node runnig binary",
+        "https://github.com/beamylabs/beamylabs-start/tree/master/scripts/technica"
+      ],
+      "type": "flexray",
+      "device_name": "flexray0",
+      "namespace": "MyFlexrayNamespace",
+      "config": {
+        "target_host": "127.0.0.1",
+        "target_port": 51111,
+        "hardware": "Technica_CM_CAN_COMBO"
+      },
+      "fibex_file": "fibex_files/flexray.xml"
     }
   ],
   "gateway": {
-    "gateway_pid": "gateway_pid",
+    "_comment": [
+      "used for telnet interface"
+    ],
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
-    "port": 4000,
-    "server_pid": "auto_config_boot_server_pid"
+    "_comment": [
+      "configuration ports for lin trasievers"
+    ],
+    "target_port": 4000,
+    "server_port": 4001
   },
   "grpc_server": {
+    "_comment": [
+      "gprc port used"
+    ],
     "port": 50051
   },
   "reflectors": [
     {
-      "application_pid": "reflector1",
+      "application_pid": "my_reflector1",
       "reflect": [
         {
+          "_comment": [
+            "Send all data from source to dest, exclude specfiec frames",
+            "both networks need to be of type can|canfd|udp"
+          ],
           "source": "PhysicalCanInterface",
-          "dest": "VirtualCanInterface",
+          "dest": "VCanInterface",
           "exclude": []
         },
         {
-          "source": "VirtualCanInterface",
+          "_comment": [
+            "Send all data from source to dest, exclude specfiec frames.",
+            "both networks need to be of type can|canfd|udp"
+          ],
+          "source": "VCanInterface",
           "dest": "PhysicalCanInterface",
           "exclude": [
             "FrameA",
