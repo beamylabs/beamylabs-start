@@ -1,6 +1,6 @@
-# Rust gRPC signal-broker example
+# pub sub example
 
-This project is intended to be a basic example of how to use the subscribe/publish functions with beamybroker.
+This project is intended to be a basic example of how to use the subscribe/publish functions with Beamybroker.
 
 ## Setup
 
@@ -12,9 +12,11 @@ The cargo build system will download and install all necessary dependencies that
 
 The signal-broker namespace I'm using in this example is <b>VirtualInterface</b>
 
+> for this example to work you need to upload a [configuration](configuration) manually, read about `system configuration` [here](/README.md) on how to upload the configuration/folder.
+
 ## Add Protofiles
 
-Don't forget to add the latest up to date .proto files from here https://github.com/beamylabs/beamylabs-start/tree/master/proto_files and put them in the protos folder
+Don't forget to add the latest up to date .proto files from [here](/proto_files) and put them in the protos folder
 
 ## How to use
 

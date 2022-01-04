@@ -122,6 +122,7 @@ Beamy Broker is configured using a `interfaces.json` an example can be found [he
 - [go](examples/grpc/go/README.md)
 - [elixir](examples/grpc/elixir/car5g/README.md)
 - [grpc-web](examples/grpc/grpc-web/README.md)
+- [rust](examples/grpc/rust/beamybroker-pubsub-example/README.md)
 
 ## Statistics and usage
 

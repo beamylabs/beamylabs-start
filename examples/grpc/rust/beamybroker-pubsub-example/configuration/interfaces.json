@@ -1,0 +1,23 @@
+{
+  "default_namespace": "VirtualInterface",
+  "chains": [
+    {
+      "type": "virtual",
+      "device_name": "virtual",
+      "namespace": "VirtualInterface"
+    }
+  ],
+  "gateway": {
+    "gateway_pid": "gateway_pid",
+    "tcp_socket_port": 4040
+  },
+  "auto_config_boot_server": {
+    "target_port": 4000,
+    "server_port": 4001
+  },
+  "grpc_server": {
+    "port": 50051
+  },
+  "reflectors": [
+  ]
+}
