@@ -1,6 +1,6 @@
 # pub sub example
 
-This project is intended to be a basic example of how to use the subscribe/publish functions with Beamybroker.
+This project is intended to be a basic example of how to use the subscribe/publish functions with BeamyBroker.
 
 ## Setup
 
