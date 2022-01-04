@@ -118,8 +118,9 @@ BeamyBroker is configured using a `interfaces.json` an example can be found [her
 
 ## Inspiration - get started
 
-- [python](examples/grpc/python/README.md)
+- [python](examples/grpc/python/README.md) - recommended starting point
 - [go](examples/grpc/go/README.md)
+- [android/java](examples/grpc/android/beamyconfiguration/README.md)
 - [elixir](examples/grpc/elixir/car5g/README.md)
 - [grpc-web](examples/grpc/grpc-web/README.md)
 - [rust](examples/grpc/rust/beamybroker-pubsub-example/README.md)
