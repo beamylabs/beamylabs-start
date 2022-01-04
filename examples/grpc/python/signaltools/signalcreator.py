@@ -65,7 +65,6 @@ class SignalCreator:
                 for sinfo in finfo.childInfo:
                     all_signals.append(self.signal(sinfo.id.name, namespace_name))
         assert frame != None, f"frame {name} does not exist in namespace {namespace_name}"
-        assert all_signals != [], f"frame {name} {namespace_name} does not have childs"
         return all_signals
 
     def signal_with_payload(self, name, namespace_name, value_pair, allow_malformed = False):
