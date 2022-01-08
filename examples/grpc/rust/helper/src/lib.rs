@@ -1,10 +1,11 @@
-use std::{error::Error, fs};
+use std::{error::Error, fs, path::Path};
 
 use beamy_api::base::{
     file_upload_request::Data, system_service_client::SystemServiceClient, FileDescription,
     FileUploadRequest,
 };
 use futures::{stream, Stream};
+use path_slash::PathExt;
 use sha2::{Digest, Sha256};
 use tonic::transport::Channel;
 use walkdir::WalkDir;
@@ -60,7 +61,11 @@ async fn upload_file(
 ) -> Result<(), Box<dyn Error>> {
     let sha256 = get_sha256(path)?;
     let chunk_size = 1000000;
-    let upload_iterator = generate_data(path, dest_path, chunk_size, sha256).await?;
+
+    // Make the path to unix style
+    let unix_destination_path = Path::new(&dest_path).to_slash().unwrap();
+
+    let upload_iterator = generate_data(path, unix_destination_path, chunk_size, sha256).await?;
     let _response = system_stub.upload_file(upload_iterator).await?;
 
     println!("Uploaded file {}", path);
