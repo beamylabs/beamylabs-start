@@ -1,15 +1,24 @@
-use beamy_broker_client_example::beamy_api::base::network_service_client::NetworkServiceClient;
-use beamy_broker_client_example::beamy_api::base::{
-    ClientId, NameSpace, SignalId, SignalIds, SubscriberConfig,
-};
 use tonic::transport::Channel;
+
+use lib_helper::{
+    beamy_api::base::{
+        network_service_client::NetworkServiceClient, system_service_client::SystemServiceClient,
+        ClientId, NameSpace, SignalId, SignalIds, SubscriberConfig,
+    },
+    check_license, reload_configuration, upload_folder,
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let channel = Channel::from_static("http://localhost:50051")
         .connect()
         .await?;
-    let mut client = NetworkServiceClient::new(channel);
+    let mut system_stub = SystemServiceClient::new(channel.clone());
+    let mut network_stub = NetworkServiceClient::new(channel);
+
+    check_license(&mut system_stub).await?;
+    upload_folder(&mut system_stub, "configuration").await?;
+    reload_configuration(&mut system_stub).await?;
 
     let client_id = Some(ClientId {
         id: "rusty_subscriber".to_string(),
@@ -23,7 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         on_change: true,
     };
 
-    let mut result = client
+    let mut result = network_stub
         .subscribe_to_signals(subscriber_config)
         .await?
         .into_inner();
