@@ -12,7 +12,7 @@ Docker version 20.10.8 or later is required.
 > if you like to use the old instructions with older docker, go [here](https://github.com/beamylabs/beamylabs-start/tree/16e84cbac82a740abe189a92cd1a2c1405710516)
 
 To be able to get going; that is docker pull, you need custom credentials.
-Contact us at https://www.beamylabs.com
+Contact us at <https://www.beamylabs.com>.
 
 ## Start
 
@@ -45,7 +45,7 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) docker-compose up -d
 `$(scripts/resolve-ip.sh eth0)` assumes that the interface for your main
 ethernet connection is called `eth0`. If that's not the case, you need to
 change `eth0` to the correct name. (Hint: you can can find your interface name
-using `ifconfig` or `ipconfig`).
+using `ip addr` or `ifconfig`).
 
 ## Stop
 
