@@ -12,14 +12,22 @@ if [ -z "$iface" ]; then
   exit 0
 fi
 
-found="$(ifconfig "$iface" | sed -E -n "s/^[[:space:]]*inet (([0-9]+\.){3}[0-9]+).*/\1/p")"
+# ip addr show "$iface"
+if type "ip" > /dev/null; then
+    cmd="ip addr show"
+else
+    cmd="ifconfig"
+fi
+
+
+found="$($cmd "$iface" | sed -E -n "s/^[[:space:]]*inet (([0-9]+\.){3}[0-9]+).*/\1/p")"
 case "$found" in
   ""|127.0.0.1|169.254.*)
-    ip="$defaultip"
+    ip_addr="$defaultip"
     ;;
   *)
-    ip="$found"
+    ip_addr="$found"
     ;;
 esac
 
-echo "$ip"
+echo "$ip_addr"
