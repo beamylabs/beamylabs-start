@@ -3,7 +3,7 @@
 Go [here](https://github.com/beamylabs/beamylabs-start/discussions) to check
 what's ongoing and try the latest featues.
 
-# Get started with Beamy Broker
+# Get started with BeamyBroker
 
 ## Prerequisite
 
@@ -12,7 +12,7 @@ Docker version 20.10.8 or later is required.
 > if you like to use the old instructions with older docker, go [here](https://github.com/beamylabs/beamylabs-start/tree/16e84cbac82a740abe189a92cd1a2c1405710516)
 
 To be able to get going; that is docker pull, you need custom credentials.
-Contact us at https://www.beamylabs.com
+Contact us at <https://www.beamylabs.com>.
 
 ## Start
 
@@ -26,7 +26,7 @@ docker-compose up -d
 This command only needs to be run once. It is persistant over system reboot --
 the containers will be restarted after a reboot, over and over again.
 
-Point your web browser at the machine running Beamybroker, an address like
+Point your web browser at the machine running BeamyBroker, an address like
 `http://192.0.2.42:8080/`. If you are connected to a hosted WLAN Access Point
 like `beamylabs`, the address should be `http://192.168.4.1:8080/`.
 
@@ -35,7 +35,7 @@ NOTE: if you change your interface settings you must restart by do doing
 
 ### Start in distributed mode
 
-If you want to run Beamybroker in the special distributed mode, its node name
+If you want to run BeamyBroker in the special distributed mode, its node name
 needs to be set. Run it like this:
 
 ```bash
@@ -45,7 +45,7 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) docker-compose up -d
 `$(scripts/resolve-ip.sh eth0)` assumes that the interface for your main
 ethernet connection is called `eth0`. If that's not the case, you need to
 change `eth0` to the correct name. (Hint: you can can find your interface name
-using `ifconfig` or `ipconfig`).
+using `ip addr` or `ifconfig`).
 
 ## Stop
 
@@ -79,7 +79,7 @@ NODE_NAME=$(scripts/resolve-ip.sh eth0) ./upgrade.sh
 
 ### Upgrade through the web interface
 
-It is possible to trigger an upgrade through the Beamybroker web interface.
+It is possible to trigger an upgrade through the BeamyBroker web interface.
 This require a service to be running. To install and start this service (only
 needed once):
 
@@ -108,12 +108,22 @@ Pre generated files and samples are avaliable for a selection of
 inspiration by how it's done for python
 [here](examples/grpc/python/README.md#re-generate-stubs).
 
+## System configuration
+
+BeamyBroker is configured using a `interfaces.json` an example can be found [here](examples/grpc/python/simple_ecu/configuration_can). All resources/files referenced needs to be provided to the server. There are several ways to configure BeamyBroker.
+- Using web interface, `http://127.0.0.1:8080/#/configuration`
+- Using code as done [here](examples/grpc/python/simple_ecu/ecu.py) where a folder is uploaded using `upload_folder` with all relevant files followed by a `reload_configuration`. This is recomended since it allows all clients to be self sufficent, allowing simple code sharing.
+
+> an extensive reference can be found [here](configuration/interfaces_referense.json)
+
 ## Inspiration - get started
 
-- [python](examples/grpc/python/README.md)
+- [python](examples/grpc/python/README.md) - recommended starting point
 - [go](examples/grpc/go/README.md)
+- [android/java](examples/grpc/android/beamyconfiguration/README.md)
 - [elixir](examples/grpc/elixir/car5g/README.md)
 - [grpc-web](examples/grpc/grpc-web/README.md)
+- [rust](examples/grpc/rust/beamybroker-pubsub-example/README.md)
 
 ## Statistics and usage
 

@@ -268,6 +268,7 @@ def run(ip, port):
     upload_folder(system_stub, "configuration_udp")
     # upload_folder(system_stub, "configuration_lin")
     # upload_folder(system_stub, "configuration_can")
+    # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
 
     global signal_creator
@@ -346,7 +347,7 @@ def run(ip, port):
                 # here you can add any signal from any namespace
                 # signal_creator.signal("TestFr04", "ecu_B"),
             ],
-            False,  # True = only report when signal changes
+            False,  # True: only report when signal changes
             lambda signals: double_and_publish(
                 network_stub,
                 ecu_b_client_id,
