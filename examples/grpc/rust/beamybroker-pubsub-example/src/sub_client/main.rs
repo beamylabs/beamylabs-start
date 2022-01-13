@@ -7,6 +7,7 @@ use lib_helper::{
     },
     check_license, reload_configuration, upload_folder,
 };
+use std::{thread, time};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -32,17 +33,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         on_change: true,
     };
 
-    let mut result = network_stub
-        .subscribe_to_signals(subscriber_config)
-        .await?
-        .into_inner();
-
     // Read message from stream and print it out
-    while let Some(next_message) = result.message().await? {
-        println!("Received {:#?}", next_message.signal);
-    }
+    loop {
+        let mut result = network_stub
+            .subscribe_to_signals(subscriber_config.clone())
+            .await?
+            .into_inner();
 
-    Ok(())
+        while let Some(next_message) = result.message().await? {
+            println!("Received {:#?}", next_message.signal);
+        }
+
+        {
+            println!("Subscription dropped, retrying");
+            let duration = time::Duration::from_secs(1);
+            thread::sleep(duration);
+        }
+    }
 }
 
 /// generate signal ids for subscribe config
