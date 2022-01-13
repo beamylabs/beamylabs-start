@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11traffic_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\x1a\x10system_api.proto\"[\n\x0cPlaybackMode\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x12\r\n\x03\x45OF\x18\x03 \x01(\tH\x00\x12\x1a\n\x04mode\x18\x04 \x01(\x0e\x32\n.base.ModeH\x00\x42\x08\n\x06status\"9\n\rPlaybackInfos\x12(\n\x0cplaybackInfo\x18\x01 \x03(\x0b\x32\x12.base.PlaybackInfo\"d\n\x0ePlaybackConfig\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"f\n\x0cPlaybackInfo\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12(\n\x0cplaybackMode\x18\x02 \x01(\x0b\x32\x12.base.PlaybackMode*1\n\x04Mode\x12\x08\n\x04PLAY\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\x08\n\x04STOP\x10\x02\x12\n\n\x06RECORD\x10\x03\x32K\n\x0eTrafficService\x12\x39\n\x0bPlayTraffic\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x11traffic_api.proto\x12\x04\x62\x61se\x1a\x0c\x63ommon.proto\x1a\x10system_api.proto\"\x93\x01\n\x0cPlaybackMode\x12\x16\n\x0c\x65rrorMessage\x18\x02 \x01(\tH\x00\x12\r\n\x03\x45OF\x18\x03 \x01(\tH\x00\x12\x1a\n\x04mode\x18\x04 \x01(\x0e\x32\n.base.ModeH\x00\x12\x12\n\noffsetTime\x18\x05 \x01(\x04\x12\x11\n\tstartTime\x18\x06 \x01(\x04\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\x04\x42\x08\n\x06status\"9\n\rPlaybackInfos\x12(\n\x0cplaybackInfo\x18\x01 \x03(\x0b\x32\x12.base.PlaybackInfo\"d\n\x0ePlaybackConfig\x12.\n\x0f\x66ileDescription\x18\x01 \x01(\x0b\x32\x15.base.FileDescription\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"f\n\x0cPlaybackInfo\x12,\n\x0eplaybackConfig\x18\x01 \x01(\x0b\x32\x14.base.PlaybackConfig\x12(\n\x0cplaybackMode\x18\x02 \x01(\x0b\x32\x12.base.PlaybackMode*1\n\x04Mode\x12\x08\n\x04PLAY\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\x08\n\x04STOP\x10\x02\x12\n\n\x06RECORD\x10\x03\x32\x86\x01\n\x0eTrafficService\x12\x39\n\x0bPlayTraffic\x12\x13.base.PlaybackInfos\x1a\x13.base.PlaybackInfos\"\x00\x12\x39\n\x11PlayTrafficStatus\x12\x0b.base.Empty\x1a\x13.base.PlaybackInfos\"\x00\x30\x01\x62\x06proto3')
   ,
   dependencies=[common__pb2.DESCRIPTOR,system__api__pb2.DESCRIPTOR,])
 
@@ -52,8 +52,8 @@ _MODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=417,
-  serialized_end=466,
+  serialized_start=474,
+  serialized_end=523,
 )
 _sym_db.RegisterEnumDescriptor(_MODE)
 
@@ -93,6 +93,27 @@ _PLAYBACKMODE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='offsetTime', full_name='base.PlaybackMode.offsetTime', index=3,
+      number=5, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='startTime', full_name='base.PlaybackMode.startTime', index=4,
+      number=6, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='endTime', full_name='base.PlaybackMode.endTime', index=5,
+      number=7, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -108,8 +129,8 @@ _PLAYBACKMODE = _descriptor.Descriptor(
       name='status', full_name='base.PlaybackMode.status',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=59,
-  serialized_end=150,
+  serialized_start=60,
+  serialized_end=207,
 )
 
 
@@ -139,8 +160,8 @@ _PLAYBACKINFOS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=152,
-  serialized_end=209,
+  serialized_start=209,
+  serialized_end=266,
 )
 
 
@@ -177,8 +198,8 @@ _PLAYBACKCONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=211,
-  serialized_end=311,
+  serialized_start=268,
+  serialized_end=368,
 )
 
 
@@ -215,8 +236,8 @@ _PLAYBACKINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=313,
-  serialized_end=415,
+  serialized_start=370,
+  serialized_end=472,
 )
 
 _PLAYBACKMODE.fields_by_name['mode'].enum_type = _MODE
@@ -277,8 +298,8 @@ _TRAFFICSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=468,
-  serialized_end=543,
+  serialized_start=526,
+  serialized_end=660,
   methods=[
   _descriptor.MethodDescriptor(
     name='PlayTraffic',
@@ -286,6 +307,15 @@ _TRAFFICSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     containing_service=None,
     input_type=_PLAYBACKINFOS,
+    output_type=_PLAYBACKINFOS,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='PlayTrafficStatus',
+    full_name='base.TrafficService.PlayTrafficStatus',
+    index=1,
+    containing_service=None,
+    input_type=common__pb2._EMPTY,
     output_type=_PLAYBACKINFOS,
     serialized_options=None,
   ),

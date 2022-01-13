@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='base',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04\x62\x61se\"\x07\n\x05\x45mpty\"\x16\n\x08\x43lientId\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x08SignalId\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"J\n\nSignalInfo\x12\x1a\n\x02id\x18\x01 \x01(\x0b\x32\x0e.base.SignalId\x12 \n\x08metaData\x18\x02 \x01(\x0b\x32\x0e.base.MetaData\"\x84\x01\n\x08MetaData\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x0b\n\x03max\x18\x05 \x01(\x05\x12\x0b\n\x03min\x18\x06 \x01(\x05\x12\x0c\n\x04unit\x18\x07 \x01(\t\x12\x0c\n\x04size\x18\x08 \x01(\x05\x12\r\n\x05isRaw\x18\t \x01(\x08\x12\x0e\n\x06\x66\x61\x63tor\x18\n \x01(\x01\x12\x0e\n\x06offset\x18\x0b \x01(\x01\"\x19\n\tNameSpace\x12\x0c\n\x04name\x18\x01 \x01(\t\"T\n\x0bNetworkInfo\x12\"\n\tnamespace\x18\x01 \x01(\x0b\x32\x0f.base.NameSpace\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"V\n\tFrameInfo\x12$\n\nsignalInfo\x18\x01 \x01(\x0b\x32\x10.base.SignalInfo\x12#\n\tchildInfo\x18\x02 \x03(\x0b\x32\x10.base.SignalInfo\"(\n\x06\x46rames\x12\x1e\n\x05\x66rame\x18\x01 \x03(\x0b\x32\x0f.base.FrameInfob\x06proto3')
+  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04\x62\x61se\"\x07\n\x05\x45mpty\"\x16\n\x08\x43lientId\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x08SignalId\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\"\n\tnamespace\x18\x02 \x01(\x0b\x32\x0f.base.NameSpace\"J\n\nSignalInfo\x12\x1a\n\x02id\x18\x01 \x01(\x0b\x32\x0e.base.SignalId\x12 \n\x08metaData\x18\x02 \x01(\x0b\x32\x0e.base.MetaData\"\x84\x01\n\x08MetaData\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x0b\n\x03max\x18\x0c \x01(\x02\x12\x0b\n\x03min\x18\r \x01(\x02\x12\x0c\n\x04unit\x18\x07 \x01(\t\x12\x0c\n\x04size\x18\x08 \x01(\x05\x12\r\n\x05isRaw\x18\t \x01(\x08\x12\x0e\n\x06\x66\x61\x63tor\x18\n \x01(\x01\x12\x0e\n\x06offset\x18\x0b \x01(\x01\"\x19\n\tNameSpace\x12\x0c\n\x04name\x18\x01 \x01(\t\"T\n\x0bNetworkInfo\x12\"\n\tnamespace\x18\x01 \x01(\x0b\x32\x0f.base.NameSpace\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"V\n\tFrameInfo\x12$\n\nsignalInfo\x18\x01 \x01(\x0b\x32\x10.base.SignalInfo\x12#\n\tchildInfo\x18\x02 \x03(\x0b\x32\x10.base.SignalInfo\"(\n\x06\x46rames\x12\x1e\n\x05\x66rame\x18\x01 \x03(\x0b\x32\x0f.base.FrameInfob\x06proto3')
 )
 
 
@@ -173,15 +173,15 @@ _METADATA = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='max', full_name='base.MetaData.max', index=1,
-      number=5, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      number=12, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='min', full_name='base.MetaData.min', index=2,
-      number=6, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      number=13, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
