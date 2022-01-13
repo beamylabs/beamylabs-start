@@ -7,6 +7,7 @@ package base;
 
 service TrafficService {
   rpc PlayTraffic (PlaybackInfos) returns (PlaybackInfos) {}
+  rpc PlayTrafficStatus (Empty) returns (stream PlaybackInfos) {}
 }
 
 enum Mode {
@@ -22,6 +23,9 @@ message PlaybackMode {
       string EOF = 3;
       Mode mode = 4;
     }
+  uint64 offsetTime = 5;
+  uint64 startTime = 6;
+  uint64 endTime = 7;
 }
 
 message PlaybackInfos {
