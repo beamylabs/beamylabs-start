@@ -9,15 +9,13 @@
       "type": "can",
       "namespace": "ecu_A",
       "device_name": "can0",
-      "dbc_file": "can/test.dbc",
-      "time_stamp": "software"
+      "dbc_file": "can/test.dbc"
     },
     {
       "type": "can",
       "namespace": "ecu_B",
       "device_name": "can1",
-      "dbc_file": "can/test.dbc",
-      "time_stamp": "software"
+      "dbc_file": "can/test.dbc"
     },
     {
       "namespace": "test_can",
