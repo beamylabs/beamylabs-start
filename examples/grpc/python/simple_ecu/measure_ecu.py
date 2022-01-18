@@ -224,6 +224,19 @@ def main(argv):
 # ecu_under_test_id: operates on ecu_B: on received message counter it emits count_times_2.
 # time_measurer_id: operates on ecu_A and collects the reference time (emit of counter) and return or counter_times_2
 # 
+# method 1
+# As document in this example. Diffrence is calculated between write and subscribe.
+#
+# method 2 (requires a second can port)
+# Measure time for signal to travel form ecu_tester_id to ecu_under_test_id by just listening to both signals, 
+# this produced best measurment quality, since both signals are registered once they are visible on the can wire.
+# High precision is achieved since measures are made in a consistent way.
+# for best result use hardware timestamps if available (hw dependant) 
+# https://github.com/beamylabs/beamylabs-start/discussions/26
+#
+# to enable method 2 specify a new namespace for time_measurer_id (make sure to add this to interfaces.json)
+# time_measurer_namespace = ecu_C
+#
 # About client_id
 # emitted signals from a specific client_id does not return to the same client, thus all above client_id are unique.
 # every client can work on any number of namespaces
