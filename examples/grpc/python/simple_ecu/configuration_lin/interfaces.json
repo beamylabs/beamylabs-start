@@ -32,15 +32,6 @@
       "node_mode": "slave",
       "ldf_file": "ldf/test.ldf",
       "schedule_autostart": false
-    },
-    {
-      "namespace": "test_can",
-      "type": "udp",
-      "dbc_file": "can/test.dbc",
-      "device_name": "test_can",
-      "server_port": 2003,
-      "target_host": "127.0.0.1",
-      "target_port": 2004    
     }
   ],
   "gateway": {
