@@ -246,14 +246,18 @@ def all_siblings(name, namespace_name):
     frame_name = signal_creator.frame_by_signal(name, namespace_name)
     return signal_creator.signals_in_frame(frame_name.name, frame_name.namespace.name)
 
+
 def some_function_to_calculate_crc(a, b, c):
     return 1
+
 
 def change_namespace(signals, namespace_name):
     for signal in signals:
         signal.id.namespace.name = namespace_name
 
 
+# TD;LR
+# receiev a frame, splite into all signals. Modify some of the signals and forward
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
@@ -268,53 +272,45 @@ def run(ip, port):
     global signal_creator
     signal_creator = SignalCreator(system_stub)
 
-    # Lists available signals
-    # configuration = system_stub.GetConfiguration(common_pb2.Empty())
-    # for networkInfo in configuration.networkInfo:
-    #     print(
-    #         "signals in namespace ",
-    #         networkInfo.namespace.name,
-    #         system_stub.ListSignals(networkInfo.namespace),
-    #     )
-
     # ecu a, we do this with lambda refering to modify_signal_publish_frame.
     reflector_client_id = common_pb2.ClientId(id="reflector_client_id")
 
-    def modify_signals_publish_frame(network_stub, client_id, signals):
-        publish_list = []
-        destination_namespace = "ecu_B"
+    def modify_signals_publish_frame(
+        network_stub, client_id, destination_namespace_name, signals
+    ):
         # create dictonary to easier access.
         signal_dict = {signal.id.name: signal for signal in signals}
-        for name, signal in signal_dict.items():
-            print(f"incoming {name} {get_value_pair(signal)}")
 
-            # clause for the signals we like to modify or update
-            if signal.id == signal_creator.signal("TestFr07_Child02", "ecu_A"):
-                (type, value) = get_value_pair(signal)
-                updated_signal = signal_creator.signal_with_payload(
-                    signal.id.name, signal.id.namespace.name, (type, value + 1)
-                )
-                publish_list.append(updated_signal)
-            if signal.id == signal_creator.signal("TestFr07_Child01_UB", "ecu_A"):
-                (type, value) = get_value_pair(signal)
-                updated_signal = signal_creator.signal_with_payload(
-                    signal.id.name,
-                    signal.id.namespace.name,
-                    # just invert this single bit
-                    (type, 1 - value),
-                )
-                publish_list.append(updated_signal)
-            # advanced aritmetics, eg crc or similar
-            if signal.id == signal_creator.signal("counter_times_2", "ecu_A"):
-                updated_signal = signal_creator.signal_with_payload(
-                    signal.id.name,
-                    signal.id.namespace.name,
-                    (type, some_function_to_calculate_crc(id, get_value_pair(signal_dict["TestFr07_Child02"])[0], get_value_pair(signal_dict["TestFr07_Child01_UB"])[0])),
-                )
-                publish_list.append(updated_signal)
-            else:
-                publish_list.append(signal)
-        change_namespace(publish_list, destination_namespace)
+        # lets update TestFr07_Child02
+        (type, value) = get_value_pair(signal_dict["TestFr07_Child02"])
+        signal_dict["TestFr07_Child02"] = signal_creator.signal_with_payload(
+            "TestFr07_Child02", destination_namespace_name, (type, value + 1)
+        )
+
+        # lets update TestFr07_Child01_UB just invert this single bit
+        (type, value) = get_value_pair(signal_dict["TestFr07_Child01_UB"])
+        signal_dict["TestFr07_Child01_UB"] = signal_creator.signal_with_payload(
+            "TestFr07_Child01_UB", destination_namespace_name, (type, 1 - value)
+        )
+
+        # lets compute counter_times_2 using some formula
+        (type, value) = get_value_pair(signal_dict["counter_times_2"])
+        signal_dict["counter_times_2"] = signal_creator.signal_with_payload(
+            "counter_times_2",
+            destination_namespace_name,
+            (
+                type,
+                some_function_to_calculate_crc(
+                    id,
+                    get_value_pair(signal_dict["TestFr07_Child02"])[0],
+                    get_value_pair(signal_dict["TestFr07_Child01_UB"])[0],
+                ),
+            ),
+        )
+
+        publish_list = signal_dict.values()
+        # update destination namespace for all entrys in list
+        change_namespace(publish_list, destination_namespace_name)
         # print(f"updates lists {publish_list}")
         publish_signals(client_id, network_stub, publish_list)
 
@@ -329,6 +325,7 @@ def run(ip, port):
             lambda signals: modify_signals_publish_frame(
                 network_stub,
                 reflector_client_id,
+                "ecu_B",
                 signals,
             ),
         ),
