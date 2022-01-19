@@ -246,6 +246,8 @@ def all_siblings(name, namespace_name):
     frame_name = signal_creator.frame_by_signal(name, namespace_name)
     return signal_creator.signals_in_frame(frame_name.name, frame_name.namespace.name)
 
+def some_function_to_calculate_crc(a, b, c):
+    return 1
 
 def change_namespace(signals, namespace_name):
     for signal in signals:
@@ -300,6 +302,14 @@ def run(ip, port):
                     signal.id.namespace.name,
                     # just invert this single bit
                     (type, 1 - value),
+                )
+                publish_list.append(updated_signal)
+            # advanced aritmetics, eg crc or similar
+            if signal.id == signal_creator.signal("counter_times_2", "ecu_A"):
+                updated_signal = signal_creator.signal_with_payload(
+                    signal.id.name,
+                    signal.id.namespace.name,
+                    (type, some_function_to_calculate_crc(id, get_value_pair(signal_dict["TestFr07_Child02"])[0], get_value_pair(signal_dict["TestFr07_Child01_UB"])[0])),
                 )
                 publish_list.append(updated_signal)
             else:
