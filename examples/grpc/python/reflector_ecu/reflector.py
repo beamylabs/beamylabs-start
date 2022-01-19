@@ -257,7 +257,11 @@ def change_namespace(signals, namespace_name):
 
 
 # TD;LR
-# receiev a frame, splite into all signals. Modify some of the signals and forward
+# Forward all frames from ecu_A to ecu_B except TestFr07 which is modified on the fly. Gateway/reflector/forwarder
+# forward all frames from ecu_B to ecu_A without exception
+# TestFr07 is split into all signals. Some signals are modified and then dispatched on ecu_B
+#
+# refer to interfaces.json for reflector configuration.
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
