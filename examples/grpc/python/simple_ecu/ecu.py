@@ -100,7 +100,7 @@ def ecu_A(stub, pause):
     clientId = common_pb2.ClientId(id="id_ecu_A")
     while True:
 
-        print("\necu_A, seed/counter is ", increasing_counter)
+        print("\necu_A, seed is ", increasing_counter)
         # Publishes value 'counter'
 
         publish_signals(
@@ -110,12 +110,6 @@ def ecu_A(stub, pause):
                 signal_creator.signal_with_payload(
                     "counter", namespace, ("integer", increasing_counter)
                 ),
-                # signal_creator.signal_with_payload(
-                #     "TestFr07_Child01_UB", namespace, ("integer", 1)
-                # ),
-                # signal_creator.signal_with_payload(
-                #     "TestFr07_Child02_UB", namespace, ("integer", 1)
-                # ),
                 # add any number of signals here, make sure that all signals/frames are unique.
                 # signal_creator.signal_with_payload(
                 #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d")), False
@@ -222,7 +216,6 @@ def main(argv):
 
 def double_and_publish(network_stub, client_id, trigger, signals):
     for signal in signals:
-        # print(f"signals contains {signals}")
         print(f"ecu_B, (subscribe) {signal.id.name} {get_value(signal)}")
         if signal.id == trigger:
             publish_signals(
@@ -238,11 +231,6 @@ def double_and_publish(network_stub, client_id, trigger, signals):
                     # )
                 ],
             )
-
-
-def change_namespace(signals, namespace_name):
-    for signal in signals:
-        signal.id.namespace.name = namespace_name
 
 
 def run(ip, port):
@@ -263,79 +251,15 @@ def run(ip, port):
     signal_creator = SignalCreator(system_stub)
 
     # Lists available signals
-    # configuration = system_stub.GetConfiguration(common_pb2.Empty())
-    # for networkInfo in configuration.networkInfo:
-    #     print(
-    #         "signals in namespace ",
-    #         networkInfo.namespace.name,
-    #         system_stub.ListSignals(networkInfo.namespace),
-    #     )
-
-    # ecu a, we do this with lambda refering to modify_signal_publish_frame.
-    reflector_client_id = common_pb2.ClientId(id="reflector_client_id")
-
-    def all_siblings(name, namespace_name):
-        frame_name = signal_creator.frame_by_signal(name, namespace_name)
-        return signal_creator.signals_in_frame(
-            frame_name.name, frame_name.namespace.name
+    configuration = system_stub.GetConfiguration(common_pb2.Empty())
+    for networkInfo in configuration.networkInfo:
+        print(
+            "signals in namespace ",
+            networkInfo.namespace.name,
+            system_stub.ListSignals(networkInfo.namespace),
         )
 
-    def modify_signals_publish_frame(network_stub, client_id, signals):
-        publish_list = []
-        destination_namespace = "ecu_A"
-        for signal in signals:
-            # clause for the signals we like to modify or update
-            if signal.id == signal_creator.signal("TestFr07_Child02", "ecu_A"):
-                updated_signal = signal_creator.signal_with_payload(
-                    signal.id.name,
-                    signal.id.namespace.name,
-                    ("integer", get_value(signal) + 1)
-                    #  "counter_times_2", "ecu_B", ("integer", get_value(signal) * 1)
-                )
-                publish_list.append(updated_signal)
-            else:
-                publish_list.append(signal)
-        change_namespace(publish_list, destination_namespace)
-        print(f"updates lists {publish_list}")
-        publish_signals(client_id, network_stub, publish_list)
-
-    Thread(
-        target=act_on_signal,
-        args=(
-            reflector_client_id,
-            network_stub,
-            all_siblings("counter_times_2", "ecu_A"), 
-            False,  # True = only report when signal changes
-            lambda signals: modify_signals_publish_frame(
-                network_stub,
-                reflector_client_id,
-                signals,
-            ),
-        ),
-    ).start()
-
-    # ecu b just log signals - use same client it to avoid local bouncing
-    ecu_b_client_id_2 = common_pb2.ClientId(id="id_ecu_B")
-
-    frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_B")
-    all_signals_in_frame = signal_creator.signals_in_frame(
-        frame_name.name, frame_name.namespace.name
-    )
-
-    ecu_B_sub_thread_2 = Thread(
-        target=act_on_signal,
-        args=(
-            ecu_b_client_id_2,
-            network_stub,
-            [] + all_signals_in_frame,
-            False,  # True = only report when signal changes
-            lambda signals: (
-                print("ecu_B BOUNCED frame "),
-                printer(signals),
-            ),
-        ),
-    )
-    ecu_B_sub_thread_2.start()
+    # Starting Threads
 
     # ecu b, we do this with lambda refering to double_and_publish.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
@@ -350,7 +274,7 @@ def run(ip, port):
                 # here you can add any signal from any namespace
                 # signal_creator.signal("TestFr04", "ecu_B"),
             ],
-            False,  # True: only report when signal changes
+            True,  # True: only report when signal changes
             lambda signals: double_and_publish(
                 network_stub,
                 ecu_b_client_id,
@@ -381,7 +305,7 @@ def run(ip, port):
         # signal_creator.signal("TestFr04", "ecu_B"),
     ]
     ecu_read_on_timer = Thread(target=read_on_timer, args=(network_stub, signals, 1))
-    # ecu_read_on_timer.start()
+    ecu_read_on_timer.start()
 
     # once we are done we could cancel subscription
     # subscription.cancel()
