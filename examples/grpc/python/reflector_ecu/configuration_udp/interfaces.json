@@ -1,0 +1,37 @@
+{
+  "chains": [
+    {
+      "device_name": "virtual",
+      "namespace": "VirtualInterface",
+      "type": "virtual"
+    },
+    {
+      "namespace": "ecu_A",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "server_port": 2001,
+      "target_host": "127.0.0.1",
+      "target_port": 2000
+    },
+    {
+      "namespace": "ecu_B",
+      "type": "udp",
+      "dbc_file": "can/test.dbc",
+      "server_port": 2000,
+      "target_host": "127.0.0.1",
+      "target_port": 2001
+    }
+  ],
+  "gateway": {
+    "tcp_socket_port": 4040
+  },
+  "auto_config_boot_server": {
+    "target_port": 4000,
+    "server_port": 4001
+  },
+  "grpc_server": {
+    "port": 50051
+  },
+  "reflectors": [
+  ]
+}
