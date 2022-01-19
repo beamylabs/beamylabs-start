@@ -32,6 +32,5 @@
   "grpc_server": {
     "port": 50051
   },
-  "reflectors": [
-  ]
+  "reflectors": []
 }

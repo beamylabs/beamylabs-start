@@ -253,10 +253,7 @@ def run(ip, port):
     system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
     check_license(system_stub)
 
-    # upload_folder(system_stub, "configuration_udp")
-    # upload_folder(system_stub, "configuration_lin")
     upload_folder(system_stub, "configuration_can")
-    # upload_folder(system_stub, "configuration_canfd")
     reload_configuration(system_stub)
 
     global signal_creator
@@ -282,7 +279,7 @@ def run(ip, port):
 
     def modify_signals_publish_frame(network_stub, client_id, signals):
         publish_list = []
-        destination_namespace = "ecu_A"
+        destination_namespace = "ecu_B"
         for signal in signals:
             # clause for the signals we like to modify or update
             if signal.id == signal_creator.signal("TestFr07_Child02", "ecu_A"):
@@ -290,7 +287,14 @@ def run(ip, port):
                     signal.id.name,
                     signal.id.namespace.name,
                     ("integer", get_value(signal) + 1)
-                    #  "counter_times_2", "ecu_B", ("integer", get_value(signal) * 1)
+                )
+                publish_list.append(updated_signal)
+            if signal.id == signal_creator.signal("TestFr07_Child01_UB", "ecu_A"):
+                updated_signal = signal_creator.signal_with_payload(
+                    signal.id.name,
+                    signal.id.namespace.name,
+                    # just invert this single byte
+                    ("integer", 1 - get_value(signal))
                 )
                 publish_list.append(updated_signal)
             else:
@@ -314,78 +318,6 @@ def run(ip, port):
             ),
         ),
     ).start()
-
-    # ecu b just log signals - use same client it to avoid local bouncing
-    ecu_b_client_id_2 = common_pb2.ClientId(id="id_ecu_B")
-
-    frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_B")
-    all_signals_in_frame = signal_creator.signals_in_frame(
-        frame_name.name, frame_name.namespace.name
-    )
-
-    ecu_B_sub_thread_2 = Thread(
-        target=act_on_signal,
-        args=(
-            ecu_b_client_id_2,
-            network_stub,
-            [] + all_signals_in_frame,
-            False,  # True = only report when signal changes
-            lambda signals: (
-                print("ecu_B BOUNCED frame "),
-                printer(signals),
-            ),
-        ),
-    )
-    ecu_B_sub_thread_2.start()
-
-    # ecu b, we do this with lambda refering to double_and_publish.
-    ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
-
-    ecu_B_sub_thread = Thread(
-        target=act_on_signal,
-        args=(
-            ecu_b_client_id,
-            network_stub,
-            [
-                signal_creator.signal("counter", "ecu_B"),
-                # here you can add any signal from any namespace
-                # signal_creator.signal("TestFr04", "ecu_B"),
-            ],
-            False,  # True: only report when signal changes
-            lambda signals: double_and_publish(
-                network_stub,
-                ecu_b_client_id,
-                signal_creator.signal("counter", "ecu_B"),
-                signals,
-            ),
-            lambda subscripton: (q.put(("id_ecu_B", subscripton))),
-        ),
-    )
-    ecu_B_sub_thread.start()
-    # wait for subscription to settle
-    ecu, subscription = q.get()
-
-    # ecu a, this is where we publish, and
-    ecu_A_thread = Thread(
-        target=ecu_A,
-        args=(
-            network_stub,
-            1,
-        ),
-    )
-    ecu_A_thread.start()
-
-    # ecu b, bonus, periodically, read using timer.
-    signals = [
-        signal_creator.signal("counter", "ecu_B"),
-        # add any number of signals from any namespace
-        # signal_creator.signal("TestFr04", "ecu_B"),
-    ]
-    ecu_read_on_timer = Thread(target=read_on_timer, args=(network_stub, signals, 1))
-    # ecu_read_on_timer.start()
-
-    # once we are done we could cancel subscription
-    # subscription.cancel()
 
 
 if __name__ == "__main__":
