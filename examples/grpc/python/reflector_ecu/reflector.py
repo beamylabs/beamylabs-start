@@ -81,7 +81,7 @@ def publish_signals(client_id, stub, signals_with_payload, frequency=0):
 
 def printer(signals):
     for signal in signals:
-        print(f"{signal.id.name} {signal.id.namespace.name} {get_value(signal)}")
+        print(f"{signal.id.name} {signal.id.namespace.name} {get_value_pair(signal)}")
 
 
 def ecu_A(stub, pause):
@@ -159,17 +159,19 @@ def read_on_timer(stub, signals, pause):
         time.sleep(pause)
 
 
-def get_value(signal):
+def get_value_pair(signal):
     if signal.raw != b"":
-        return "0x" + binascii.hexlify(signal.raw).decode("ascii")
+        raise Exception(f"not a valid signal, probably a frame {signal}")
     elif signal.HasField("integer"):
-        return signal.integer
+        return ("integer", signal.integer)
     elif signal.HasField("double"):
-        return signal.double
+        return ("double", signal.double)
     elif signal.HasField("arbitration"):
-        return signal.arbitration
+        return ("arbitration", signal.arbitration)
+    elif signal.HasField("empty"):
+        return ("empty", signal.empty)
     else:
-        return "empty"
+        raise Exception(f"not a valid signal {signal}")
 
 
 def act_on_signal(client_id, stub, sub_signals, on_change, fun, on_subcribed=None):
@@ -240,6 +242,11 @@ def double_and_publish(network_stub, client_id, trigger, signals):
             )
 
 
+def all_siblings(name, namespace_name):
+    frame_name = signal_creator.frame_by_signal(name, namespace_name)
+    return signal_creator.signals_in_frame(frame_name.name, frame_name.namespace.name)
+
+
 def change_namespace(signals, namespace_name):
     for signal in signals:
         signal.id.namespace.name = namespace_name
@@ -271,36 +278,34 @@ def run(ip, port):
     # ecu a, we do this with lambda refering to modify_signal_publish_frame.
     reflector_client_id = common_pb2.ClientId(id="reflector_client_id")
 
-    def all_siblings(name, namespace_name):
-        frame_name = signal_creator.frame_by_signal(name, namespace_name)
-        return signal_creator.signals_in_frame(
-            frame_name.name, frame_name.namespace.name
-        )
-
     def modify_signals_publish_frame(network_stub, client_id, signals):
         publish_list = []
         destination_namespace = "ecu_B"
-        for signal in signals:
+        # create dictonary to easier access.
+        signal_dict = {signal.id.name: signal for signal in signals}
+        for name, signal in signal_dict.items():
+            print(f"incoming {name} {get_value_pair(signal)}")
+
             # clause for the signals we like to modify or update
             if signal.id == signal_creator.signal("TestFr07_Child02", "ecu_A"):
+                (type, value) = get_value_pair(signal)
                 updated_signal = signal_creator.signal_with_payload(
-                    signal.id.name,
-                    signal.id.namespace.name,
-                    ("integer", get_value(signal) + 1)
+                    signal.id.name, signal.id.namespace.name, (type, value + 1)
                 )
                 publish_list.append(updated_signal)
             if signal.id == signal_creator.signal("TestFr07_Child01_UB", "ecu_A"):
+                (type, value) = get_value_pair(signal)
                 updated_signal = signal_creator.signal_with_payload(
                     signal.id.name,
                     signal.id.namespace.name,
-                    # just invert this single byte
-                    ("integer", 1 - get_value(signal))
+                    # just invert this single bit
+                    (type, 1 - value),
                 )
                 publish_list.append(updated_signal)
             else:
                 publish_list.append(signal)
         change_namespace(publish_list, destination_namespace)
-        print(f"updates lists {publish_list}")
+        # print(f"updates lists {publish_list}")
         publish_signals(client_id, network_stub, publish_list)
 
     Thread(
