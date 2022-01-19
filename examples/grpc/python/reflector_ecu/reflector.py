@@ -304,7 +304,8 @@ def run(ip, port):
         args=(
             reflector_client_id,
             network_stub,
-            all_siblings("counter_times_2", "ecu_A"), 
+            # get all childs in frame, alternatively we could do # all_siblings("counter_times_2", "ecu_A")
+            signal_creator.signals_in_frame("TestFr07", "ecu_A"),
             False,  # True = only report when signal changes
             lambda signals: modify_signals_publish_frame(
                 network_stub,

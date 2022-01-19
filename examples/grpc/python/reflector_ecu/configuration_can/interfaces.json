@@ -29,5 +29,30 @@
     "port": 50051
   },
   "reflectors": [
+    {
+      "application_pid": "my_reflector1",
+      "reflect": [
+        {
+          "_comment": [
+            "Send all data from source to dest, exclude specfiec frames",
+            "both networks need to be of type can|canfd|udp"
+          ],
+          "source": "ecu_A",
+          "dest": "ecu_B",
+          "exclude": [
+            "TestFr07"
+          ]
+        },
+        {
+          "_comment": [
+            "Send all data from source to dest, exclude specfiec frames.",
+            "both networks need to be of type can|canfd|udp"
+          ],
+          "source": "ecu_B",
+          "dest": "ecu_A",
+          "exclude": []
+        }
+      ]
+    }
   ]
 }
