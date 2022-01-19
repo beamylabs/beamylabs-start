@@ -278,22 +278,22 @@ def run(ip, port):
     def modify_signals_publish_frame(
         network_stub, client_id, destination_namespace_name, signals
     ):
-        # create dictonary to easier access.
+        # work in dictonary domain for easier access.
         signal_dict = {signal.id.name: signal for signal in signals}
 
-        # lets update TestFr07_Child02
+        # example, lets update TestFr07_Child02
         (type, value) = get_value_pair(signal_dict["TestFr07_Child02"])
         signal_dict["TestFr07_Child02"] = signal_creator.signal_with_payload(
             "TestFr07_Child02", destination_namespace_name, (type, value + 1)
         )
 
-        # lets update TestFr07_Child01_UB just invert this single bit
+        # example, lets update TestFr07_Child01_UB just invert this single bit
         (type, value) = get_value_pair(signal_dict["TestFr07_Child01_UB"])
         signal_dict["TestFr07_Child01_UB"] = signal_creator.signal_with_payload(
             "TestFr07_Child01_UB", destination_namespace_name, (type, 1 - value)
         )
 
-        # lets compute counter_times_2 using some formula
+        # example, lets compute counter_times_2 using some formula
         (type, value) = get_value_pair(signal_dict["counter_times_2"])
         signal_dict["counter_times_2"] = signal_creator.signal_with_payload(
             "counter_times_2",
@@ -302,8 +302,17 @@ def run(ip, port):
                 type,
                 some_function_to_calculate_crc(
                     id,
-                    get_value_pair(signal_dict["TestFr07_Child02"])[0],
-                    get_value_pair(signal_dict["TestFr07_Child01_UB"])[0],
+                    destination_namespace_name,
+                    [
+                        (
+                            "TestFr07_Child02",
+                            get_value_pair(signal_dict["TestFr07_Child02"])[0],
+                        ),
+                        (
+                            "TestFr07_Child01_UB",
+                            get_value_pair(signal_dict["TestFr07_Child01_UB"])[0],
+                        ),
+                    ],
                 ),
             ),
         )
