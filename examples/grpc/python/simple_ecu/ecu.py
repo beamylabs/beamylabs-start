@@ -240,21 +240,9 @@ def double_and_publish(network_stub, client_id, trigger, signals):
             )
 
 
-def modify_signal_publish_frame(network_stub, client_id, signals):
-    publish_list = []
-    signal_to_modify = signal_creator.signal("TestFr07_Child02", "ecu_A")
+def change_namespace(signals, namespace_name):
     for signal in signals:
-        if signal.id == signal_to_modify:
-            updated_signal = signal_creator.signal_with_payload(
-                signal.id.name,
-                signal.id.namespace.name,
-                ("integer", get_value(signal) + 1)
-                #  "counter_times_2", "ecu_B", ("integer", get_value(signal) * 1)
-            )
-            publish_list.append(updated_signal)
-        else:
-            publish_list.append(signal)
-    publish_signals(client_id, network_stub, publish_list)
+        signal.id.namespace.name = namespace_name
 
 
 def run(ip, port):
@@ -275,41 +263,56 @@ def run(ip, port):
     signal_creator = SignalCreator(system_stub)
 
     # Lists available signals
-    configuration = system_stub.GetConfiguration(common_pb2.Empty())
-    for networkInfo in configuration.networkInfo:
-        print(
-            "signals in namespace ",
-            networkInfo.namespace.name,
-            system_stub.ListSignals(networkInfo.namespace),
-        )
-
-    # all_frames = signal_creator.frames("ecu_B")
-    # all_signals = signal_creator.signals_in_frame("TestFr06", all_frames[0].namespace.name)
-    # Starting Threads
+    # configuration = system_stub.GetConfiguration(common_pb2.Empty())
+    # for networkInfo in configuration.networkInfo:
+    #     print(
+    #         "signals in namespace ",
+    #         networkInfo.namespace.name,
+    #         system_stub.ListSignals(networkInfo.namespace),
+    #     )
 
     # ecu a, we do this with lambda refering to modify_signal_publish_frame.
-    ecu_a_client_id_2 = common_pb2.ClientId(id="id_ecu_A_doubler")
+    reflector_client_id = common_pb2.ClientId(id="reflector_client_id")
 
-    frame_name = signal_creator.frame_by_signal("counter_times_2", "ecu_A")
-    all_signals_in_frame = signal_creator.signals_in_frame(
-        frame_name.name, frame_name.namespace.name
-    )
+    def all_siblings(name, namespace_name):
+        frame_name = signal_creator.frame_by_signal(name, namespace_name)
+        return signal_creator.signals_in_frame(
+            frame_name.name, frame_name.namespace.name
+        )
 
-    ecu_A_sub_thread_2 = Thread(
+    def modify_signals_publish_frame(network_stub, client_id, signals):
+        publish_list = []
+        destination_namespace = "ecu_A"
+        for signal in signals:
+            # clause for the signals we like to modify or update
+            if signal.id == signal_creator.signal("TestFr07_Child02", "ecu_A"):
+                updated_signal = signal_creator.signal_with_payload(
+                    signal.id.name,
+                    signal.id.namespace.name,
+                    ("integer", get_value(signal) + 1)
+                    #  "counter_times_2", "ecu_B", ("integer", get_value(signal) * 1)
+                )
+                publish_list.append(updated_signal)
+            else:
+                publish_list.append(signal)
+        change_namespace(publish_list, destination_namespace)
+        print(f"updates lists {publish_list}")
+        publish_signals(client_id, network_stub, publish_list)
+
+    Thread(
         target=act_on_signal,
         args=(
-            ecu_a_client_id_2,
+            reflector_client_id,
             network_stub,
-            [] + all_signals_in_frame,
+            all_siblings("counter_times_2", "ecu_A"), 
             False,  # True = only report when signal changes
-            lambda signals: modify_signal_publish_frame(
+            lambda signals: modify_signals_publish_frame(
                 network_stub,
-                ecu_a_client_id_2,
+                reflector_client_id,
                 signals,
             ),
         ),
-    )
-    ecu_A_sub_thread_2.start()
+    ).start()
 
     # ecu b just log signals - use same client it to avoid local bouncing
     ecu_b_client_id_2 = common_pb2.ClientId(id="id_ecu_B")
@@ -329,7 +332,7 @@ def run(ip, port):
             lambda signals: (
                 print("ecu_B BOUNCED frame "),
                 printer(signals),
-            )
+            ),
         ),
     )
     ecu_B_sub_thread_2.start()
