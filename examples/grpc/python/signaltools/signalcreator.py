@@ -46,7 +46,7 @@ class SignalCreator:
         all_frames = []
         for finfo in self._networks[namespace_name].frame:
             all_frames.append(self.signal(finfo.signalInfo.id.name, namespace_name))
-            # all_frames.append(finfo) 
+            # all_frames.append(finfo)
         return all_frames
 
     def frame_by_signal(self, name, namespace_name):
@@ -54,7 +54,9 @@ class SignalCreator:
             for sinfo in finfo.childInfo:
                 if sinfo.id.name == name:
                     return self.signal(finfo.signalInfo.id.name, namespace_name)
-        raise Exception(f"signal not declared (namespace, signal): {namespace_name} {name}")
+        raise Exception(
+            f"signal not declared (namespace, signal): {namespace_name} {name}"
+        )
 
     def signals_in_frame(self, name, namespace_name):
         all_signals = []
@@ -64,10 +66,14 @@ class SignalCreator:
                 frame = finfo
                 for sinfo in finfo.childInfo:
                     all_signals.append(self.signal(sinfo.id.name, namespace_name))
-        assert frame != None, f"frame {name} does not exist in namespace {namespace_name}"
+        assert (
+            frame != None
+        ), f"frame {name} does not exist in namespace {namespace_name}"
         return all_signals
 
-    def signal_with_payload(self, name, namespace_name, value_pair, allow_malformed = False):
+    def signal_with_payload(
+        self, name, namespace_name, value_pair, allow_malformed=False
+    ):
         signal = self.signal(name, namespace_name)
 
         key, value = value_pair
@@ -75,7 +81,21 @@ class SignalCreator:
         if key not in types:
             raise Exception(f"type must be one of: {types}")
         if key is "raw" and allow_malformed is False:
-            assert len(value)*8 == self._sinfos[(namespace_name, name)].size, f"payload size missmatch, expected {self._sinfos[(namespace_name, name)].size/8} bytes"
+            assert (
+                len(value) * 8 == self._sinfos[(namespace_name, name)].size
+            ), f"payload size missmatch, expected {self._sinfos[(namespace_name, name)].size/8} bytes"
+        min = self._sinfos[(namespace_name, name)].min
+        max = self._sinfos[(namespace_name, name)].max
+        assert (False, "hej")
+        if (
+            key in ["integer", "double"]
+            and not (max == 0 and min == 0)
+            and allow_malformed is False
+        ):
+            assert (
+                min <= value <= max
+            ), f"signal {name} value {value} not within expected range {min} {max}"
+
         params = {"id": signal, key: value}
         return network_api_pb2.Signal(**params)
 
