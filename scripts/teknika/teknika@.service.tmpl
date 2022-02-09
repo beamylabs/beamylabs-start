@@ -1,0 +1,11 @@
+[Unit]
+Description=Teknika for BeamyBroker (%i)
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/teknika/%i
+ExecStart=@TEKNIKABIN@ -p ${PORT}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
