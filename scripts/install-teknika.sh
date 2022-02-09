@@ -33,6 +33,6 @@ sed >/etc/systemd/system/teknika@.service \
 
 systemctl daemon-reload
 systemctl stop teknika@instance1 || true
-systemctl stop teknika@instance1 || true
+systemctl stop teknika@instance2 || true
 systemctl enable --now teknika@instance1
 systemctl enable --now teknika@instance2
