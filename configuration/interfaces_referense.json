@@ -126,8 +126,9 @@
     },
     {
       "_comment": [
-        "Technica CM CAN COMBO support, target_host refers to node runnig binary",
-        "https://github.com/beamylabs/beamylabs-start/tree/master/scripts/technica"
+        "Technica CM CAN COMBO support, target_host refers to node running this teknika binary:",
+        "https://github.com/beamylabs/beamylabs-start/tree/master/scripts/technica",
+        "target_config (for teknika binary): interface to listen on, multicast frames to catch"
       ],
       "type": "flexray",
       "device_name": "flexray0",
@@ -135,7 +136,11 @@
       "config": {
         "target_host": "127.0.0.1",
         "target_port": 51111,
-        "hardware": "Technica_CM_CAN_COMBO"
+        "hardware": "Technica_CM_CAN_COMBO",
+        "target_config": {
+          "interface": "eth0",
+          "multicast": "01:00:5e:00:00:00"
+        }
       },
       "fibex_file": "fibex_files/flexray.xml"
     }
