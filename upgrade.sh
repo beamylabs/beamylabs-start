@@ -36,7 +36,7 @@ if ! docker-compose --env-file envfile -f docker-compose-full-system.yml pull; t
   exit 1
 fi
 
-docker-compose --env-file envfile -f docker-compose-full-system.yml down
+docker-compose --env-file envfile -f docker-compose-full-system.yml down --remove-orphans
 docker-compose --env-file envfile -f docker-compose-full-system.yml up -d
 
 rpi=
