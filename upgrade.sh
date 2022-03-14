@@ -6,10 +6,8 @@ if ! cd "$scriptd"; then
   exit 1
 fi
 
-composef="docker-compose-full-system.yml"
-
-if [ ! -f "$composef" ]; then
-  printf "%: file not found\n" "$composef"
+if [ ! -f "docker-compose.yml" ]; then
+  printf "docker-compose.yml not found\n"
   exit 1
 fi
 
@@ -31,13 +29,13 @@ fi
 
 # for any unset *_TAG env vars, the docker-compose yml falls back to "latest"
 
-if ! docker-compose --env-file envfile -f docker-compose-full-system.yml pull; then
+if ! docker-compose --env-file envfile pull; then
   printf "upgrade aborted, some non-existent tag?\n"
   exit 1
 fi
 
-docker-compose --env-file envfile -f docker-compose-full-system.yml down --remove-orphans
-docker-compose --env-file envfile -f docker-compose-full-system.yml up -d
+docker-compose --env-file envfile down --remove-orphans
+docker-compose --env-file envfile up -d
 
 rpi=
 grep &>/dev/null -i "raspberry" /sys/firmware/devicetree/base/model && rpi="rpi"
