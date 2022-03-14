@@ -5,15 +5,6 @@ what's ongoing and try the latest features.
 
 # Get started with BeamyBroker
 
-## Prerequisite
-
-Docker version 20.10.8 or later is required.
-
-> if you like to use the old instructions with older docker, go [here](https://github.com/beamylabs/beamylabs-start/tree/16e84cbac82a740abe189a92cd1a2c1405710516)
-
-To be able to get going; that is docker pull, you need custom credentials.
-Contact us at <https://www.beamylabs.com>.
-
 ## Start
 
 Clone this repository and make sure you have `docker` and `docker-compose`
