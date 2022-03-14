@@ -5,8 +5,6 @@ services:
     stdin_open: true
     tty: true
     image: beamylabs/beamybroker-web-client:${BEAMYWEBCLIENT_TAG:-latest}
-    environment:
-      SIGNAL_SERVER_HOST_NAME: ${SIGNALBROKER_IP}
     ports:
      - "8080:8080"
     depends_on:

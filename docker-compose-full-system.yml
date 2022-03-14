@@ -13,8 +13,6 @@ services:
       - "8080:8080"
     extra_hosts:
       - "host.docker.internal:${SIGNALBROKER_IP:-host-gateway}"
-    environment:
-      SIGNAL_SERVER_HOST_NAME: ${SIGNALBROKER_IP:-host.docker.internal}
     depends_on:
      - proxy
 
