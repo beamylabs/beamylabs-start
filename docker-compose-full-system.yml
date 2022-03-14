@@ -1,7 +1,6 @@
 version: '3.2'
 services:
 
-  # served on port 8080, connects to the proxy on localhost:8081 by default
   web-client:
     restart: always
     stdin_open: true
@@ -11,22 +10,6 @@ services:
       - "${CONFIG_FOLDER:-./configuration}:/service_client/configuration"
     ports:
       - "8080:8080"
-    extra_hosts:
-      - "host.docker.internal:${SIGNALBROKER_IP:-host-gateway}"
-    depends_on:
-     - proxy
-
-  proxy:
-    restart: always
-    image: beamylabs/grpcwebproxy:${GRPCWEBPROXY_TAG:-latest}
-    ports:
-      - "8081:8080"
-    extra_hosts:
-      - "host.docker.internal:${SIGNALBROKER_IP:-host-gateway}"
-    command: >
-      ./grpcwebproxy --backend_addr=${SIGNALBROKER_IP:-host.docker.internal}:50051
-       --run_tls_server=false --allow_all_origins
-       --server_http_max_read_timeout=0s --server_http_max_write_timeout=0s
 
   signal-broker:
     tty: true
