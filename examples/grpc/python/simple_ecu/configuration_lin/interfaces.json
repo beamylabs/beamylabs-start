@@ -17,7 +17,7 @@
       "node_mode": "master",
       "ldf_file": "ldf/test.ldf",
       "schedule_file": "ldf/test.ldf",
-      "schedule_table_name": "DEVMLIN01Schedule01",
+      "schedule_table_name": "DiagSchedule",
       "schedule_autostart": true
     },
     {
