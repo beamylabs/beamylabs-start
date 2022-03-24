@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Remember that git pull has been run on the repo by scripts/trigger-upgrade.sh
+# before it calls us.
+
 scriptd="$(cd &>/dev/null -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 if ! cd "$scriptd"; then
   printf "Can't cd to script dir '%s'?!\n" "$scriptd"
@@ -41,6 +44,8 @@ rpi=
 grep &>/dev/null -i "raspberry" /sys/firmware/devicetree/base/model && rpi="rpi"
 
 if [ -n "$rpi" ]; then
+  # NOTE this will restart the teknika services, even if user has disabled them
+  sudo ./scripts/install-teknika.sh
   # restarting to ensure that we're running the latest version of
   # scripts/trigger-upgrade.sh
   sudo systemctl restart beamylabs-upgrade
