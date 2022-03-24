@@ -49,4 +49,7 @@ if [ -n "$rpi" ]; then
   # restarting to ensure that we're running the latest version of
   # scripts/trigger-upgrade.sh
   sudo systemctl restart beamylabs-upgrade
+
+  # The beamylabs-upgrade service has now been restarted, so execution of this
+  # script will *not* continue here if it was started by said service.
 fi
