@@ -32,13 +32,13 @@ fi
 
 # for any unset *_TAG env vars, the docker-compose yml falls back to "latest"
 
-if ! docker-compose --env-file envfile pull; then
+if ! docker-compose --no-ansi --env-file envfile pull; then
   printf "upgrade aborted, some non-existent tag?\n"
   exit 1
 fi
 
-docker-compose --env-file envfile down --remove-orphans
-docker-compose --env-file envfile up -d
+docker-compose --no-ansi --env-file envfile down --remove-orphans
+docker-compose --no-ansi --env-file envfile up -d
 
 rpi=
 grep &>/dev/null -i "raspberry" /sys/firmware/devicetree/base/model && rpi="rpi"
