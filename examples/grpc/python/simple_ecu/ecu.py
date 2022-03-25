@@ -123,6 +123,47 @@ def ecu_A(stub, pause):
                 # ),
             ],
         )
+        publish_signals(
+            clientId,
+            stub,
+            [
+                # signal_creator.signal_with_payload(
+                #     "counter", namespace, ("integer", increasing_counter)
+                # ),
+                # add any number of signals here, make sure that all signals/frames are unique.
+                # signal_creator.signal_with_payload(
+                #     "MasterReq", namespace, ("raw", binascii.unhexlify("0a0b0c0d0a0b0c0d")), False
+                # ),
+                # to provide manual headers (relevant for lin only)
+                signal_creator.signal_with_payload(
+                    "MasterReq", namespace, ("arbitration", True), False
+                )
+                # signal_creator.signal_with_payload(
+                #     "SlaveResp", namespace, ("arbitration", True), False
+                # ),
+            ],
+        )
+
+        publish_signals(
+            clientId,
+            stub,
+            [
+                # signal_creator.signal_with_payload(
+                #     "counter", namespace, ("integer", increasing_counter)
+                # ),
+                # add any number of signals here, make sure that all signals/frames are unique.
+                # signal_creator.signal_with_payload(
+                #     "MasterReq", namespace, ("raw", binascii.unhexlify("0a0b0c0d0a0b0c0d")), False
+                # ),
+                # to provide manual headers (relevant for lin only)
+                signal_creator.signal_with_payload(
+                    "SlaveResp", namespace, ("arbitration", True), False
+                )
+                # signal_creator.signal_with_payload(
+                #     "SlaveResp", namespace, ("arbitration", True), False
+                # ),
+            ],
+        )
 
         time.sleep(pause)
 
