@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd "${0%/*}"
+cd "${0%/*}" || exit 1
 
 if [[ "$EUID" != 0 ]]; then
   printf "Please give me root privileges by running me with sudo or doas.\n"
@@ -24,9 +24,9 @@ sed >beamylabs-upgrade.service \
     -e "s,@BEAMYUSER@,$BEAMYUSER,g" \
     beamylabs-upgrade.service.tmpl
 
-set -x
 cp -vf --preserve=mode,timestamps beamylabs-upgrade.service /etc/systemd/system/
 
 systemctl daemon-reload
-systemctl restart beamylabs-upgrade
+systemctl stop beamylabs-upgrade || true
 systemctl enable beamylabs-upgrade
+systemctl start beamylabs-upgrade || true
