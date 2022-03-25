@@ -12,16 +12,17 @@ TEKNIKABIN=/usr/local/bin/teknika
 arch="$(uname -m)"
 case "$arch" in
   x86_64|aarch64)
-    cp -vaf teknika/teknika-"$arch" "$TEKNIKABIN"
+    archbin="teknika/teknika-$arch"
     ;;
   armv7l)
-    cp -vaf teknika/teknika-armhf "$TEKNIKABIN"
+    archbin="teknika/teknika-armhf"
     ;;
   *)
     printf "your system arch %s is unknown\n" "$arch"
     exit 1
     ;;
 esac
+cp -vf --preserve=mode,timestamps "$archbin" "$TEKNIKABIN"
 
 mkdir -p /etc/teknika
 # We avoid overwriting any user changes to the ports

@@ -25,7 +25,7 @@ sed >beamylabs-upgrade.service \
     beamylabs-upgrade.service.tmpl
 
 set -x
-cp -af beamylabs-upgrade.service /etc/systemd/system/
+cp -vf --preserve=mode,timestamps beamylabs-upgrade.service /etc/systemd/system/
 
 systemctl daemon-reload
 systemctl restart beamylabs-upgrade
