@@ -19,12 +19,10 @@ if [[ -z "$BEAMYUSER" ]]; then
   exit 1
 fi
 
-sed >beamylabs-upgrade.service \
+sed >/etc/systemd/system/beamylabs-upgrade.service \
     -e "s,@BEAMYHOME@,$BEAMYHOME,g" \
     -e "s,@BEAMYUSER@,$BEAMYUSER,g" \
     beamylabs-upgrade.service.tmpl
-
-cp -vf --preserve=mode,timestamps beamylabs-upgrade.service /etc/systemd/system/
 
 systemctl daemon-reload
 systemctl stop beamylabs-upgrade || true
