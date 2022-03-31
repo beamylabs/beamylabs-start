@@ -5,7 +5,12 @@ what's ongoing and try the latest features.
 
 # Get started with BeamyBroker
 
-## Start
+## Pre-built SD card images for Raspberry Pi 4
+
+We build images suitable for Raspberry Pi 4 with the Seeed CAN-shield. Have a
+look here: https://www.beamylabs.com/releases/
+
+## Run it yourself
 
 Clone this repository and make sure you have `docker` and `docker-compose`
 installed, then run:
