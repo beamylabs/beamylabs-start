@@ -22,7 +22,7 @@ Simple ecu simulates 2 ecu:s which are connected (using `LIN`/`CAN`/`udp`) (defa
 start by cloning `beamylabs-start` then go here 
 from *this* location run:
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 > if you don't have python3 installed go [here](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python#readme) 
