@@ -16,6 +16,14 @@
       "namespace": "ecu_B",
       "device_name": "can1",
       "dbc_file": "can/test.dbc"
+    },
+    {
+      "namespace": "physical_relays",
+      "type": "udp",
+      "dbc_file": "can/physical_relays.dbc",
+      "server_port": 2000,
+      "target_host": "127.0.0.1",
+      "target_port": 2001
     }
   ],
   "gateway": {

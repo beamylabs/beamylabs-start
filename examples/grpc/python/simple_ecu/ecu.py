@@ -233,6 +233,41 @@ def double_and_publish(network_stub, client_id, trigger, signals):
             )
 
 
+def power_on(network_stub):
+
+    client_id = common_pb2.ClientId(id="id_relay")
+
+    VIU_control_thread = Thread(
+        target=act_on_signal,
+        args=(
+            client_id,
+            network_stub,
+            [signal_creator.signal("Relay01_enable_resp", "physical_relays")],
+            lambda subscripton: (q.put(("physical_relays_responded", subscripton))),
+            lambda subscripton: (
+                q.put(("physical_relays_subscription_settled", subscripton))
+            ),
+        ),
+    )
+    VIU_control_thread.start()
+    # wait for subscription to settle
+    (message, subscription) = q.get()
+    assert (message, "physical_relays_subscription_settled")
+
+    publish_signals(
+        client_id,
+        network_stub,
+        [
+            signal_creator.signal_with_payload(
+                "Relay01_enable_req", "physical_relays", ("integer", 1)
+            )
+        ],
+    )
+    # wait for relay node to reply
+    (message, subscription) = q.get
+    assert message == "physical_relays_responded"
+
+
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
@@ -260,6 +295,9 @@ def run(ip, port):
         )
 
     # Starting Threads
+
+    # physical toggle power on using relay.
+    power_on(network_stub)
 
     # ecu b, we do this with lambda refering to double_and_publish.
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
