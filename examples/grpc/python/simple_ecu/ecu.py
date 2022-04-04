@@ -214,42 +214,49 @@ def main(argv):
     run(args.ip, args.port)
 
 
-def double_and_publish(network_stub, client_id, trigger, signals):
-    for signal in signals:
-        print(f"ecu_B, (subscribe) {signal.id.name} {get_value(signal)}")
-        if signal.id == trigger:
-            publish_signals(
-                client_id,
-                network_stub,
-                [
-                    signal_creator.signal_with_payload(
-                        "counter_times_2", "ecu_B", ("integer", get_value(signal) * 2)
-                    ),
-                    # add any number of signals/frames here
-                    # signal_creator.signal_with_payload(
-                    #     "TestFr04", "ecu_B", ("raw", binascii.unhexlify("0a0b0c0d")), False
-                    # )
-                ],
-            )
+def power_on_client(network_stub):
+    def toggle_and_reply(client_id, network_stub, signals):
+        # enable my relay
+        publish_signals(
+            client_id,
+            network_stub,
+            [
+                signal_creator.signal_with_payload(
+                    "Relay01_enable_resp", "physical_relays", ("integer", 1)
+                )
+            ],
+        )
+
+    client_id = common_pb2.ClientId(id="id_client_relay")
+    Thread(
+        target=act_on_signal,
+        args=(
+            client_id,
+            network_stub,
+            [signal_creator.signal("Relay01_enable_req", "physical_relays")],
+            False,
+            lambda signals: toggle_and_reply(client_id, network_stub, signals),
+        ),
+    ).start()
 
 
 def power_on(network_stub):
 
     client_id = common_pb2.ClientId(id="id_relay")
 
-    VIU_control_thread = Thread(
+    Thread(
         target=act_on_signal,
         args=(
             client_id,
             network_stub,
             [signal_creator.signal("Relay01_enable_resp", "physical_relays")],
-            lambda subscripton: (q.put(("physical_relays_responded", subscripton))),
+            False,
+            lambda signals: (q.put(("physical_relays_responded", signals))),
             lambda subscripton: (
                 q.put(("physical_relays_subscription_settled", subscripton))
             ),
         ),
-    )
-    VIU_control_thread.start()
+    ).start()
     # wait for subscription to settle
     (message, subscription) = q.get()
     assert (message, "physical_relays_subscription_settled")
@@ -264,8 +271,10 @@ def power_on(network_stub):
         ],
     )
     # wait for relay node to reply
-    (message, subscription) = q.get
+    (message, ignore) = q.get()
     assert message == "physical_relays_responded"
+    print("power on confirmed")
+    subscription.cancel()
 
 
 def run(ip, port):
@@ -297,9 +306,30 @@ def run(ip, port):
     # Starting Threads
 
     # physical toggle power on using relay.
+    power_on_client(network_stub)
     power_on(network_stub)
 
     # ecu b, we do this with lambda refering to double_and_publish.
+    def double_and_publish(network_stub, client_id, trigger, signals):
+        for signal in signals:
+            print(f"ecu_B, (subscribe) {signal.id.name} {get_value(signal)}")
+            if signal.id == trigger:
+                publish_signals(
+                    client_id,
+                    network_stub,
+                    [
+                        signal_creator.signal_with_payload(
+                            "counter_times_2",
+                            "ecu_B",
+                            ("integer", get_value(signal) * 2),
+                        ),
+                        # add any number of signals/frames here
+                        # signal_creator.signal_with_payload(
+                        #     "TestFr04", "ecu_B", ("raw", binascii.unhexlify("0a0b0c0d")), False
+                        # )
+                    ],
+                )
+
     ecu_b_client_id = common_pb2.ClientId(id="id_ecu_B")
 
     ecu_B_sub_thread = Thread(

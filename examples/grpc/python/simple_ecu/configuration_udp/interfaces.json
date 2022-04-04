@@ -20,6 +20,14 @@
       "server_port": 2000,
       "target_host": "127.0.0.1",
       "target_port": 2001
+    },
+    {
+      "namespace": "physical_relays",
+      "type": "udp",
+      "dbc_file": "can/physical_relays.dbc",
+      "server_port": 2002,
+      "target_host": "127.0.0.1",
+      "target_port": 2003
     }
   ],
   "gateway": {
