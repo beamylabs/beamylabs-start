@@ -214,15 +214,34 @@ def main(argv):
     run(args.ip, args.port)
 
 
-def power_on_client(network_stub):
+def power_on_client(system_stub, network_stub):
     def toggle_and_reply(client_id, network_stub, signals):
-        # enable my relay
+        def enable_relay(relay_signal):
+            requested_state = get_value(relay_signal)
+            assert 0 <= requested_state <= 2
+            if requested_state == 0:
+                print(f"relay {relay_signal.id.name} request no changed")
+                return
+            elif requested_state == 1:
+                print(f"relay {relay_signal.id.name} request enable")
+                # TODO GPIO code enable relay
+                return
+            elif requested_state == 2:
+                print(f"relay {relay_signal.id.name} request disable")
+                # TODO GPIO code disable relay
+                return
+
+        # control relay
+        for relay_signal in signals:
+            enable_relay(relay_signal)
+
+        # send confirmation back
         publish_signals(
             client_id,
             network_stub,
             [
                 signal_creator.signal_with_payload(
-                    "Relay01_enable_resp", "physical_relays", ("integer", 1)
+                    "Relays_resp_set", "physical_relays", ("integer", 1)
                 )
             ],
         )
@@ -233,7 +252,9 @@ def power_on_client(network_stub):
         args=(
             client_id,
             network_stub,
-            [signal_creator.signal("Relay01_enable_req", "physical_relays")],
+            # react to any relay in given frame
+            signal_creator.signals_in_frame("Relay_00to07", "physical_relays"),
+            # [signal_creator.signal("Relay01_enable_req", "physical_relays")],
             False,
             lambda signals: toggle_and_reply(client_id, network_stub, signals),
         ),
@@ -249,7 +270,7 @@ def power_on(network_stub):
         args=(
             client_id,
             network_stub,
-            [signal_creator.signal("Relay01_enable_resp", "physical_relays")],
+            [signal_creator.signal("Relays_resp_set", "physical_relays")],
             False,
             lambda signals: (q.put(("physical_relays_responded", signals))),
             lambda subscripton: (
@@ -266,8 +287,11 @@ def power_on(network_stub):
         network_stub,
         [
             signal_creator.signal_with_payload(
-                "Relay01_enable_req", "physical_relays", ("integer", 1)
-            )
+                "Relay00", "physical_relays", ("integer", 1)
+            ),
+            signal_creator.signal_with_payload(
+                "Relay01", "physical_relays", ("integer", 2)
+            ),
         ],
     )
     # wait for relay node to reply
@@ -306,7 +330,7 @@ def run(ip, port):
     # Starting Threads
 
     # physical toggle power on using relay.
-    power_on_client(network_stub)
+    power_on_client(system_stub, network_stub)
     power_on(network_stub)
 
     # ecu b, we do this with lambda refering to double_and_publish.
