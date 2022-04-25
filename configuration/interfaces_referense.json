@@ -23,6 +23,17 @@
     },
     {
       "_comment": [
+        "extended can interface",
+        "use 29-bit CAN identifiers"
+      ],
+      "type": "can",
+      "namespace": "PhysicalCanInterface",
+      "device_name": "can0",
+      "extended": true,
+      "dbc_file": "can_files/can_one.dbc"
+    },
+    {
+      "_comment": [
         "vanilla canfd interface"
       ],
       "type": "canfd",
