@@ -2,19 +2,20 @@
   "chains": [
     {
       "_comment_short_names": [
-        "advanced, optional",
-        "to generate long, names as in frame.signal"
+        "Advanced, optional",
+        "To generate long, names as in frame.signal"
       ],
       "short_names": false,
       "_comment_time_stamps": [
-        "advanced, optional",
-        "use timestamps provided by transiver, currently only supported for type flexray"
+        "Advanced, optional",
+        "Use timestamps provided by transceiver, currently only supported for type",
+        "Flexray"
       ],
       "time_stamp": "hardware"
     },
     {
       "_comment": [
-        "vanilla can interface"
+        "Vanilla can interface"
       ],
       "type": "can",
       "namespace": "PhysicalCanInterface",
@@ -23,8 +24,8 @@
     },
     {
       "_comment": [
-        "extended can interface",
-        "use 29-bit CAN identifiers"
+        "Extended can interface",
+        "Use 29-bit CAN identifiers"
       ],
       "type": "can",
       "namespace": "PhysicalCanInterface",
@@ -34,7 +35,7 @@
     },
     {
       "_comment": [
-        "vanilla canfd interface"
+        "Vanilla CAN-FD interface"
       ],
       "type": "canfd",
       "namespace": "PhysicalCanFDInterface",
@@ -43,7 +44,7 @@
     },
     {
       "_comment": [
-        "vanilla vcan interface supported by linux"
+        "Vanilla VCAN interface supported by Linux"
       ],
       "type": "virtual",
       "namespace": "VCanInterface",
@@ -52,8 +53,8 @@
     },
     {
       "_comment": [
-        "vanilla canfd interface",
-        "useful for communicating between apps, use unique client_id in each client to prevent signal bouncing",
+        "Vanilla CAN-FD interface",
+        "Useful for communicating between apps, use unique client_id in each client to prevent signal bouncing",
         "as in getting echo of owned signal"
       ],
       "device_name": "virtual",
@@ -62,7 +63,7 @@
     },
     {
       "_comment": [
-        "udp interface can be paired with ldf, fibex for dbc file"
+        "UDP interface can be paired with a .ldf, .fibex for .dbc file"
       ],
       "namespace": "UDPCanInterface",
       "type": "udp",
@@ -74,7 +75,7 @@
     },
     {
       "_comment": [
-        "lin node configured with DHCP ip"
+        "LIN node configured with DHCP IP"
       ],
       "namespace": "LinSlave",
       "type": "lin",
@@ -89,11 +90,11 @@
     },
     {
       "_comment": [
-        "lin node configured with STATIC ip"
+        "LIN node configured with STATIC IP"
       ],
       "__comment_node_id": [
-        "advanced, optional",
-        "node_id needs to exist in Node_attributes list, used to specify NAD for lin node"
+        "Advanced, optional",
+        "Node_id needs to exist in Node_attributes list, used to specify NAD for LIN node"
       ],
       "namespace": "LinSlave",
       "type": "lin",
@@ -124,7 +125,7 @@
     },
     {
       "_comment": [
-        "defaults to MX30 flexray device."
+        "Defaults to MX30 Flexray device."
       ],
       "type": "flexray",
       "device_name": "flexray0",
@@ -137,7 +138,7 @@
     },
     {
       "_comment": [
-        "Technica CM CAN COMBO support, target_host refers to node running this teknika binary:",
+        "Technica CM CAN COMBO support, target_host refers to node running this Teknika binary:",
         "https://github.com/beamylabs/beamylabs-start/tree/master/scripts/technica",
         "target_config (for teknika binary): interface to listen on, multicast frames to catch"
       ],
@@ -158,20 +159,20 @@
   ],
   "gateway": {
     "_comment": [
-      "used for telnet interface"
+      "Used for Telnet interface"
     ],
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
     "_comment": [
-      "configuration ports for lin trasievers"
+      "Configuration ports for LIN transceivers"
     ],
     "target_port": 4000,
     "server_port": 4001
   },
   "grpc_server": {
     "_comment": [
-      "gprc port used"
+      "gPRC port used"
     ],
     "port": 50051
   },
@@ -181,8 +182,8 @@
       "reflect": [
         {
           "_comment": [
-            "Send all data from source to dest, exclude specfiec frames",
-            "both networks need to be of type can|canfd|udp"
+            "Send all data from source to dest, exclude specific frames",
+            "Both networks need to be of type can|canfd|udp"
           ],
           "source": "PhysicalCanInterface",
           "dest": "VCanInterface",
@@ -191,7 +192,7 @@
         {
           "_comment": [
             "Send all data from source to dest, exclude specfiec frames.",
-            "both networks need to be of type can|canfd|udp"
+            "Both networks need to be of type can|canfd|udp"
           ],
           "source": "VCanInterface",
           "dest": "PhysicalCanInterface",
