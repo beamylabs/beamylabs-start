@@ -1,3 +1,4 @@
 requests==2.21.0
 grpcio==1.40.0
 grpcio-tools==1.40.0
+grpc-interceptor==0.14.1
