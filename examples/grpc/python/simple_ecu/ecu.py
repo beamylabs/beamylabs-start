@@ -233,45 +233,44 @@ def double_and_publish(network_stub, client_id, trigger, signals):
                 ],
             )
 
+
 import grpc
 
-import generic_client_interceptor
-
-class _ClientCallDetails(
-        collections.namedtuple(
-            '_ClientCallDetails',
-            ('method', 'timeout', 'metadata', 'credentials')),
-        grpc.ClientCallDetails):
-    pass
+from grpc_interceptor import ClientCallDetails, ClientInterceptor
+from typing import Any, Callable
 
 
-def header_adder_interceptor(header, value):
+class HeaderInterceptor(ClientInterceptor):
+    def __init__(self, key):
+        self.key = key
 
-    def intercept_call(client_call_details, request_iterator, request_streaming,
-                       response_streaming):
-        metadata = []
-        if client_call_details.metadata is not None:
-            metadata = list(client_call_details.metadata)
-        metadata.append((
-            header,
-            value,
-        ))
-        client_call_details = _ClientCallDetails(
-            client_call_details.method, client_call_details.timeout, metadata,
-            client_call_details.credentials)
-        return client_call_details, request_iterator, None
+    def intercept(
+        self,
+        method: Callable,
+        request_or_iterator: Any,
+        call_details: grpc.ClientCallDetails,
+    ):
+        new_details = ClientCallDetails(
+            call_details.method,
+            call_details.timeout,
+            [("x-api-key", self.key)],
+            call_details.credentials,
+            call_details.wait_for_ready,
+            call_details.compression,
+        )
 
-    return generic_client_interceptor.create(intercept_call)
+        return method(request_or_iterator, new_details)
+
 
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
 
-    header_adder_interceptor_res = header_adder_interceptor(
-        'api_key', 'my_super_secret_key')
-
     channel = grpc.insecure_channel(ip + ":" + port)
-    intercept_channel = grpc.intercept_channel(channel, header_adder_interceptor_res)
+    intercept_channel = grpc.intercept_channel(
+        channel, HeaderInterceptor("my_super_secret_key")
+    )
+    # intercept_channel = grpc.intercept_channel(channel, header_adder_interceptor_res)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(intercept_channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(intercept_channel)
     check_license(system_stub)
