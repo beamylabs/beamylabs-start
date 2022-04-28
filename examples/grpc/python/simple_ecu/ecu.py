@@ -16,6 +16,7 @@ import network_api_pb2_grpc
 import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
+import collections
 
 
 sys.path.append("../common")
@@ -232,13 +233,47 @@ def double_and_publish(network_stub, client_id, trigger, signals):
                 ],
             )
 
+import grpc
+
+import generic_client_interceptor
+
+class _ClientCallDetails(
+        collections.namedtuple(
+            '_ClientCallDetails',
+            ('method', 'timeout', 'metadata', 'credentials')),
+        grpc.ClientCallDetails):
+    pass
+
+
+def header_adder_interceptor(header, value):
+
+    def intercept_call(client_call_details, request_iterator, request_streaming,
+                       response_streaming):
+        metadata = []
+        if client_call_details.metadata is not None:
+            metadata = list(client_call_details.metadata)
+        metadata.append((
+            header,
+            value,
+        ))
+        client_call_details = _ClientCallDetails(
+            client_call_details.method, client_call_details.timeout, metadata,
+            client_call_details.credentials)
+        return client_call_details, request_iterator, None
+
+    return generic_client_interceptor.create(intercept_call)
 
 def run(ip, port):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
+
+    header_adder_interceptor_res = header_adder_interceptor(
+        'api_key', 'my_super_secret_key')
+
     channel = grpc.insecure_channel(ip + ":" + port)
-    network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
-    system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
+    intercept_channel = grpc.intercept_channel(channel, header_adder_interceptor_res)
+    network_stub = network_api_pb2_grpc.NetworkServiceStub(intercept_channel)
+    system_stub = system_api_pb2_grpc.SystemServiceStub(intercept_channel)
     check_license(system_stub)
 
     upload_folder(system_stub, "configuration_udp")
