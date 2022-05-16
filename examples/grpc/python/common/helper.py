@@ -10,6 +10,8 @@ import posixpath
 import ntpath
 import itertools
 
+import grpc
+
 
 def get_sha256(file):
     f = open(file, "rb")
@@ -41,7 +43,7 @@ def upload_file(stub, path, dest_path):
     upload_iterator = generate_data(
         file, dest_path.replace(ntpath.sep, posixpath.sep), 1000000, sha256
     )
-    response = stub.UploadFile(upload_iterator)
+    response = stub.UploadFile(upload_iterator, compression=grpc.Compression.Gzip)
     print("uploaded", path, response)
 
 
