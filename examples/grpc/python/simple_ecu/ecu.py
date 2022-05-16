@@ -211,8 +211,17 @@ def main(argv):
         required=False,
         default="50051",
     )
+    parser.add_argument(
+        "-x_api_key",
+        "--x_api_key",
+        type=str,
+        help="required api key for https sessions",
+        required=False,
+        default="offline",
+    )
     args = parser.parse_args()
-    run(args.ip, args.port)
+
+    run(args.ip, args.port, args.x_api_key)
 
 
 def double_and_publish(network_stub, client_id, trigger, signals):
@@ -241,8 +250,8 @@ from typing import Any, Callable
 
 
 class HeaderInterceptor(ClientInterceptor):
-    def __init__(self, key):
-        self.key = key
+    def __init__(self, header_dict):
+        self.header_dict = header_dict
 
     def intercept(
         self,
@@ -253,7 +262,7 @@ class HeaderInterceptor(ClientInterceptor):
         new_details = ClientCallDetails(
             call_details.method,
             call_details.timeout,
-            [("x-api-key", self.key)],
+            self.header_dict.items(),
             call_details.credentials,
             call_details.wait_for_ready,
             call_details.compression,
@@ -262,13 +271,13 @@ class HeaderInterceptor(ClientInterceptor):
         return method(request_or_iterator, new_details)
 
 
-def run(ip, port):
+def run(ip, port, x_api_key):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
 
     channel = grpc.insecure_channel(ip + ":" + port)
     intercept_channel = grpc.intercept_channel(
-        channel, HeaderInterceptor("my_super_secret_key")
+        channel, HeaderInterceptor({"x-api-key": x_api_key})
     )
     # intercept_channel = grpc.intercept_channel(channel, header_adder_interceptor_res)
     network_stub = network_api_pb2_grpc.NetworkServiceStub(intercept_channel)
