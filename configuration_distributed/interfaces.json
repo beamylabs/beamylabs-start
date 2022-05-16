@@ -1,8 +1,8 @@
 {
-  "master_node": "master@master.com",
+  "master_node": "node@master.com",
   "nodes": [
     {
-      "node_name": "slave@slave1.com",
+      "node_name": "node@slave1.com",
       "default_namespace": "VirtualInterface",
       "chains": [
         {
@@ -25,7 +25,7 @@
       "reflectors": []
     },
     {
-      "node_name": "master@master.com",
+      "node_name": "node@master.com",
       "default_namespace": "UDPCanInterface",
       "chains": [
         {
