@@ -43,6 +43,8 @@ ethernet connection is called `eth0`. If that's not the case, you need to
 change `eth0` to the correct name. (Hint: you can can find your interface name
 using `ip addr` or `ifconfig`).
 
+Example configuration and detailed instructions can be found [here](configuration_distributed/README.md).
+
 ## Stop
 
 ```bash

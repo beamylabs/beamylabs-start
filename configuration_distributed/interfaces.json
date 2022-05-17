@@ -35,8 +35,7 @@
           "device_name": "udp2",
           "server_port": 2002,
           "target_host": "127.0.0.1",
-          "target_port": 2001,
-          "fixed_payload_size": 8
+          "target_port": 2001
         }
       ],
       "gateway": {
