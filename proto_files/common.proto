@@ -28,6 +28,8 @@ message MetaData {
   bool isRaw = 9;
   double factor = 10;
   double offset = 11;
+  string unit = 12;
+  string owner = 13;
 }
 
 message NameSpace {
