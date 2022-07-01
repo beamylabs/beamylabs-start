@@ -63,6 +63,17 @@
     },
     {
       "_comment": [
+        "can interface without recover",
+        "to prevent CAN interface from restarting after ERROR_PASSIVE mode"
+      ],
+      "type": "can",
+      "namespace": "PhysicalCanInterface",
+      "device_name": "can0",
+      "auto_recover": false,
+      "dbc_file": "can_files/can_one.dbc"
+    },
+    {
+      "_comment": [
         "UDP interface can be paired with a .ldf, .fibex for .dbc file"
       ],
       "namespace": "UDPCanInterface",
