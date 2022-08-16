@@ -21,13 +21,17 @@ message SignalInfo {
 
 message MetaData {
   string description = 4;
-  int32 max = 5;
-  int32 min = 6;
+  float max = 12;
+  float min = 13;
   string unit = 7;
   int32 size = 8;
   bool isRaw = 9;
   double factor = 10;
   double offset = 11;
+  repeated string sender = 14;
+  repeated string receiver = 15;
+  float cycleTime = 16;
+  float startValue = 17;
 }
 
 message NameSpace {
