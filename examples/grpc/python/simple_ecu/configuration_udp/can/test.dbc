@@ -35,6 +35,10 @@ BO_ 2029 DiagResFrame_2029: 8 ECM
 BO_ 2030 DiagResFrame_2030: 8 ECM
 BO_ 2031 DiagResFrame_2031: 8 ECM
 
+BO_ 1352 NARRP2b: 7 Testsystem
+ SG_ I2H1 : 32|24@1- (1,0) [-8388608|8388607] "nV" Vector__XXX
+ SG_ I2AVG : 0|24@1- (1,0) [-8388608|8388607] "nV" Vector__XXX
+
 BO_ 53 TestFr01: 8 DDM
  SG_ TestFr01_Child01 : 9|2@0+ (1.0, 0.0) [0.0|0.0] "" CEM
  SG_ TestFr01_Child01_UB : 7|1@0+ (1,0) [0|1] "" CEM
