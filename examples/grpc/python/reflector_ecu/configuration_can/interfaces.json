@@ -8,21 +8,13 @@
     {
       "type": "can",
       "namespace": "ecu_A",
-<<<<<<< HEAD
       "device_name": "vcan0",
-=======
-      "device_name": "can0",
->>>>>>> 1d9b12e (benefit from simpler configuration)
       "database": "can/test.dbc"
     },
     {
       "type": "can",
       "namespace": "ecu_B",
-<<<<<<< HEAD
       "device_name": "vcan1",
-=======
-      "device_name": "can1",
->>>>>>> 1d9b12e (benefit from simpler configuration)
       "database": "can/test.dbc"
     }
   ],
