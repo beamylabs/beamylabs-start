@@ -19,6 +19,14 @@ message SignalInfo {
   MetaData metaData = 2;
 }
 
+message Multiplex {
+    oneof mode {
+        Empty none = 1;
+        Empty select = 2;
+        int32 filter = 3;
+    };
+}
+
 message MetaData {
   string description = 4;
   float max = 12;
@@ -32,6 +40,7 @@ message MetaData {
   repeated string receiver = 15;
   float cycleTime = 16;
   float startValue = 17;
+  Multiplex multiplex = 18;
 }
 
 message NameSpace {
