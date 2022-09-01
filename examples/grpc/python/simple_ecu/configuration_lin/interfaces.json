@@ -15,7 +15,7 @@
         "target_port": 2013
       },
       "node_mode": "master",
-      "database": "ldf/test.ldf",
+      "ldf_file": "ldf/test.ldf",
       "schedule_file": "ldf/test.ldf",
       "schedule_table_name": "DEVMLIN01Schedule01",
       "schedule_autostart": true
@@ -30,8 +30,20 @@
         "target_port": 2016
       },
       "node_mode": "slave",
-      "database": "ldf/test.ldf",
+      "ldf_file": "ldf/test.ldf",
       "schedule_autostart": false
     }
+  ],
+  "gateway": {
+    "tcp_socket_port": 4040
+  },
+  "auto_config_boot_server": {
+    "target_port": 4000,
+    "server_port": 4001
+  },
+  "grpc_server": {
+    "port": 50051
+  },
+  "reflectors": [
   ]
 }

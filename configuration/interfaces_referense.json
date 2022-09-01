@@ -20,7 +20,7 @@
       "type": "can",
       "namespace": "PhysicalCanInterface",
       "device_name": "can0",
-      "dbc_file|database": "can_files/can_one.dbc"
+      "dbc_file": "can_files/can_one.dbc"
     },
     {
       "_comment": [
@@ -31,7 +31,7 @@
       "namespace": "PhysicalCanInterface",
       "device_name": "can0",
       "extended": true,
-      "dbc_file|database": "can_files/can_one.dbc"
+      "dbc_file": "can_files/can_one.dbc"
     },
     {
       "_comment": [
@@ -40,7 +40,7 @@
       "type": "canfd",
       "namespace": "PhysicalCanFDInterface",
       "device_name": "can1",
-      "dbc_file|database": "can_files/canfd_one.dbc"
+      "dbc_file": "can_files/canfd_one.dbc"
     },
     {
       "_comment": [
@@ -49,7 +49,7 @@
       "type": "virtual",
       "namespace": "VCanInterface",
       "device_name": "vcan1",
-      "dbc_file|database": "can_files/can_one.dbc"
+      "dbc_file": "can_files/can_one.dbc"
     },
     {
       "_comment": [
@@ -70,7 +70,7 @@
       "namespace": "PhysicalCanInterface",
       "device_name": "can0",
       "auto_recover": false,
-      "dbc_file|database": "can_files/can_one.dbc"
+      "dbc_file": "can_files/can_one.dbc"
     },
     {
       "_comment": [
@@ -78,7 +78,7 @@
       ],
       "namespace": "UDPCanInterface",
       "type": "udp",
-      "dbc_file|database": "can_files/can_three.dbc",
+      "dbc_file": "can_files/can_three.dbc",
       "device_name": "udp2",
       "server_port": 2001,
       "target_host": "127.0.0.1",
@@ -96,7 +96,7 @@
         "target_port": 2013
       },
       "node_mode": "slave",
-      "ldf_file|database": "ldf_files/lin_one.ldf",
+      "ldf_file": "ldf_files/lin_one.ldf",
       "schedule_autostart": false
     },
     {
@@ -117,7 +117,7 @@
       },
       "node_mode": "slave",
       "node_id": "node_id",
-      "ldf_file|database": "ldf_files/lin_one.ldf",
+      "ldf_file": "ldf_files/lin_one.ldf",
       "schedule_autostart": false
     },
     {
@@ -129,7 +129,7 @@
         "target_port": 2016
       },
       "node_mode": "master",
-      "ldf_file|database": "ldf_files/lin_one.ldf",
+      "ldf_file": "ldf_files/lin_one.ldf",
       "schedule_file": "ldf_files/lin_one.ldf",
       "schedule_table_name": "linoneSchedule",
       "schedule_autostart": true
@@ -145,7 +145,7 @@
         "target_host": "127.0.0.1",
         "target_port": 51111
       },
-      "fibex_file|database": "fibex_files/flexray.xml"
+      "fibex_file": "fibex_files/flexray.xml"
     },
     {
       "_comment": [
@@ -165,37 +165,35 @@
           "multicast": "01:00:5e:00:00:00"
         }
       },
-      "fibex_file|database": "fibex_files/flexray.xml"
+      "fibex_file": "fibex_files/flexray.xml"
     }
   ],
   "gateway": {
     "_comment": [
-      "Used for Telnet interface, optional section, defaults as shown below"
+      "Used for Telnet interface"
     ],
     "tcp_socket_port": 4040
   },
   "auto_config_boot_server": {
     "_comment": [
-      "Configuration ports for LIN transceivers, optional section, defaults as shown below"
+      "Configuration ports for LIN transceivers"
     ],
     "target_port": 4000,
     "server_port": 4001
   },
   "grpc_server": {
     "_comment": [
-      "gPRC port used, optional section, defaults as shown below"
+      "gPRC port used"
     ],
     "port": 50051
   },
   "reflectors": [
     {
-      "_comment": [
-          "Optional section. Default off"
-      ],
+      "application_pid": "my_reflector1",
       "reflect": [
         {
           "_comment": [
-            "Send all data from source namespace to dest, exclude specific frames",
+            "Send all data from source to dest, exclude specific frames",
             "Both networks need to be of type can|canfd|udp"
           ],
           "source": "PhysicalCanInterface",
@@ -204,7 +202,7 @@
         },
         {
           "_comment": [
-            "Send all data from source namespace to dest, exclude specific frames.",
+            "Send all data from source to dest, exclude specfiec frames.",
             "Both networks need to be of type can|canfd|udp"
           ],
           "source": "VCanInterface",
