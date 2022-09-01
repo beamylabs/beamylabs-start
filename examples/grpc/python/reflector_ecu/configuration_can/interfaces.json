@@ -9,28 +9,17 @@
       "type": "can",
       "namespace": "ecu_A",
       "device_name": "vcan0",
-      "dbc_file": "can/test.dbc"
+      "database": "can/test.dbc"
     },
     {
       "type": "can",
       "namespace": "ecu_B",
       "device_name": "vcan1",
-      "dbc_file": "can/test.dbc"
+      "database": "can/test.dbc"
     }
   ],
-  "gateway": {
-    "tcp_socket_port": 4040
-  },
-  "auto_config_boot_server": {
-    "target_port": 4000,
-    "server_port": 4001
-  },
-  "grpc_server": {
-    "port": 50051
-  },
   "reflectors": [
     {
-      "application_pid": "my_reflector1",
       "reflect": [
         {
           "_comment": [

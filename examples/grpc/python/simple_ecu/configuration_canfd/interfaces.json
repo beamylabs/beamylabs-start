@@ -9,25 +9,13 @@
       "type": "canfd",
       "namespace": "ecu_A",
       "device_name": "can0",
-      "dbc_file": "can/test.dbc"
+      "database": "can/test.dbc"
     },
     {
       "type": "canfd",
       "namespace": "ecu_B",
       "device_name": "can1",
-      "dbc_file": "can/test.dbc"
+      "database": "can/test.dbc"
     }
-  ],
-  "gateway": {
-    "tcp_socket_port": 4040
-  },
-  "auto_config_boot_server": {
-    "target_port": 4000,
-    "server_port": 4001
-  },
-  "grpc_server": {
-    "port": 50051
-  },
-  "reflectors": [
   ]
 }
