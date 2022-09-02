@@ -16,6 +16,7 @@ import network_api_pb2_grpc
 import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
+import traffic_api_pb2_grpc
 import collections
 
 
@@ -28,6 +29,8 @@ from threading import Thread, Timer
 import queue
 
 from signalcreator import SignalCreator
+
+from urllib.parse import urlparse
 
 signal_creator = None
 q = queue.Queue()
@@ -85,75 +88,6 @@ def printer(signals):
         print(f"{signal.id.name} {signal.id.namespace.name} {get_value(signal)}")
 
 
-def ecu_A(stub, pause):
-    """Publishes a value, read other value (published by ecu_B)
-
-    Parameters
-    ----------
-    stub : NetworkServiceStub
-        Object instance of class
-    pause : int
-        Amount of time to pause, in seconds
-
-    """
-    increasing_counter = 0
-    namespace = "ecu_A"
-    clientId = common_pb2.ClientId(id="id_ecu_A")
-    while True:
-
-        print("\necu_A, seed is ", increasing_counter)
-        # Publishes value 'counter'
-
-        publish_signals(
-            clientId,
-            stub,
-            [
-                signal_creator.signal_with_payload(
-                    "counter", namespace, ("integer", increasing_counter)
-                ),
-                # add any number of signals here, make sure that all signals/frames are unique.
-                # signal_creator.signal_with_payload(
-                #     "TestFr04", namespace, ("raw", binascii.unhexlify("0a0b0c0d")), False
-                # ),
-            ],
-        )
-
-        time.sleep(pause)
-
-        # Read the other value 'counter_times_2' and output result
-
-        read_signal_response = read_signals(
-            stub, signal_creator.signal("counter_times_2", namespace)
-        )
-        for signal in read_signal_response.signal:
-            print(f"ecu_A, (result) {signal.id.name} is {get_value(signal)}")
-        increasing_counter = (increasing_counter + 1) % 4
-
-
-def read_on_timer(stub, signals, pause):
-    """Simple reading with timer
-
-    Parameters
-    ----------
-    stub : NetworkServiceStub
-        Object instance of class
-    signals : SignalId
-        Object instance of class
-    pause : int
-        Amount of time to pause, in seconds
-
-    """
-    while True:
-        read_info = network_api_pb2.SignalIds(signalId=signals)
-        try:
-            response = stub.ReadSignals(read_info)
-            for signal in response.signal:
-                print(f"ecu_B, (read) {signal.id.name} is {get_value(signal)}")
-        except grpc._channel._Rendezvous as err:
-            print(err)
-        time.sleep(pause)
-
-
 def get_value(signal):
     if signal.raw != b"":
         return "0x" + binascii.hexlify(signal.raw).decode("ascii")
@@ -196,20 +130,20 @@ def act_on_signal(client_id, stub, sub_signals, on_change, fun, on_subcribed=Non
 def main(argv):
     parser = argparse.ArgumentParser(description="Provide address to Beambroker")
     parser.add_argument(
-        "-ip",
-        "--ip",
+        "-url",
+        "--url",
         type=str,
-        help="IP address of the Beamy Broker",
+        help="URL of the Beamy Broker",
         required=False,
-        default="127.0.0.1",
+        default="http://127.0.0.1:50051",
     )
     parser.add_argument(
-        "-port",
-        "--port",
-        type=str,
-        help="grpc port used on Beamy Broker",
+        "-reload_config",
+        "--reload_config",
+        action="store_true",
+        help="Reload configuration",
         required=False,
-        default="50051",
+        default=False,
     )
     parser.add_argument(
         "-x_api_key",
@@ -221,27 +155,7 @@ def main(argv):
     )
     args = parser.parse_args()
 
-    run(args.ip, args.port, args.x_api_key)
-
-
-def double_and_publish(network_stub, client_id, trigger, signals):
-    for signal in signals:
-        print(f"ecu_B, (subscribe) {signal.id.name} {get_value(signal)}")
-        if signal.id == trigger:
-            publish_signals(
-                client_id,
-                network_stub,
-                [
-                    signal_creator.signal_with_payload(
-                        "counter_times_2", "ecu_B", ("integer", get_value(signal) * 2)
-                    ),
-                    # add any number of signals/frames here
-                    # signal_creator.signal_with_payload(
-                    #     "TestFr04", "ecu_B", ("raw", binascii.unhexlify("0a0b0c0d")), False
-                    # )
-                ],
-            )
-
+    run(args.url, args.reload_config, args.x_api_key)
 
 import grpc
 
@@ -271,24 +185,36 @@ class HeaderInterceptor(ClientInterceptor):
         return method(request_or_iterator, new_details)
 
 
-def run(ip, port, x_api_key):
+def run(url, restart_broker, x_api_key):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
 
-    channel = grpc.insecure_channel(ip + ":" + port)
+    url = urlparse(url)
+
+    if url.scheme == "https":
+        creds = grpc.ssl_channel_credentials(
+            root_certificates=None, private_key=None, certificate_chain=None
+        )
+        channel = grpc.secure_channel(
+            url.hostname + ":" + str(url.port or "443"), creds
+        )
+    else:
+        channel = grpc.insecure_channel(url.hostname + ":" + str(url.port or "50051"))
+
     intercept_channel = grpc.intercept_channel(
         channel, HeaderInterceptor({"x-api-key": x_api_key})
     )
-    # intercept_channel = grpc.intercept_channel(channel, header_adder_interceptor_res)
+
     network_stub = network_api_pb2_grpc.NetworkServiceStub(intercept_channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(intercept_channel)
+    traffic_stub = traffic_api_pb2_grpc.TrafficServiceStub(intercept_channel)
     check_license(system_stub)
 
-    upload_folder(system_stub, "configuration_udp")
-    # upload_folder(system_stub, "configuration_lin")
-    # upload_folder(system_stub, "configuration_can")
-    # upload_folder(system_stub, "configuration_canfd")
-    reload_configuration(system_stub)
+    # upload_folder(system_stub, "configuration_udp")
+    # # upload_folder(system_stub, "configuration_lin")
+    # # upload_folder(system_stub, "configuration_can")
+    # # upload_folder(system_stub, "configuration_canfd")
+    # reload_configuration(system_stub)
 
     global signal_creator
     signal_creator = SignalCreator(system_stub)
@@ -313,15 +239,12 @@ def run(ip, port, x_api_key):
             ecu_b_client_id,
             network_stub,
             [
-                signal_creator.signal("counter", "ecu_B"),
+                signal_creator.signal("ExternTemp3Temperature", "RMS_temp3"),
                 # here you can add any signal from any namespace
                 # signal_creator.signal("TestFr04", "ecu_B"),
             ],
-            True,  # True: only report when signal changes
-            lambda signals: double_and_publish(
-                network_stub,
-                ecu_b_client_id,
-                signal_creator.signal("counter", "ecu_B"),
+            False,  # True: only report when signal changes
+            lambda signals: printer(
                 signals,
             ),
             lambda subscripton: (q.put(("id_ecu_B", subscripton))),
@@ -331,26 +254,6 @@ def run(ip, port, x_api_key):
     # wait for subscription to settle
     ecu, subscription = q.get()
 
-    # ecu a, this is where we publish, and
-    ecu_A_thread = Thread(
-        target=ecu_A,
-        args=(
-            network_stub,
-            1,
-        ),
-    )
-    ecu_A_thread.start()
-
-    # ecu b, bonus, periodically, read using timer.
-    signals = [
-        signal_creator.signal("counter", "ecu_B"),
-        # add any number of signals from any namespace
-        # signal_creator.signal("TestFr04", "ecu_B"),
-    ]
-    ecu_read_on_timer = Thread(target=read_on_timer, args=(network_stub, signals, 1))
-    ecu_read_on_timer.start()
-
-    # once we are done we could cancel subscription
     # subscription.cancel()
 
 
