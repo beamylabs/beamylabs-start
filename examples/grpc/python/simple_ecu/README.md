@@ -28,9 +28,9 @@ pip3 install -r requirements.txt
 > if you don't have python3 installed go [here](https://github.com/beamylabs/beamylabs-start/tree/master/examples/grpc/python#readme) 
 ### Options
 
-ecu.py can be started with options `-h` or `--ip <ip_address>`.
-* `--ip <ip_address>` - Points to the ip of your beamy broker installation, if this option is not used the scripts will use ip `127.0.0.1`. For example start the script by typing:
-`python3 ecu.py --ip 192.168.0.xxx`
+ecu.py can be started with options `-h` or `--ecu <address>`.
+* `--url <address>` - Points to the ip of your beamy broker installation, if this option is not used the scripts will use address `http://127.0.0.1:50051`. For example start the script by typing:
+`python3 ecu.py --url http://192.168.0.xxx`
 
 * `-h` - Help, shows available options for script, run `python3 ecu.py -h`
 
