@@ -37,15 +37,15 @@ ecu.py can be started with options `-h` or `--ecu <address>`.
 ### Default instructions
 * Run shell (terminal, powershell, etc.).
 * From [this folder](.) run
-  * `python3 ecu.py --ip <ip_address>`
+  * `python3 ecu.py --url <address>`
 
 ### Overview
 A bunch of things are going on in this examples and it all starts in the main function `def run(argv):`. Lets break it down.
 
 #### Setting up stubs and configuration
-First we start of with setting up a connection to the beamy broker (with the ip that was passed to the script) and then defining the grpc stubs that will be used. In code it looks like this:
-```pyhton
-  channel = grpc.insecure_channel(ip + port)
+First we start of with setting up a connection to the beamy broker (with the ip that was passed to the script) and then defining the grpc stubs that will be used. In code it typically looks like this:
+```python
+  channel = grpc.insecure_channel(address)
   network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
   system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
   check_license(system_stub)
