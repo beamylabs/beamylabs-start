@@ -272,10 +272,7 @@ class HeaderInterceptor(ClientInterceptor):
 
         return method(request_or_iterator, new_details)
 
-
-def run(url, restart_broker, x_api_key):
-    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
-    # Setting up stubs and configuration
+def create_channel(url, x_api_key):
 
     url = urlparse(url)
 
@@ -292,8 +289,14 @@ def run(url, restart_broker, x_api_key):
     intercept_channel = grpc.intercept_channel(
         channel, HeaderInterceptor({"x-api-key": x_api_key})
     )
+    return intercept_channel
 
-    # intercept_channel = grpc.intercept_channel(channel, header_adder_interceptor_res)
+
+def run(url, restart_broker, x_api_key):
+    """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
+    # Setting up stubs and configuration
+    intercept_channel = create_channel(url, x_api_key)
+
     network_stub = network_api_pb2_grpc.NetworkServiceStub(intercept_channel)
     system_stub = system_api_pb2_grpc.SystemServiceStub(intercept_channel)
     check_license(system_stub)
