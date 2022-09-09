@@ -16,6 +16,7 @@ import network_api_pb2_grpc
 import system_api_pb2
 import system_api_pb2_grpc
 import common_pb2
+import collections
 
 
 sys.path.append("../common")
@@ -25,6 +26,8 @@ from helper import *
 
 from threading import Thread, Timer
 import queue
+
+from urllib.parse import urlparse
 
 from signalcreator import SignalCreator
 
@@ -195,23 +198,32 @@ def act_on_signal(client_id, stub, sub_signals, on_change, fun, on_subcribed=Non
 def main(argv):
     parser = argparse.ArgumentParser(description="Provide address to Beambroker")
     parser.add_argument(
-        "-ip",
-        "--ip",
+        "-url",
+        "--url",
         type=str,
-        help="IP address of the Beamy Broker",
+        help="URL of the Beamy Broker",
         required=False,
-        default="127.0.0.1",
+        default="http://127.0.0.1:50051",
     )
     parser.add_argument(
-        "-port",
-        "--port",
-        type=str,
-        help="grpc port used on Beamy Broker",
+        "-reload_config",
+        "--reload_config",
+        action="store_true",
+        help="Reload configuration",
         required=False,
-        default="50051",
+        default=False,
+    )
+    parser.add_argument(
+        "-x_api_key",
+        "--x_api_key",
+        type=str,
+        help="required api key for https sessions",
+        required=False,
+        default="offline",
     )
     args = parser.parse_args()
-    run(args.ip, args.port)
+
+    run(args.url, args.reload_config, args.x_api_key)
 
 
 def double_and_publish(network_stub, client_id, trigger, signals):
@@ -233,12 +245,60 @@ def double_and_publish(network_stub, client_id, trigger, signals):
             )
 
 
-def run(ip, port):
+import grpc
+
+from grpc_interceptor import ClientCallDetails, ClientInterceptor
+from typing import Any, Callable
+
+
+class HeaderInterceptor(ClientInterceptor):
+    def __init__(self, header_dict):
+        self.header_dict = header_dict
+
+    def intercept(
+        self,
+        method: Callable,
+        request_or_iterator: Any,
+        call_details: grpc.ClientCallDetails,
+    ):
+        new_details = ClientCallDetails(
+            call_details.method,
+            call_details.timeout,
+            self.header_dict.items(),
+            call_details.credentials,
+            call_details.wait_for_ready,
+            call_details.compression,
+        )
+
+        return method(request_or_iterator, new_details)
+
+def create_channel(url, x_api_key):
+
+    url = urlparse(url)
+
+    if url.scheme == "https":
+        creds = grpc.ssl_channel_credentials(
+            root_certificates=None, private_key=None, certificate_chain=None
+        )
+        channel = grpc.secure_channel(
+            url.hostname + ":" + str(url.port or "443"), creds
+        )
+    else:
+        channel = grpc.insecure_channel(url.hostname + ":" + str(url.port or "50051"))
+
+    intercept_channel = grpc.intercept_channel(
+        channel, HeaderInterceptor({"x-api-key": x_api_key})
+    )
+    return intercept_channel
+
+
+def run(url, restart_broker, x_api_key):
     """Main function, checking arguments passed to script, setting up stubs, configuration and starting Threads."""
     # Setting up stubs and configuration
-    channel = grpc.insecure_channel(ip + ":" + port)
-    network_stub = network_api_pb2_grpc.NetworkServiceStub(channel)
-    system_stub = system_api_pb2_grpc.SystemServiceStub(channel)
+    intercept_channel = create_channel(url, x_api_key)
+
+    network_stub = network_api_pb2_grpc.NetworkServiceStub(intercept_channel)
+    system_stub = system_api_pb2_grpc.SystemServiceStub(intercept_channel)
     check_license(system_stub)
 
     upload_folder(system_stub, "configuration_udp")
