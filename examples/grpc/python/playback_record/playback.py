@@ -263,7 +263,7 @@ def run(argv):
     recordlist = [
         {
             "namespace": "custom_can",
-            "path": "recordings/candump_uploaded_recorded.log",
+            "path": "recordings/candump_uploaded_recorded",
             "mode": traffic_api_pb2.Mode.RECORD,
         },
     ]
@@ -304,7 +304,7 @@ def run(argv):
     recordlist = [
         {
             "namespace": "custom_can",
-            "path": "recordings/candump_uploaded_recorded.log",
+            "path": "recordings/candump_uploaded_recorded",
             "mode": traffic_api_pb2.Mode.STOP,
         },
     ]
@@ -317,8 +317,8 @@ def run(argv):
     # now stop recording and download the recorded file
     download_file(
         system_stub,
-        "recordings/candump_uploaded_recorded.log",
-        "candump_uploaded_recorded_downloaded.log",
+        "recordings/candump_uploaded_recorded",
+        "candump_uploaded_recorded_downloaded",
     )
     print("file is now downloaded")
 

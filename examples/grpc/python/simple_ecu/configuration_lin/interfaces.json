@@ -11,7 +11,6 @@
       "config": {
         "device_identifier": 8,
         "server_port": 2014,
-        "target_host": null,
         "target_port": 2013
       },
       "node_mode": "master",
@@ -26,12 +25,10 @@
       "config": {
         "device_identifier": 7,
         "server_port": 2015,
-        "target_host": null,
         "target_port": 2016
       },
       "node_mode": "slave",
-      "database": "ldf/test.ldf",
-      "schedule_autostart": false
+      "database": "ldf/test.ldf"
     }
   ]
 }
