@@ -1,5 +1,11 @@
 # Beamy One gallery
 
+> The documentation in this folder is **deprecated**.
+> 
+> For the latest instructions go to a repository [remotivelabs/remotive-box](https://github.com/remotivelabs/remotive-box/).
+
+---
+
 Go [here](3D-model) to print your copy.
 
 ## Components
